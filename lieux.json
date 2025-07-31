@@ -1,0 +1,20 @@
+[
+  {
+    "nom": "Atelier 2000",
+    "latitude": 50.627289,
+    "longitude": 3.054373,
+    "description": "Description de l'Atelier 2000",
+    "rss": "A",
+    "contact": "+33 3 20 00 00 00",
+    "portail": "12345678"
+  },
+  {
+    "nom": "Alleux",
+    "latitude": 50.85015,
+    "longitude": 1.8116,
+    "description": "Description d'Alleux",
+    "rss": "B",
+    "contact": "+33 3 20 11 22 33",
+    "portail": ""
+  }
+]
