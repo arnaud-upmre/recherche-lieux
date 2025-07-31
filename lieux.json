@@ -184,14 +184,122 @@
     "latitude": 50.8497,
     "longitude": 1.81277,
     "description": "",
-    "rss": "",
-    "contact": "A",
+    "rss": "A",
+    "contact": "",
     "portail": ""
   },
- {
+  {
     "nom": "Caffiers L SAT1",
     "latitude": 50.85015,
     "longitude": 1.8116,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Caffiers L SAT2",
+    "latitude": 50.85407,
+    "longitude": 1.805,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Cassel S",
+    "latitude": 50.78073,
+    "longitude": 2.47334,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Cassel SAT2",
+    "latitude": 50.78194,
+    "longitude": 2.47147,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L",
+    "latitude": 50.92629,
+    "longitude": 1.83412,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L SAT1",
+    "latitude": 50.93019,
+    "longitude": 1.8398,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L SAT2",
+    "latitude": 50.93019,
+    "longitude": 1.8398,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L SAT3",
+    "latitude": 50.93019,
+    "longitude": 1.8398,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L SAT4",
+    "latitude": 50.93019,
+    "longitude": 1.8398,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coquelles L SAT5",
+    "latitude": 50.92738,
+    "longitude": 1.83633,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coudekerque SST",
+    "latitude": 50.99517,
+    "longitude": 2.39034,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coudekerque SST SAT1",
+    "latitude": 51.00247,
+    "longitude": 2.38268,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coudekerque SST SAT2",
+    "latitude": 51.00549,
+    "longitude": 2.37858,
     "description": "",
     "rss": "A",
     "contact": "",
