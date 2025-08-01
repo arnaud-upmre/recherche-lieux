@@ -3,62 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Page de démarrage - Logo EALE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <!-- 🔁 Redirection méta après 2 secondes -->
-  <meta http-equiv="refresh" content="2;url=index.html" />
+  <title>Page de démarrage - EALE</title>
 
-  <!-- Import Google Font cursive -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
 
   <style>
-    body, html {
-      height: 100%;
+    body {
       margin: 0;
-      background: white;
+      background: #fff;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
       overflow: hidden;
       user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #333;
-    }
-
-    #logo-container {
-      width: 200px;
-      height: 200px;
-      animation: zoomIn 2s ease forwards;
+      position: relative;
     }
 
     #logo {
-      width: 100%;
-      height: 100%;
+      width: 200px;
+      height: 200px;
+      animation: zoomIn 2s ease-out forwards;
       object-fit: contain;
-      user-select: none;
       pointer-events: none;
     }
 
     #random-text {
-      margin-top: 4rem; /* plus d’espace */
+      position: absolute;
+      bottom: 40px;
       font-size: 1.3rem;
       font-family: 'Dancing Script', cursive;
       font-weight: 600;
       color: #4a4a4a;
       text-align: center;
-      max-width: 280px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+      max-width: 90%;
       user-select: none;
-      text-shadow:
-        1px 1px 2px rgba(0,0,0,0.15),
-        0 0 5px rgba(74, 74, 74, 0.2);
-      transition: color 0.3s ease;
-    }
-
-    #random-text:hover {
-      color: #222;
-      cursor: default;
     }
 
     @keyframes zoomIn {
@@ -75,13 +58,16 @@
 </head>
 <body>
 
-  <!-- 🖼️ Logo EALE centré -->
-  <div id="logo-container">
-    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
-  </div>
+  <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
 
-  <!-- Texte aléatoire -->
   <div id="random-text"></div>
+
+  <noscript>
+    <meta http-equiv="refresh" content="3;url=index.html" />
+    <p style="margin-top: 2rem; text-align: center; color: #444;">
+      JavaScript est requis. Redirection en cours…
+    </p>
+  </noscript>
 
   <script>
     const phrases = [
@@ -126,12 +112,10 @@
     ];
 
     const randomIndex = Math.floor(Math.random() * phrases.length);
-    const randomPhrase = phrases[randomIndex];
-
-    document.getElementById('random-text').textContent = randomPhrase;
+    document.getElementById('random-text').textContent = phrases[randomIndex];
 
     setTimeout(() => {
-      window.location.href = "index.html";
+      location.href = "index.html";
     }, 3000);
 
     document.addEventListener('contextmenu', e => e.preventDefault());
