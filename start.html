@@ -15,10 +15,13 @@
       margin: 0;
       background: white;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       overflow: hidden;
       user-select: none;
+      font-family: Arial, sans-serif;
+      color: #333;
     }
 
     #logo-container {
@@ -33,6 +36,15 @@
       object-fit: contain;
       user-select: none;
       pointer-events: none;
+    }
+
+    #random-text {
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-style: italic;
+      text-align: center;
+      max-width: 220px;
+      user-select: none;
     }
 
     @keyframes zoomIn {
@@ -54,7 +66,59 @@
     <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
+  <!-- Texte aléatoire -->
+  <div id="random-text"></div>
+
   <script>
+    // Phrases à afficher aléatoirement
+    const phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Regroupé par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Activé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Livré par Arnaud.",
+      "Assemblé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Guidé par Arnaud.",
+      "Connecté par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Lien établi par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+
+    // Sélection aléatoire d'une phrase
+    const randomIndex = Math.floor(Math.random() * phrases.length);
+    const randomPhrase = phrases[randomIndex];
+
+    // Affichage dans le div
+    document.getElementById('random-text').textContent = randomPhrase;
+
     // 🕒 Redirection JavaScript en secours après 3 secondes
     setTimeout(() => {
       window.location.href = "index.html";
