@@ -9,6 +9,9 @@
   <!-- 🔁 Redirection méta après 2 secondes -->
   <meta http-equiv="refresh" content="2;url=index.html" />
 
+  <!-- Import Google Font cursive -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+
   <style>
     body, html {
       height: 100%;
@@ -39,19 +42,22 @@
     }
 
     #random-text {
-      margin-top: 2.5rem; /* plus d'espace */
-      font-size: 1.15rem;
-      font-style: italic;
+      margin-top: 4rem; /* plus d’espace */
+      font-size: 1.3rem;
+      font-family: 'Dancing Script', cursive;
+      font-weight: 600;
+      color: #4a4a4a;
       text-align: center;
-      max-width: 240px;
-      color: #5a5a5a;
-      font-family: 'Georgia', serif;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      max-width: 280px;
       user-select: none;
+      text-shadow:
+        1px 1px 2px rgba(0,0,0,0.15),
+        0 0 5px rgba(74, 74, 74, 0.2);
       transition: color 0.3s ease;
     }
+
     #random-text:hover {
-      color: #2c2c2c;
+      color: #222;
       cursor: default;
     }
 
