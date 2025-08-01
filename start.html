@@ -20,7 +20,7 @@
       align-items: center;
       overflow: hidden;
       user-select: none;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #333;
     }
 
@@ -39,12 +39,20 @@
     }
 
     #random-text {
-      margin-top: 1rem;
-      font-size: 1rem;
+      margin-top: 2.5rem; /* plus d'espace */
+      font-size: 1.15rem;
       font-style: italic;
       text-align: center;
-      max-width: 220px;
+      max-width: 240px;
+      color: #5a5a5a;
+      font-family: 'Georgia', serif;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
       user-select: none;
+      transition: color 0.3s ease;
+    }
+    #random-text:hover {
+      color: #2c2c2c;
+      cursor: default;
     }
 
     @keyframes zoomIn {
@@ -70,7 +78,6 @@
   <div id="random-text"></div>
 
   <script>
-    // Phrases à afficher aléatoirement
     const phrases = [
       "Propulsé par Arnaud.",
       "Une réalisation signée Arnaud.",
@@ -112,19 +119,15 @@
       "Interface pensée par Arnaud."
     ];
 
-    // Sélection aléatoire d'une phrase
     const randomIndex = Math.floor(Math.random() * phrases.length);
     const randomPhrase = phrases[randomIndex];
 
-    // Affichage dans le div
     document.getElementById('random-text').textContent = randomPhrase;
 
-    // 🕒 Redirection JavaScript en secours après 3 secondes
     setTimeout(() => {
       window.location.href = "index.html";
     }, 3000);
 
-    // 🚫 Désactive clic droit
     document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
 </body>
