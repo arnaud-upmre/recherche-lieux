@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <!-- Empêche l'indexation par les moteurs de recherche -->
-  <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>Page de démarrage - Logo EALE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Redirection automatique après 2 secondes -->
+  
+  <!-- 🔁 Redirection méta après 2 secondes -->
   <meta http-equiv="refresh" content="2;url=index.html" />
 
   <style>
@@ -18,12 +17,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      -webkit-touch-callout: none;
       overflow: hidden;
+      user-select: none;
     }
 
     #logo-container {
@@ -54,15 +49,19 @@
 </head>
 <body>
 
+  <!-- 🖼️ Logo EALE centré -->
   <div id="logo-container">
     <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
   <script>
-    // Désactive le clic droit (menu contextuel)
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    // 🕒 Redirection JavaScript en secours après 3 secondes
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 3000);
+
+    // 🚫 Désactive clic droit
+    document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
 </body>
 </html>
