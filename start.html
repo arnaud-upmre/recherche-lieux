@@ -1,41 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Empêche l'indexation par les moteurs de recherche -->
+  <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Démarrage</title>
+  <title>Arnaud - EALE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
+    /* Corps centrée, sans sélection texte */
+    body, html {
+      height: 100%;
       margin: 0;
-      padding: 0;
-      background: #fff;
+      background: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      user-select: none; /* Désactive la sélection */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none; /* iOS Safari */
+      overflow: hidden; /* Empêche scroll */
     }
-    img {
-      max-width: 70%;
-      height: auto;
-      animation: fadeIn 0.6s ease-in-out;
+
+    /* Conteneur du logo avec animation zoom */
+    #logo-container {
+      width: 200px;
+      height: 200px;
+      animation: zoomIn 2s ease forwards;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+
+    #logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none; /* Empêche interactions sur l'image */
+    }
+
+    /* Animation zoom avant */
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Affichage temporaire du logo EALE avant redirection -->
-  <img src="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/Logo%20EALE.png" alt="Logo EALE" />
+  <!-- Conteneur du logo EALE animé -->
+  <div id="logo-container">
+    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+  </div>
 
   <script>
-    // Redirection vers index.html après 2 secondes
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
+    // Désactive le clic droit (menu contextuel)
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
   </script>
-
 </body>
 </html>
