@@ -4,10 +4,9 @@
   <!-- Empêche l'indexation par les moteurs de recherche -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <title>Arnaud - EALE</title>
+  <title>Page de démarrage - Logo EALE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Corps centrée, sans sélection texte */
     body, html {
       height: 100%;
       margin: 0;
@@ -15,15 +14,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      user-select: none; /* Désactive la sélection */
+      user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
-      -webkit-touch-callout: none; /* iOS Safari */
-      overflow: hidden; /* Empêche scroll */
+      -webkit-touch-callout: none;
+      overflow: hidden;
     }
 
-    /* Conteneur du logo avec animation zoom */
     #logo-container {
       width: 200px;
       height: 200px;
@@ -35,10 +33,9 @@
       height: 100%;
       object-fit: contain;
       user-select: none;
-      pointer-events: none; /* Empêche interactions sur l'image */
+      pointer-events: none;
     }
 
-    /* Animation zoom avant */
     @keyframes zoomIn {
       from {
         transform: scale(0.5);
@@ -53,7 +50,6 @@
 </head>
 <body>
 
-  <!-- Conteneur du logo EALE animé -->
   <div id="logo-container">
     <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
@@ -63,6 +59,11 @@
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
+
+    // Redirige vers la page principale après 2 secondes (2000 ms)
+    setTimeout(function() {
+      window.location.href = "index.html"; // Change ici si ton fichier principal a un autre nom ou URL
+    }, 2000);
   </script>
 </body>
 </html>
