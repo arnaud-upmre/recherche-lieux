@@ -3,43 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chargement...</title>
+  <title>Démarrage</title>
   <style>
     body {
       margin: 0;
-      background-color: #ffffff;
+      padding: 0;
+      background: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      animation: fadeOut 2s ease-in forwards;
     }
-
     img {
-      width: 150px;
+      max-width: 70%;
       height: auto;
-      opacity: 1;
-      animation: logoFade 2s ease-in forwards;
+      animation: fadeIn 0.6s ease-in-out;
     }
-
-    @keyframes logoFade {
-      0% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    @keyframes fadeOut {
-      0% { background-color: #fff; }
-      100% { background-color: #fff; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
+</head>
+<body>
+
+  <!-- Affichage temporaire du logo EALE avant redirection -->
+  <img src="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/Logo%20EALE.png" alt="Logo EALE" />
+
   <script>
+    // Redirection vers index.html après 2 secondes
     setTimeout(() => {
       window.location.href = "index.html";
     }, 2000);
   </script>
-</head>
-<body>
-  <img src="Logo EALE.png" alt="Logo EALE" />
+
 </body>
 </html>
