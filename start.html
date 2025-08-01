@@ -6,11 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Page de démarrage - EALE</title>
 
+  <!-- Import Roboto depuis Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+
   <style>
     body {
       margin: 0;
       background: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Roboto', Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -19,7 +22,7 @@
       overflow: hidden;
       user-select: none;
       position: relative;
-      color: #444;
+      color: #222;
     }
 
     #logo {
@@ -34,14 +37,15 @@
       position: absolute;
       bottom: 40px;
       font-size: 1.4rem;
-      font-weight: 600;
+      font-weight: 500;
       text-align: center;
       max-width: 90%;
       user-select: none;
-      opacity: 0;
-      animation: fadeIn 1.5s ease forwards;
-      text-shadow: 0 0 2px rgba(0,0,0,0.1);
-      color: #333;
+      color: #222;
+      /* Suppression totale des effets */
+      text-shadow: none;
+      opacity: 1;
+      animation: none;
     }
 
     @keyframes zoomIn {
@@ -51,12 +55,6 @@
       }
       to {
         transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeIn {
-      to {
         opacity: 1;
       }
     }
