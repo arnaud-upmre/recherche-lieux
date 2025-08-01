@@ -12,7 +12,7 @@
   <style>
     html, body {
       margin: 0;
-      padding: 0 0 60px 0; /* padding bottom pour éviter que texte soit coupé */
+      padding: 0 0 60px 0;
       height: 100%;
       background: #fff;
       font-family: 'Roboto', Arial, sans-serif;
@@ -40,11 +40,12 @@
     }
 
     #random-text {
-      position: fixed; /* fix pour garantir position */
-      bottom: 80px;    /* plus haut */
+      position: fixed;
+      bottom: 120px; /* plus haut */
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1rem;
+      font-size: 0.9rem; /* plus petit */
+      font-style: italic; /* italique */
       font-weight: 500;
       max-width: 90%;
       text-align: center;
@@ -60,7 +61,7 @@
 
     @media (max-height: 600px) {
       #random-text {
-        bottom: 40px; /* plus bas sur petits écrans */
+        bottom: 80px; /* un peu plus bas sur petits écrans */
       }
     }
 
