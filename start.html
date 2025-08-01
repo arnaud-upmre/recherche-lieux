@@ -6,6 +6,10 @@
   <meta charset="UTF-8" />
   <title>Page de démarrage - Logo EALE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Redirection automatique après 2 secondes -->
+  <meta http-equiv="refresh" content="2;url=index.html" />
+
   <style>
     body, html {
       height: 100%;
@@ -59,11 +63,6 @@
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
-
-    // Redirige vers la page principale après 2 secondes (2000 ms)
-    setTimeout(function() {
-      window.location.href = "index.html"; // Change ici si ton fichier principal a un autre nom ou URL
-    }, 2000);
   </script>
 </body>
 </html>
