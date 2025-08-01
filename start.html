@@ -6,13 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Page de démarrage - EALE</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
-
   <style>
     body {
       margin: 0;
       background: #fff;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -21,6 +19,7 @@
       overflow: hidden;
       user-select: none;
       position: relative;
+      color: #444;
     }
 
     #logo {
@@ -34,14 +33,15 @@
     #random-text {
       position: absolute;
       bottom: 40px;
-      font-size: 1.3rem;
-      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
       font-weight: 600;
-      color: #4a4a4a;
       text-align: center;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
       max-width: 90%;
       user-select: none;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+      text-shadow: 0 0 2px rgba(0,0,0,0.1);
+      color: #333;
     }
 
     @keyframes zoomIn {
@@ -51,6 +51,12 @@
       }
       to {
         transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
         opacity: 1;
       }
     }
