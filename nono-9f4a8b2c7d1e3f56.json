@@ -304,5 +304,176 @@
     "rss": "A",
     "contact": "",
     "portail": ""
+  },
+  {
+    "nom": "Coulogne SP",
+    "latitude": 50.93494,
+    "longitude": 1.85672,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coulogne SP  SM1-SM2",
+    "latitude": 50.9333,
+    "longitude": 1.86056,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coulogne SP SAT1",
+    "latitude": 50.93228,
+    "longitude": 1.86179,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coulogne SP SAT2",
+    "latitude": 50.93525,
+    "longitude": 1.85033,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coulogne SP SAT3",
+    "latitude": 50.93525,
+    "longitude": 1.85033,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Coulogne SP SAT4",
+    "latitude": 50.93557,
+    "longitude": 1.85462,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Curie SSP",
+    "latitude": 50.94073,
+    "longitude": 1.85027,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Curie SSP SAT1",
+    "latitude": 50.94156,
+    "longitude": 1.84856,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Curie SSP SAT2",
+    "latitude": 50.94091,
+    "longitude": 1.85015,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Curie SSP SAT3",
+    "latitude": 50.94242,
+    "longitude": 1.84725,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Curie SSP SAT4",
+    "latitude": 50.94565,
+    "longitude": 1.84089,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Dannes SSP",
+    "latitude": 50.5793,
+    "longitude": 1.61447,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Délivrance SST",
+    "latitude": 50.62733,
+    "longitude": 2.99147,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Don Sainghin SS",
+    "latitude": 50.55251,
+    "longitude": 2.91516,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Don Sainghin SS SAT1",
+    "latitude": 50.54891,
+    "longitude": 2.90745,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Don Sainghin SS SAT2",
+    "latitude": 50.54747,
+    "longitude": 2.90489,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Don Sainghin SS SAT3",
+    "latitude": 50.55251,
+    "longitude": 2.91516,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Dunkerque SSPA",
+    "latitude": 51.02866,
+    "longitude": 2.36969,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
+  },
+  {
+    "nom": "Erquinghem PRCI",
+    "latitude": 50.67218,
+    "longitude": 2.82697,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": ""
   }
 ]
