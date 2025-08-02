@@ -2,39 +2,57 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Test du compteur</title>
+  <title>Test Compteur</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    #counter {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h2>🔢 Test du compteur</h2>
-  <p id="counter">Chargement…</p>
-  <button onclick="incrementCounter()">🔁 Incrémenter</button>
+  <h1>🔢 Test du compteur</h1>
+  <div id="counter">Chargement…</div>
+  <button onclick="increment()">🔁 Incrémenter</button>
 
   <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwA9on64_dg6bUnFYsPIiYWYMXh5roIzLEKRRnj6KJfRX6YoFuW1x5ZR4MJ2ruibr_8/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+    const counterEl = document.getElementById("counter");
 
-    function updateCounter() {
+    function fetchCount() {
       fetch(scriptUrl)
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-          document.getElementById("counter").textContent = `Compteur : ${data.count}`;
+          counterEl.textContent = `🔢 Recherches : ${data.count}`;
         })
         .catch(() => {
-          document.getElementById("counter").textContent = "❌ Erreur compteur";
+          counterEl.textContent = "❌ Erreur compteur";
         });
     }
 
-    function incrementCounter() {
+    function increment() {
       fetch(scriptUrl + "?increment=true")
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-          document.getElementById("counter").textContent = `Compteur : ${data.count}`;
+          counterEl.textContent = `🔢 Recherches : ${data.count}`;
         })
         .catch(() => {
-          document.getElementById("counter").textContent = "❌ Erreur compteur";
+          counterEl.textContent = "❌ Erreur compteur";
         });
     }
 
-    updateCounter();
+    // Charger au démarrage
+    fetchCount();
   </script>
 </body>
 </html>
