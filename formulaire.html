@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire Point GPS</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      color: #222;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-style: italic;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Soumettre un point GPS ou signaler une correction</h2>
+
+  <form id="gpsForm">
+    <label for="type">Type de demande :</label>
+    <select id="type" name="type" required>
+      <option value="">-- Choisissez --</option>
+      <option value="ajout">Ajout d’un point GPS</option>
+      <option value="modification">Correction d’un point existant</option>
+    </select>
+
+    <label for="nom">Nom du lieu :</label>
+    <input type="text" id="nom" name="nom" required>
+
+    <div id="ajout-fields" class="hidden">
+      <label for="latitude">Latitude :</label>
+      <input type="text" id="latitude" name="latitude">
+
+      <label for="longitude">Longitude :</label>
+      <input type="text" id="longitude" name="longitude">
+
+      <label for="ligne">Nom de la ligne :</label>
+      <input type="text" id="ligne" name="ligne">
+
+      <label for="numero">Numéro de ligne SNCF :</label>
+      <input type="text" id="numero" name="numero">
+
+      <label for="pk">PK (Point Kilométrique) :</label>
+      <input type="text" id="pk" name="pk">
+    </div>
+
+    <div id="modif-fields" class="hidden">
+      <label for="modif">Détaillez la ou les corrections souhaitées :</label>
+      <textarea id="modif" name="modif" rows="4"></textarea>
+    </div>
+
+    <label for="description">Description :</label>
+    <textarea id="description" name="description" rows="3"></textarea>
+
+    <label for="contact">Contact (tel ou email) :</label>
+    <input type="text" id="contact" name="contact">
+
+    <label for="portail">Lien portail ou site :</label>
+    <input type="url" id="portail" name="portail">
+
+    <label for="email">Votre e-mail (si besoin de vous recontacter) :</label>
+    <input type="email" id="email" name="email">
+
+    <button type="submit">Envoyer</button>
+    <p id="status"></p>
+  </form>
+
+  <script>
+    const typeField = document.getElementById("type");
+    const ajoutFields = document.getElementById("ajout-fields");
+    const modifFields = document.getElementById("modif-fields");
+
+    typeField.addEventListener("change", () => {
+      if (typeField.value === "ajout") {
+        ajoutFields.classList.remove("hidden");
+        modifFields.classList.add("hidden");
+      } else if (typeField.value === "modification") {
+        modifFields.classList.remove("hidden");
+        ajoutFields.classList.add("hidden");
+      } else {
+        ajoutFields.classList.add("hidden");
+        modifFields.classList.add("hidden");
+      }
+    });
+
+    // Envoi (à compléter selon ton script Apps Script)
+    const form = document.getElementById("gpsForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("status");
+      status.textContent = "Envoi en cours...";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const response = await fetch("TON_URL_SCRIPT", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.success) {
+          status.textContent = "✅ Merci, votre message a bien été transmis.";
+          form.reset();
+        } else {
+          throw new Error(result.error || "Erreur");
+        }
+      } catch (err) {
+        status.textContent = "❌ Une erreur est survenue. Veuillez réessayer.";
+      }
+    });
+  </script>
+
+</body>
+</html>
