@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Webhook</title>
+  <meta charset="UTF-8" />
+  <title>Test du compteur</title>
 </head>
 <body>
-  <h1>Test du compteur</h1>
-  <button onclick="envoyer()">Simuler une recherche</button>
+  <h1>🔢 Test du compteur</h1>
+  <button onclick="incrementer()">🔁 Incrémenter</button>
 
   <script>
-    function envoyer() {
+    function incrementer() {
       fetch("https://webhook.site/1b4ba5a9-6be8-44c5-8c69-515498779aac", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "recherche", date: new Date().toISOString() })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          action: "recherche",
+          date: new Date().toISOString()
+        })
       })
-      .then(() => alert("✅ Requête envoyée"))
-      .catch((err) => {
-        console.error("Erreur :", err);
-        alert("❌ Erreur lors de l'envoi");
-      });
+      .then(() => alert("✅ Envoi réussi !"))
+      .catch(() => alert("❌ Erreur d'envoi"));
     }
   </script>
 </body>
