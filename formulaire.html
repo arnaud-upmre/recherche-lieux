@@ -2,54 +2,57 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Formulaire Point GPS</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire GPS</title>
   <style>
     body {
+      background-color: #f9f9f9;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
       padding: 30px;
-      max-width: 800px;
-      margin: auto;
+      margin: 0;
       color: #222;
+    }
+
+    main {
+      max-width: 750px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 24px;
-    }
-
-    form {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 22px;
+      margin-bottom: 25px;
     }
 
     label {
-      font-weight: bold;
+      font-weight: 600;
       display: block;
       margin-top: 20px;
     }
 
-    input, select, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 10px;
       margin-top: 6px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
       font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
     }
 
     button {
-      margin-top: 25px;
-      padding: 12px 20px;
+      margin-top: 30px;
+      padding: 12px 24px;
       font-size: 16px;
       background-color: #0078D4;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
     }
 
@@ -62,64 +65,56 @@
     }
 
     #status {
-      margin-top: 15px;
+      margin-top: 20px;
       font-style: italic;
+      font-size: 14px;
+    }
+
+    .success {
       color: green;
+    }
+
+    .error {
+      color: red;
     }
   </style>
 </head>
 <body>
 
-  <h2>Soumettre un point GPS ou signaler une correction</h2>
+  <main>
+    <h2>Soumettre un point GPS ou une modification</h2>
 
-  <form id="gpsForm">
-    <label for="type">Type de demande :</label>
-    <select id="type" name="type" required>
-      <option value="">-- Choisissez --</option>
-      <option value="ajout">Ajout d’un point GPS</option>
-      <option value="modification">Correction d’un point existant</option>
-    </select>
+    <form id="gpsForm">
+      <label for="type">Type de demande :</label>
+      <select id="type" name="type" required>
+        <option value="">-- Choisissez --</option>
+        <option value="ajout">Ajout d’un point GPS</option>
+        <option value="modification">Modification d’un point existant</option>
+      </select>
 
-    <label for="nom">Nom du lieu :</label>
-    <input type="text" id="nom" name="nom" required>
+      <label for="nomprenom">Votre nom et prénom :</label>
+      <input type="text" id="nomprenom" name="nomprenom" required>
 
-    <div id="ajout-fields" class="hidden">
-      <label for="latitude">Latitude :</label>
-      <input type="text" id="latitude" name="latitude">
+      <label for="nomposte">Nom du poste :</label>
+      <input type="text" id="nomposte" name="nomposte" required>
 
-      <label for="longitude">Longitude :</label>
-      <input type="text" id="longitude" name="longitude">
+      <div id="ajout-fields" class="hidden">
+        <label for="coordonnees">Coordonnées GPS ou lien :</label>
+        <textarea id="coordonnees" name="coordonnees" rows="2"></textarea>
 
-      <label for="ligne">Nom de la ligne :</label>
-      <input type="text" id="ligne" name="ligne">
+        <label for="autre">Autres informations :</label>
+        <textarea id="autre" name="autre" rows="2"></textarea>
+      </div>
 
-      <label for="numero">Numéro de ligne SNCF :</label>
-      <input type="text" id="numero" name="numero">
+      <div id="modif-fields" class="hidden">
+        <label for="raison">Raison de la modification :</label>
+        <textarea id="raison" name="raison" rows="3"></textarea>
+      </div>
 
-      <label for="pk">PK (Point Kilométrique) :</label>
-      <input type="text" id="pk" name="pk">
-    </div>
-
-    <div id="modif-fields" class="hidden">
-      <label for="modif">Détaillez la ou les corrections souhaitées :</label>
-      <textarea id="modif" name="modif" rows="4"></textarea>
-    </div>
-
-    <label for="description">Description :</label>
-    <textarea id="description" name="description" rows="3"></textarea>
-
-    <label for="contact">Contact (tel ou email) :</label>
-    <input type="text" id="contact" name="contact">
-
-    <label for="portail">Lien portail ou site :</label>
-    <input type="url" id="portail" name="portail">
-
-    <label for="email">Votre e-mail (si besoin de vous recontacter) :</label>
-    <input type="email" id="email" name="email">
-
-    <button type="submit">Envoyer</button>
-    <p id="status"></p>
-  </form>
+      <button type="submit">Envoyer</button>
+      <p id="status"></p>
+    </form>
+  </main>
 
   <script>
     const typeField = document.getElementById("type");
@@ -139,11 +134,11 @@
       }
     });
 
-    // Envoi (à compléter selon ton script Apps Script)
     const form = document.getElementById("gpsForm");
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const status = document.getElementById("status");
+      status.className = "";
       status.textContent = "Envoi en cours...";
 
       const data = Object.fromEntries(new FormData(form).entries());
@@ -154,15 +149,22 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
+
         const result = await response.json();
+
         if (result.success) {
-          status.textContent = "✅ Merci, votre message a bien été transmis.";
+          status.textContent = "✅ Votre demande a été envoyée avec succès.";
+          status.classList.add("success");
           form.reset();
+          ajoutFields.classList.add("hidden");
+          modifFields.classList.add("hidden");
         } else {
-          throw new Error(result.error || "Erreur");
+          throw new Error(result.error || "Erreur inconnue");
         }
       } catch (err) {
+        console.error(err);
         status.textContent = "❌ Une erreur est survenue. Veuillez réessayer.";
+        status.classList.add("error");
       }
     });
   </script>
