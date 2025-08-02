@@ -72,7 +72,7 @@
     }
 
     #counter {
-      margin: 0.8rem 0 0.5rem;
+      margin: 0.8rem 0;
       font-size: 14px;
       color: #555;
     }
@@ -177,6 +177,7 @@
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
+
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <p id="counter">🔢 Recherches : chargement…</p>
@@ -208,17 +209,20 @@
     }
 
     function incrementCounter() {
-      fetch("https://counterapi.dev/api/arnaudrecherchetest", { method: "POST" })
-        .catch(err => console.error("Erreur compteur :", err));
+      fetch("https://counterapi.dev/api/arnaudrecherchetest", { method: "POST" }).catch(() => {});
     }
 
     function displayCounter() {
       fetch("https://counterapi.dev/api/arnaudrecherchetest")
         .then(res => res.json())
         .then(data => {
-          document.getElementById("counter").textContent = "🔢 Recherches : " + data.count;
+          const el = document.getElementById("counter");
+          if (el && data.count !== undefined) el.textContent = "🔢 Recherches : " + data.count;
         })
-        .catch(err => console.error("Erreur affichage compteur :", err));
+        .catch(() => {
+          const el = document.getElementById("counter");
+          if (el) el.textContent = "🔢 Recherches : erreur";
+        });
     }
 
     document.getElementById("search").addEventListener("input", e => {
@@ -231,7 +235,6 @@
       if (!query || !fuse) return;
 
       let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
-
       if (results.length === 0 || query.length <= 3) {
         const fallback = lieux.filter(lieu => normalize(lieu.nom).includes(query));
         const ids = new Set(results.map(l => l.nom));
@@ -288,6 +291,7 @@
     function showLieu(lieu) {
       incrementCounter();
       displayCounter();
+
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
       result.style.display = "block";
@@ -300,7 +304,6 @@
         </div>
         <hr class="separator" />
       `;
-
       const blocs = [];
       if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
       if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
@@ -311,7 +314,6 @@
       if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
       if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
       html += blocs.join('<hr class="separator" />');
-
       html += `
         <hr class="separator" />
         <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
