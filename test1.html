@@ -2,26 +2,97 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Test du compteur</title>
+  <title>Test compteur recherches</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin: 1rem auto;
+      position: relative;
+      background: white;
+    }
+
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 95px); }
+      95% { left: 0; }
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
-  <h1>🔢 Test du compteur</h1>
-  <button onclick="incrementer()">🔁 Incrémenter</button>
+  <h1>🚄 Test compteur de recherches</h1>
+
+  <div id="train-container">
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  </div>
+
+  <input type="text" id="fakeSearch" placeholder="Tapez quelque chose..." />
+  <br>
+  <button onclick="incrementCounter()">Simuler une recherche</button>
+
+  <div id="status">⏳ En attente...</div>
 
   <script>
-    function incrementer() {
-      fetch("https://webhook.site/1b4ba5a9-6be8-44c5-8c69-515498779aac", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          action: "recherche",
-          date: new Date().toISOString()
+    function incrementCounter() {
+      const status = document.getElementById("status");
+      status.textContent = "🔄 Envoi...";
+
+      fetch("https://script.google.com/macros/s/AKfycbwA9on64_dg6bUnFYsPIiYWYMXh5roIzLEKRRnj6KJfRX6YoFuW1x5ZR4MJ2ruibr_8/exec")
+        .then(response => {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.text();
         })
-      })
-      .then(() => alert("✅ Envoi réussi !"))
-      .catch(() => alert("❌ Erreur d'envoi"));
+        .then(text => {
+          status.textContent = "✅ Compteur incrémenté !";
+        })
+        .catch(error => {
+          console.error(error);
+          status.textContent = "❌ Erreur lors de l'envoi";
+        });
     }
   </script>
 </body>
