@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test compteur</title>
+</head>
+<body>
+  <h1>🔢 Test du compteur</h1>
+  <div id="counter">Chargement…</div>
+  <button onclick="incrementCounter()">Incrémenter</button>
+
+  <script>
+    const url = "https://counterapi.dev/api/v2/workspaces/arnaud/arnaudtest";
+
+    async function loadCount() {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        document.getElementById("counter").textContent = "Recherches : " + data.count;
+      } catch (e) {
+        document.getElementById("counter").textContent = "❌ Erreur";
+        console.error(e);
+      }
+    }
+
+    async function incrementCounter() {
+      try {
+        const res = await fetch(url + "/increment");
+        const data = await res.json();
+        document.getElementById("counter").textContent = "Recherches : " + data.count;
+      } catch (e) {
+        document.getElementById("counter").textContent = "❌ Erreur";
+        console.error(e);
+      }
+    }
+
+    loadCount();
+  </script>
+</body>
+</html>
