@@ -13,7 +13,6 @@
       margin: 0;
       color: #222;
     }
-
     main {
       max-width: 750px;
       margin: auto;
@@ -22,19 +21,16 @@
       border-radius: 16px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
-
     h2 {
       text-align: center;
       font-size: 24px;
       margin-bottom: 25px;
     }
-
     label {
       font-weight: 600;
       display: block;
       margin-top: 20px;
     }
-
     input, textarea, select {
       width: 100%;
       padding: 10px;
@@ -44,7 +40,6 @@
       border-radius: 8px;
       box-sizing: border-box;
     }
-
     button {
       margin-top: 30px;
       padding: 12px 24px;
@@ -55,24 +50,19 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #005fa3;
     }
-
     .hidden {
       display: none;
     }
-
     #status {
       margin-top: 20px;
       font-style: italic;
     }
-
     .success {
       color: green;
     }
-
     .error {
       color: red;
     }
@@ -98,11 +88,12 @@
       <input type="text" id="nomposte" name="nomposte" required>
 
       <div id="ajout-fields" class="hidden">
-        <label for="coordonnees">Coordonnées ou lien cartographique :</label>
+        <label for="coordonnees">Coordonnées ou lien GPS :</label>
         <textarea id="coordonnees" name="coordonnees" rows="2"></textarea>
 
         <label for="autre">Informations utiles complémentaires :</label>
-        <textarea id="autre" name="autre" rows="2"></textarea>
+        <textarea id="autre" name="autre" rows="2"
+          placeholder="Accès, contact sur place, code barrière, observations…"></textarea>
       </div>
 
       <div id="modif-fields" class="hidden">
@@ -134,36 +125,34 @@
     });
 
     const form = document.getElementById("gpsForm");
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
       const status = document.getElementById("status");
-      status.className = "";
-      status.textContent = "Envoi en cours...";
+      status.className = '';
+      status.textContent = 'Envoi en cours…';
 
       const data = Object.fromEntries(new FormData(form).entries());
 
       try {
-        const response = await fetch("TON_URL_SCRIPT", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('TON_URL_SCRIPT', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-
         const result = await response.json();
-
         if (result.success) {
-          status.textContent = "✅ Votre contribution a été enregistrée. Merci !";
-          status.classList.add("success");
+          status.textContent = '✅ Votre contribution a été enregistrée. Merci !';
+          status.classList.add('success');
           form.reset();
-          ajoutFields.classList.add("hidden");
-          modifFields.classList.add("hidden");
+          ajoutFields.classList.add('hidden');
+          modifFields.classList.add('hidden');
         } else {
-          throw new Error(result.error || "Erreur inconnue");
+          throw new Error(result.error || 'Erreur inconnue');
         }
       } catch (err) {
         console.error(err);
-        status.textContent = "❌ Erreur lors de l’envoi. Veuillez réessayer.";
-        status.classList.add("error");
+        status.textContent = '❌ Erreur lors de l’envoi. Veuillez réessayer.';
+        status.classList.add('error');
       }
     });
   </script>
