@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulaire GPS</title>
+  <title>🗺️ Formulaire de contribution à la carte GPS</title>
   <style>
     body {
       background-color: #f9f9f9;
@@ -25,7 +25,7 @@
 
     h2 {
       text-align: center;
-      font-size: 22px;
+      font-size: 24px;
       margin-bottom: 25px;
     }
 
@@ -67,7 +67,6 @@
     #status {
       margin-top: 20px;
       font-style: italic;
-      font-size: 14px;
     }
 
     .success {
@@ -82,7 +81,7 @@
 <body>
 
   <main>
-    <h2>Soumettre un point GPS ou une modification</h2>
+    <h2>🗺️ Formulaire de contribution à la carte GPS</h2>
 
     <form id="gpsForm">
       <label for="type">Type de demande :</label>
@@ -92,26 +91,26 @@
         <option value="modification">Modification d’un point existant</option>
       </select>
 
-      <label for="nomprenom">Votre nom et prénom :</label>
-      <input type="text" id="nomprenom" name="nomprenom" required>
+      <label for="demandeur">Demandeur :</label>
+      <input type="text" id="demandeur" name="demandeur" required>
 
-      <label for="nomposte">Nom du poste :</label>
+      <label for="nomposte">Poste concerné :</label>
       <input type="text" id="nomposte" name="nomposte" required>
 
       <div id="ajout-fields" class="hidden">
-        <label for="coordonnees">Coordonnées GPS ou lien :</label>
+        <label for="coordonnees">Coordonnées ou lien cartographique :</label>
         <textarea id="coordonnees" name="coordonnees" rows="2"></textarea>
 
-        <label for="autre">Autres informations :</label>
+        <label for="autre">Informations utiles complémentaires :</label>
         <textarea id="autre" name="autre" rows="2"></textarea>
       </div>
 
       <div id="modif-fields" class="hidden">
-        <label for="raison">Raison de la modification :</label>
+        <label for="raison">Modifications à apporter :</label>
         <textarea id="raison" name="raison" rows="3"></textarea>
       </div>
 
-      <button type="submit">Envoyer</button>
+      <button type="submit">Envoyer la demande</button>
       <p id="status"></p>
     </form>
   </main>
@@ -153,7 +152,7 @@
         const result = await response.json();
 
         if (result.success) {
-          status.textContent = "✅ Votre demande a été envoyée avec succès.";
+          status.textContent = "✅ Votre contribution a été enregistrée. Merci !";
           status.classList.add("success");
           form.reset();
           ajoutFields.classList.add("hidden");
@@ -163,7 +162,7 @@
         }
       } catch (err) {
         console.error(err);
-        status.textContent = "❌ Une erreur est survenue. Veuillez réessayer.";
+        status.textContent = "❌ Erreur lors de l’envoi. Veuillez réessayer.";
         status.classList.add("error");
       }
     });
