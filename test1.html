@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Test Compteur</title>
+  <title>Test Webhook</title>
 </head>
 <body>
   <h1>Test du compteur</h1>
@@ -13,10 +13,13 @@
       fetch("https://webhook.site/1b4ba5a9-6be8-44c5-8c69-515498779aac", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "recherche", date: new Date().toISOString() })
+        body: JSON.stringify({ message: "recherche", date: new Date().toISOString() })
       })
       .then(() => alert("✅ Requête envoyée"))
-      .catch(() => alert("❌ Erreur lors de l'envoi"));
+      .catch((err) => {
+        console.error("Erreur :", err);
+        alert("❌ Erreur lors de l'envoi");
+      });
     }
   </script>
 </body>
