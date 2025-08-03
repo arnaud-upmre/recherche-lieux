@@ -285,7 +285,7 @@ document.getElementById("searchAppareil").addEventListener("input", e => {
   }
   results.forEach(app => {
     const li = document.createElement("li");
-    li.textContent = app.appareil;
+    li.textContent = `${app.appareil} (${app.poste})`;
     li.onclick = () => showAppareil(app);
     suggestionsEl.appendChild(li);
   });
@@ -297,7 +297,7 @@ function showAppareil(app) {
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
 
-  let html = `<h2>🔌 ${app.appareil}</h2>`;
+  let html = `<h2>🔌 ${app.appareil} (${app.poste})</h2>`;
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
@@ -317,6 +317,6 @@ setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
 </script>
 
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V1</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V001a</p>
 </body>
 </html>
