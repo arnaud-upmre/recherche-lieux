@@ -160,15 +160,15 @@
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
-  <h1>🔍 Rechercher un lieu</h1>
-  <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <h1>🚘 Itinéraire et infos</h1>
+  <input type="text" id="search" placeholder="🔎 Entrer un poste pour trajet et détails" autocomplete="off" />
   <div id="counter">📍 Postes consultés : chargement…</div>
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
-  <h1 style="margin-top: 1.5rem;">🔌 Rechercher un appareil</h1>
+  <h1 style="margin-top: 1.5rem;">⚡️ Rechercher un appareil</h1>
   <input type="text" id="searchAppareil" placeholder="Ex : I 900, TT 7105…" autocomplete="off" />
-  <div id="counterAppareil">📟 Appareils consultés : chargement…</div>
+  <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
   <ul id="suggestionsAppareils"></ul>
 
   <script>
@@ -228,7 +228,7 @@
       fetch(compteurAppareilURL)
         .then(res => res.json())
         .then(data => {
-          document.getElementById("counterAppareil").textContent = `📟 Appareils consultés : ${data.count}`;
+          document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
         });
     }
 
@@ -320,6 +320,6 @@
     setInterval(updateCounterAppareil, 3000);
   </script>
 
-  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V01</p>
+  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V02</p>
 </body>
 </html>
