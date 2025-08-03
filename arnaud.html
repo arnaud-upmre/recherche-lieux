@@ -135,8 +135,8 @@
     async function fetchCounts() {
       try {
         const [lieuxRes, appareilsRes] = await Promise.all([
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json'),
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils_test.json')
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
         ]);
 
         const lieux = await lieuxRes.json();
