@@ -67,6 +67,16 @@
     .btn:hover {
       background-color: #0040a8;
     }
+
+    /* Animation fade-in pour le paragraphe */
+    .fade-in {
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
@@ -94,17 +104,16 @@
     <li>🔍 recherche intelligente,</li>
     <li>🚘 intégration avec les applications de navigation,</li>
     <li>📌 informations utiles,</li>
-    <li>📝 formulaire de contribution,</li>
-    <li>… et bien d’autres à venir.</li>
+    <li>📝 formulaire de contribution...</li>
   </ul>
 
   <div class="divider"></div>
 
   <h2>Mais pourquoi ?</h2>
 
-  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil dans l’urgence.</p>
+  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil 🙃</p>
 
-  <p>Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
+  <p id="stats" class="fade-in">Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
 
   <p>🕒 👉 <strong>Plus de 60 heures de recherche et développement</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
 
@@ -120,5 +129,32 @@
   <p>Ferroviairement,<br><strong>Arnaud</strong></p>
 
   <a href="index.html" class="btn">🔍 Faire une recherche</a>
+
+  <script>
+    async function fetchCounts() {
+      try {
+        const [lieuxRes, appareilsRes] = await Promise.all([
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json'),
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils_test.json')
+        ]);
+
+        const lieux = await lieuxRes.json();
+        const appareils = await appareilsRes.json();
+
+        const nbLieux = lieux.length;
+        const nbAppareils = appareils.length;
+
+        const stats = document.getElementById('stats');
+        stats.textContent =
+          `À ce jour, ${nbLieux} points d’accès routier et ${nbAppareils} appareils sont référencés.`;
+        stats.classList.add('visible');
+
+      } catch (error) {
+        console.error("Erreur chargement JSON :", error);
+      }
+    }
+
+    fetchCounts();
+  </script>
 </body>
 </html>
