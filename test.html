@@ -134,6 +134,7 @@
     #result p {
       margin-top: 1rem;
       color: #555;
+      white-space: pre-line;
     }
     #result p strong {
       color: #333;
@@ -157,7 +158,7 @@
 </head>
 <body>
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+    <img id="train" src="carto3f9b7d1a5c8e4f2b/train.gif" alt="Train animé" />
   </div>
 
   <h1>🚘 Itinéraire et infos</h1>
@@ -171,162 +172,153 @@
   <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
   <ul id="suggestionsAppareils"></ul>
 
-  <script>
-    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
-    const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
-    const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
-    const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+<script>
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-    let lieux = [], fuse;
-    let appareils = [], fuseAppareils;
+let lieux = [], fuse;
+let appareils = [], fuseAppareils;
 
-    function normalize(str) {
-      return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
-    }
+function normalize(str) {
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+}
 
-    function loadData() {
-      fetch(jsonUrl)
-        .then(res => res.json())
-        .then(data => {
-          lieux = data;
-          fuse = new Fuse(lieux, {
-            keys: ['nom'],
-            includeScore: true,
-            threshold: 0.4,
-            ignoreLocation: true
-          });
-        });
-    }
+// Charge les lieux
+fetch(jsonUrl).then(res => res.json()).then(data => {
+  lieux = data;
+  fuse = new Fuse(lieux, {
+    keys: ['nom'], includeScore: true, threshold: 0.4, ignoreLocation: true
+  });
+});
 
-    function loadAppareils() {
-      fetch(appareilsUrl)
-        .then(res => res.json())
-        .then(data => {
-          appareils = data;
-          fuseAppareils = new Fuse(appareils, {
-            keys: ['nom'],
-            includeScore: true,
-            threshold: 0.3,
-            ignoreLocation: true
-          });
-        });
-    }
+// Charge les appareils
+fetch(appareilsUrl).then(res => res.json()).then(data => {
+  appareils = data;
+  fuseAppareils = new Fuse(appareils, {
+    keys: ['nom'], includeScore: true, threshold: 0.3, ignoreLocation: true
+  });
+});
 
-    function updateCounter() {
-      fetch(compteurURL)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
-        });
-    }
+function updateCounter() {
+  fetch(compteurURL).then(res => res.json()).then(data => {
+    document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
+  });
+}
 
-    function incrementCounter() {
-      fetch(compteurURL + "?increment=true").then(updateCounter);
-    }
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").then(updateCounter);
+}
 
-    function updateCounterAppareil() {
-      fetch(compteurAppareilURL)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
-        });
-    }
+function updateCounterAppareil() {
+  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
+    document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
+  });
+}
 
-    function incrementCounterAppareil() {
-      fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
-    }
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
+}
 
-    // RECHERCHE APPAREILS
-    document.getElementById("searchAppareil").addEventListener("input", e => {
-      const query = normalize(e.target.value.trim());
-      const suggestionsEl = document.getElementById("suggestionsAppareils");
-      const resultEl = document.getElementById("result");
-      suggestionsEl.innerHTML = "";
-      resultEl.innerHTML = "";
-      resultEl.style.display = "none";
-      if (!query || !fuseAppareils) return;
-      let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
-      if (results.length === 0 || query.length <= 3) {
-        const fallback = appareils.filter(a => normalize(a.nom).includes(query));
-        const ids = new Set(results.map(a => a.nom));
-        fallback.forEach(a => { if (!ids.has(a.nom)) results.push(a); });
-      }
-      results.forEach(app => {
-        const li = document.createElement("li");
-        li.textContent = app.nom;
-        li.onclick = () => showAppareil(app);
-        suggestionsEl.appendChild(li);
-      });
-    });
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+  if (!query || !fuse) return;
+  let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+  if (results.length === 0 || query.length <= 3) {
+    const fallback = lieux.filter(l => normalize(l.nom).includes(query));
+    const ids = new Set(results.map(l => l.nom));
+    fallback.forEach(l => { if (!ids.has(l.nom)) results.push(l); });
+  }
+  results.forEach(lieu => {
+    const li = document.createElement("li");
+    li.textContent = lieu.nom;
+    li.onclick = () => showLieu(lieu);
+    suggestionsEl.appendChild(li);
+  });
+});
 
-    function showAppareil(app) {
-      incrementCounterAppareil();
-      const result = document.getElementById("result");
-      result.style.display = "block";
-      document.getElementById("suggestionsAppareils").innerHTML = "";
-      let html = `<h2>🔌 ${app.nom}</h2>`;
-      const blocs = [];
-      if (app.description) blocs.push(`<p>${app.description}</p>`);
-      blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-      html += blocs.join('<hr class="separator" />');
-      result.innerHTML = html;
-    }
+function showLieu(lieu) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+  incrementCounter();
+  let html = `<h2>📌 ${lieu.nom}</h2>
+  <div class="inline-links">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+  </div><hr class="separator" />`;
 
-    // RECHERCHE LIEUX
-    document.getElementById("search").addEventListener("input", e => {
-      const query = normalize(e.target.value.trim());
-      const suggestionsEl = document.getElementById("suggestions");
-      const resultEl = document.getElementById("result");
-      suggestionsEl.innerHTML = "";
-      resultEl.innerHTML = "";
-      resultEl.style.display = "none";
-      if (!query || !fuse) return;
-      let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
-      if (results.length === 0 || query.length <= 3) {
-        const fallback = lieux.filter(l => normalize(l.nom).includes(query));
-        const ids = new Set(results.map(l => l.nom));
-        fallback.forEach(l => { if (!ids.has(l.nom)) results.push(l); });
-      }
-      results.forEach(lieu => {
-        const li = document.createElement("li");
-        li.textContent = lieu.nom;
-        li.onclick = () => showLieu(lieu);
-        suggestionsEl.appendChild(li);
-      });
-    });
+  const blocs = [];
+  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+  if (lieu.pk && lieu.numero_ligne && lieu.lignes)
+    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+  if (lieu.rss === "A") {
+    blocs.push(`<p>📞 RSS Table 1 :\n\n03 28 55 82 56\n03 28 55 82 57</p>`);
+  } else if (lieu.rss) {
+    blocs.push(`<p><strong>📞 RSS :</strong> ${lieu.rss}</p>`);
+  }
+  if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
+  if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
 
-    function showLieu(lieu) {
-      const result = document.getElementById("result");
-      document.getElementById("suggestions").innerHTML = "";
-      result.style.display = "block";
-      incrementCounter();
-      let html = `<h2>📌 ${lieu.nom}</h2>
-      <div class="inline-links">
-        <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-        <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-        <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-      </div><hr class="separator" />`;
-      const blocs = [];
-      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
-      if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-        blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-      if (lieu.rss) blocs.push(`<p><strong>📞 RSS :</strong> ${lieu.rss}</p>`);
-      if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
-      if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
-      html += blocs.join('<hr class="separator" />');
-      html += `<hr class="separator" />
-      <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank">ICI</a></p>`;
-      result.innerHTML = html;
-    }
+  html += blocs.join('<hr class="separator" />');
+  result.innerHTML = html;
+}
 
-    loadData();
-    loadAppareils();
-    updateCounter();
-    updateCounterAppareil();
-    setInterval(updateCounter, 3000);
-    setInterval(updateCounterAppareil, 3000);
-  </script>
+document.getElementById("searchAppareil").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestionsAppareils");
+  const resultEl = document.getElementById("result");
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+  if (!query || !fuseAppareils) return;
+  let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
+  if (results.length === 0 || query.length <= 3) {
+    const fallback = appareils.filter(a => normalize(a.nom).includes(query));
+    const ids = new Set(results.map(a => a.nom));
+    fallback.forEach(a => { if (!ids.has(a.nom)) results.push(a); });
+  }
+  results.forEach(app => {
+    const li = document.createElement("li");
+    li.textContent = app.nom;
+    li.onclick = () => showAppareil(app);
+    suggestionsEl.appendChild(li);
+  });
+});
 
-  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V06</p>
+function showAppareil(app) {
+  incrementCounterAppareil();
+  const result = document.getElementById("result");
+  result.style.display = "block";
+  document.getElementById("suggestionsAppareils").innerHTML = "";
+
+  let html = `<h2>🔌 ${app.nom}</h2>`;
+  const blocs = [];
+  if (app.description) blocs.push(`<p>${app.description}</p>`);
+  blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
+
+  const posteTrouvé = lieux.find(l => l.nom === app.poste);
+  if (posteTrouvé) {
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => l.nom === '${app.poste}'))">ICI</a></p>`);
+  }
+
+  html += blocs.join('<hr class="separator" />');
+  result.innerHTML = html;
+}
+
+updateCounter();
+updateCounterAppareil();
+setInterval(updateCounter, 3000);
+setInterval(updateCounterAppareil, 3000);
+</script>
+
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V07b</p>
 </body>
 </html>
