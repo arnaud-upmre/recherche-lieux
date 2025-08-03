@@ -192,6 +192,8 @@ function formatRSS(table) {
     "C": ["03 28 55 82 53", "03 28 55 82 54"]
   };
 
+  const tableNum = { "A": "1", "B": "2", "C": "3" };
+
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
 
   const nums = tables[table].map(num =>
@@ -199,7 +201,7 @@ function formatRSS(table) {
   ).join("");
 
   return `
-    <p><strong>📞 RSS Table ${table} :</strong></p>
+    <p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p>
     <div class="inline-links">${nums}</div>
   `;
 }
@@ -332,6 +334,6 @@ setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
 </script>
 
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V1</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V01a</p>
 </body>
 </html>
