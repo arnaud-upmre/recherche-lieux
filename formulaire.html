@@ -97,7 +97,7 @@
     <div class="message" id="message"></div>
   </form>
 
-  <div class="version">Version v01</div>
+  <div class="version">Version v02</div>
 
   <script>
     const typeSelect = document.getElementById("type");
@@ -116,27 +116,42 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
+      const button = form.querySelector("button[type='submit']");
+      const message = document.getElementById("message");
+
+      // Affiche "envoi en cours…" et désactive le bouton
+      message.textContent = "⏳ Envoi en cours…";
+      button.disabled = true;
+      button.style.transition = "opacity 0.6s";
+      button.style.opacity = "0.4";
+
       fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
         method: "POST",
         body: data
       })
       .then(res => res.text())
-      .then(() => {
-        const message = document.getElementById("message");
-        message.textContent = "✅ Votre demande a bien été envoyée. Elle sera traitée sous 48h maximum (jours ouvrés).";
-        form.reset();
-        ajoutFields.classList.add("hidden");
-        modifFields.classList.add("hidden");
+      .then(text => {
+        if (text.trim().toUpperCase() === "OK") {
+          message.textContent = "✅ Votre demande a bien été envoyée. Elle sera traitée sous 48h maximum (jours ouvrés).";
+          form.reset();
+          ajoutFields.classList.add("hidden");
+          modifFields.classList.add("hidden");
+        } else {
+          message.textContent = "❌ Une erreur inattendue s’est produite. Veuillez réessayer.";
+        }
         setTimeout(() => {
           message.textContent = "";
-        }, 4000);
+          button.disabled = false;
+          button.style.opacity = "1";
+        }, 5000);
       })
       .catch(() => {
-        const message = document.getElementById("message");
-        message.textContent = "❌ Une erreur s’est produite. Réessayez plus tard.";
+        message.textContent = "❌ Une erreur s’est produite. Vérifiez votre connexion ou réessayez plus tard.";
         setTimeout(() => {
           message.textContent = "";
-        }, 4000);
+          button.disabled = false;
+          button.style.opacity = "1";
+        }, 5000);
       });
     });
   </script>
