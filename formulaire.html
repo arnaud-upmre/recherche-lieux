@@ -14,15 +14,34 @@
       max-width: 600px;
       margin: auto;
     }
-    h1 { text-align: center; }
-    label { font-weight: bold; display: block; margin-top: 1rem; }
+    h1 {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1rem;
+    }
     input, select, textarea, button {
-      width: 100%; padding: 0.5rem; margin-top: 0.3rem;
-      border: 1px solid #ccc; border-radius: 5px;
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
       box-sizing: border-box;
     }
-    .hidden { display: none; }
-    .message { margin-top: 1rem; color: green; font-weight: bold; text-align: center; }
+    .hidden {
+      display: none;
+    }
+    .message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      transition: opacity 0.4s;
+    }
     button {
       margin-top: 1.5rem;
       background-color: #1a73e8;
@@ -32,6 +51,12 @@
     }
     button:hover {
       background-color: #155ab6;
+    }
+    .version {
+      margin-top: 3rem;
+      text-align: center;
+      color: #aaa;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -72,6 +97,8 @@
     <div class="message" id="message"></div>
   </form>
 
+  <div class="version">Version v01</div>
+
   <script>
     const typeSelect = document.getElementById("type");
     const ajoutFields = document.getElementById("ajoutFields");
@@ -95,13 +122,21 @@
       })
       .then(res => res.text())
       .then(() => {
-        document.getElementById("message").textContent = "✅ Merci, votre demande a été envoyée.";
+        const message = document.getElementById("message");
+        message.textContent = "✅ Votre demande a bien été envoyée. Elle sera traitée sous 48h maximum (jours ouvrés).";
         form.reset();
         ajoutFields.classList.add("hidden");
         modifFields.classList.add("hidden");
+        setTimeout(() => {
+          message.textContent = "";
+        }, 4000);
       })
       .catch(() => {
-        document.getElementById("message").textContent = "❌ Une erreur s’est produite. Réessayez plus tard.";
+        const message = document.getElementById("message");
+        message.textContent = "❌ Une erreur s’est produite. Réessayez plus tard.";
+        setTimeout(() => {
+          message.textContent = "";
+        }, 4000);
       });
     });
   </script>
