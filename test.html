@@ -71,14 +71,15 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    #counter, #counterAppareils {
+    #counter {
       font-size: 13px;
       color: #666;
       margin-top: 6px;
       margin-bottom: 1rem;
     }
 
-    ul#suggestions, ul#suggestionsAppareils {
+    ul#suggestions,
+    ul#suggestionsAppareils {
       list-style: none;
       padding: 0;
       margin: 0.5rem 0 1.5rem 0;
@@ -116,7 +117,6 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
-      margin-bottom: 2rem;
     }
 
     #result h2 {
@@ -165,12 +165,6 @@
       margin: 1rem 0;
     }
 
-    footer {
-      font-size: 11px;
-      margin-top: 2rem;
-      color: #bbb;
-    }
-
     @media (max-width: 480px) {
       body { padding: 0.8rem; }
       h1 { font-size: 18px; padding: 0 0.5rem; }
@@ -185,111 +179,142 @@
 </head>
 <body>
   <div id="train-container">
-    <img id="train" src="carto3f9b7d1a5c8e4f2b/train.gif" alt="Train animé" />
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
-
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <div id="counter">📍 Postes consultés : chargement…</div>
   <ul id="suggestions"></ul>
-
   <div id="result"></div>
-
-  <h1>🔌 Rechercher un appareil</h1>
+  <h1 style="margin-top: 1.5rem;">🔌 Rechercher un appareil</h1>
   <input type="text" id="searchAppareil" placeholder="Ex : I 900, TT 7105…" autocomplete="off" />
-  <div id="counterAppareils">🔌 Appareils consultés : chargement…</div>
   <ul id="suggestionsAppareils"></ul>
-
-  <footer>2025-08-V1</footer>
 
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils_test.json";
     const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 
-    let lieux = [], appareils = [], fuse, fuseAppareils;
+    let lieux = [];
+    let fuse;
+    let appareils = [];
+    let fuseAppareils;
 
     function normalize(str) {
       return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    }
+
+    function loadData() {
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          lieux = data;
+          fuse = new Fuse(lieux, {
+            keys: ['nom'],
+            includeScore: true,
+            threshold: 0.4,
+            ignoreLocation: true
+          });
+        });
+    }
+
+    function loadAppareils() {
+      fetch(appareilsUrl)
+        .then(res => res.json())
+        .then(data => {
+          appareils = data;
+          fuseAppareils = new Fuse(appareils, {
+            keys: ['nom'],
+            includeScore: true,
+            threshold: 0.3,
+            ignoreLocation: true
+          });
+        });
     }
 
     function updateCounter() {
       fetch(compteurURL)
         .then(res => res.json())
         .then(data => {
-          document.getElementById("counter").textContent = `📍 Postes consultés : ${data.postes}`;
-          document.getElementById("counterAppareils").textContent = `🔌 Appareils consultés : ${data.appareils}`;
+          document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
         });
     }
 
     function incrementCounter() {
-      fetch(compteurURL + "?increment=postes").then(updateCounter);
-    }
-
-    function incrementCounterAppareils() {
-      fetch(compteurURL + "?increment=appareils").then(updateCounter);
-    }
-
-    function showLieu(lieu) {
-      incrementCounter();
-      const r = document.getElementById("result");
-      r.style.display = "block";
-      let html = `<h2>📌 ${lieu.nom}</h2>`;
-      html += `<div class="inline-links">
-        <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-        <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-        <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-      </div>`;
-      if (lieu.description) html += `<hr class="separator" /><p>${lieu.description}</p>`;
-      if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-        html += `<hr class="separator" /><p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`;
-      r.innerHTML = html;
+      fetch(compteurURL + "?increment=true").then(updateCounter);
     }
 
     document.getElementById("search").addEventListener("input", e => {
-      const q = normalize(e.target.value.trim());
-      const s = document.getElementById("suggestions");
-      const r = document.getElementById("result");
-      s.innerHTML = ""; r.innerHTML = ""; r.style.display = "none";
-      if (!q || !fuse) return;
-      const res = fuse.search(q).map(r => r.item);
-      res.forEach(lieu => {
+      const query = normalize(e.target.value.trim());
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+      if (!query || !fuse) return;
+      let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+      if (results.length === 0 || query.length <= 3) {
+        const fallback = lieux.filter(l => normalize(l.nom).includes(query));
+        const ids = new Set(results.map(l => l.nom));
+        fallback.forEach(l => { if (!ids.has(l.nom)) results.push(l); });
+      }
+      results.forEach(lieu => {
         const li = document.createElement("li");
         li.textContent = lieu.nom;
         li.onclick = () => showLieu(lieu);
-        s.appendChild(li);
+        suggestionsEl.appendChild(li);
       });
     });
 
     document.getElementById("searchAppareil").addEventListener("input", e => {
-      const q = normalize(e.target.value.trim());
-      const s = document.getElementById("suggestionsAppareils");
-      s.innerHTML = "";
-      if (!q || !fuseAppareils) return;
-      const res = fuseAppareils.search(q).map(r => r.item);
-      res.forEach(app => {
+      const query = normalize(e.target.value.trim());
+      const suggestionsEl = document.getElementById("suggestionsAppareils");
+      suggestionsEl.innerHTML = "";
+      if (!query || !fuseAppareils) return;
+      let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
+      if (results.length === 0 || query.length <= 3) {
+        const fallback = appareils.filter(a => normalize(a.nom).includes(query));
+        const ids = new Set(results.map(a => a.nom));
+        fallback.forEach(a => { if (!ids.has(a.nom)) results.push(a); });
+      }
+      results.forEach(app => {
         const li = document.createElement("li");
         li.textContent = `${app.nom} (${app.poste})`;
-        li.onclick = () => {
-          incrementCounterAppareils();
-          window.open(`https://www.google.com/maps?q=${app.latitude},${app.longitude}`, "_blank");
-        };
-        s.appendChild(li);
+        li.onclick = () => window.open(`https://www.google.com/maps?q=${app.latitude},${app.longitude}`, "_blank");
+        suggestionsEl.appendChild(li);
       });
     });
 
-    fetch(jsonUrl).then(r => r.json()).then(data => {
-      lieux = data;
-      fuse = new Fuse(lieux, { keys: ['nom'], threshold: 0.4 });
-    });
+    function showLieu(lieu) {
+      const result = document.getElementById("result");
+      document.getElementById("suggestions").innerHTML = "";
+      result.style.display = "block";
+      incrementCounter();
+      let html = `<h2>📌 ${lieu.nom}</h2>
+      <div class="inline-links">
+        <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+        <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+        <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+      </div><hr class="separator" />`;
+      const blocs = [];
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+      if (lieu.pk && lieu.numero_ligne && lieu.lignes)
+        blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+      if (lieu.rss) blocs.push(`<p><strong>📞 RSS :</strong> ${lieu.rss}</p>`);
+      if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
+      if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
+      html += blocs.join('<hr class="separator" />');
+      html += `<hr class="separator" />
+      <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank">ICI</a></p>`;
+      result.innerHTML = html;
+    }
 
-    fetch(appareilsUrl).then(r => r.json()).then(data => {
-      appareils = data;
-      fuseAppareils = new Fuse(appareils, { keys: ['nom'], threshold: 0.4 });
-    });
-
+    loadData();
+    loadAppareils();
     updateCounter();
     setInterval(updateCounter, 3000);
   </script>
+
+  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V01</p>
 </body>
 </html>
