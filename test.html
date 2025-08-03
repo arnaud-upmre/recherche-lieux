@@ -168,7 +168,7 @@
   <div id="result"></div>
 
   <h1 style="margin-top: 1.5rem;">⚡️ Rechercher un appareil</h1>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629, Guérite..." autocomplete="off" />
+  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629..." autocomplete="off" />
   <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
   <ul id="suggestionsAppareils"></ul>
 
@@ -185,7 +185,6 @@ function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
 
-// Charge les lieux
 fetch(jsonUrl).then(res => res.json()).then(data => {
   lieux = data;
   fuse = new Fuse(lieux, {
@@ -193,11 +192,10 @@ fetch(jsonUrl).then(res => res.json()).then(data => {
   });
 });
 
-// Charge les appareils
 fetch(appareilsUrl).then(res => res.json()).then(data => {
   appareils = data;
   fuseAppareils = new Fuse(appareils, {
-    keys: ['nom'], includeScore: true, threshold: 0.3, ignoreLocation: true
+    keys: ['appareil'], includeScore: true, threshold: 0.3, ignoreLocation: true
   });
 });
 
@@ -281,13 +279,13 @@ document.getElementById("searchAppareil").addEventListener("input", e => {
   if (!query || !fuseAppareils) return;
   let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
   if (results.length === 0 || query.length <= 3) {
-    const fallback = appareils.filter(a => normalize(a.nom).includes(query));
-    const ids = new Set(results.map(a => a.nom));
-    fallback.forEach(a => { if (!ids.has(a.nom)) results.push(a); });
+    const fallback = appareils.filter(a => normalize(a.appareil).includes(query));
+    const ids = new Set(results.map(a => a.appareil));
+    fallback.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
   }
   results.forEach(app => {
     const li = document.createElement("li");
-    li.textContent = app.nom;
+    li.textContent = app.appareil;
     li.onclick = () => showAppareil(app);
     suggestionsEl.appendChild(li);
   });
@@ -299,7 +297,7 @@ function showAppareil(app) {
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
 
-  let html = `<h2>🔌 ${app.nom}</h2>`;
+  let html = `<h2>🔌 ${app.appareil}</h2>`;
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
@@ -319,6 +317,6 @@ setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
 </script>
 
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V07c</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V1</p>
 </body>
 </html>
