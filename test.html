@@ -197,11 +197,10 @@
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils_test.json";
     const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+    const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-    let lieux = [];
-    let fuse;
-    let appareils = [];
-    let fuseAppareils;
+    let lieux = [], fuse;
+    let appareils = [], fuseAppareils;
 
     function normalize(str) {
       return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -248,7 +247,7 @@
     }
 
     function updateCounterAppareil() {
-      fetch(compteurURL + "?cell=B1")
+      fetch(compteurAppareilURL)
         .then(res => res.json())
         .then(data => {
           document.getElementById("counterAppareil").textContent = `📟 Appareils consultés : ${data.count}`;
@@ -256,7 +255,7 @@
     }
 
     function incrementCounterAppareil() {
-      fetch(compteurURL + "?increment=true&cell=B1").then(updateCounterAppareil);
+      fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
     }
 
     document.getElementById("search").addEventListener("input", e => {
@@ -335,6 +334,6 @@
     setInterval(updateCounterAppareil, 3000);
   </script>
 
-  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V02</p>
+  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V03</p>
 </body>
 </html>
