@@ -194,9 +194,9 @@ fetch(jsonUrl).then(res => res.json()).then(data => {
 
 fetch(appareilsUrl).then(res => res.json()).then(data => {
   appareils = data;
-  fuseAppareils = new Fuse(appareils, {
-    keys: ['appareil'], includeScore: true, threshold: 0.3, ignoreLocation: true
-  });
+fuseAppareils = new Fuse(appareils, {
+  keys: ['appareil', 'poste'], includeScore: true, threshold: 0.3, ignoreLocation: true
+});
 });
 
 function updateCounter() {
@@ -323,6 +323,6 @@ setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
 </script>
 
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V01c</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V01d</p>
 </body>
 </html>
