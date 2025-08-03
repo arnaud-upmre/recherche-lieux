@@ -180,13 +180,9 @@
     let lieux = [], fuse;
     let appareils = [], fuseAppareils;
 
-   function normalize(str) {
-  return str
-    .normalize("NFD")                // enlève les accents
-    .replace(/[̀-ͯ]/g, "")           // encore accents
-    .replace(/[^a-z0-9]/gi, "")     // enlève tout sauf lettres/chiffres
-    .toLowerCase();                 // met en minuscules
-}
+    function normalize(str) {
+      return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+    }
 
     function loadData() {
       fetch(jsonUrl)
@@ -240,10 +236,14 @@
       fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
     }
 
+    // RECHERCHE APPAREILS
     document.getElementById("searchAppareil").addEventListener("input", e => {
       const query = normalize(e.target.value.trim());
       const suggestionsEl = document.getElementById("suggestionsAppareils");
+      const resultEl = document.getElementById("result");
       suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
       if (!query || !fuseAppareils) return;
       let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
       if (results.length === 0 || query.length <= 3) {
@@ -253,23 +253,26 @@
       }
       results.forEach(app => {
         const li = document.createElement("li");
-        let nomCourt = app.nom;
-        let nomLong = app.nom;
-        if (app.nom.includes("/")) {
-          const segments = app.nom.split("/").map(s => s.trim());
-          nomCourt = segments[segments.length - 1];
-          nomLong = segments.slice(0, segments.length - 1).join(" / ");
-        }
-        li.textContent = `${nomCourt} (${nomLong})`;
-        li.onclick = () => {
-          incrementCounterAppareil();
-          window.open(`https://www.google.com/maps?q=${app.latitude},${app.longitude}`, "_blank");
-        };
+        li.textContent = app.nom;
+        li.onclick = () => showAppareil(app);
         suggestionsEl.appendChild(li);
       });
     });
 
-    // Lieux (inchangé)
+    function showAppareil(app) {
+      incrementCounterAppareil();
+      const result = document.getElementById("result");
+      result.style.display = "block";
+      document.getElementById("suggestionsAppareils").innerHTML = "";
+      let html = `<h2>🔌 ${app.nom}</h2>`;
+      const blocs = [];
+      if (app.description) blocs.push(`<p>${app.description}</p>`);
+      blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
+      html += blocs.join('<hr class="separator" />');
+      result.innerHTML = html;
+    }
+
+    // RECHERCHE LIEUX
     document.getElementById("search").addEventListener("input", e => {
       const query = normalize(e.target.value.trim());
       const suggestionsEl = document.getElementById("suggestions");
@@ -324,6 +327,6 @@
     setInterval(updateCounterAppareil, 3000);
   </script>
 
-  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V05</p>
+  <p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : 2025-08-V06</p>
 </body>
 </html>
