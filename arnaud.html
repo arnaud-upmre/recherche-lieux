@@ -68,7 +68,7 @@
       background-color: #0040a8;
     }
 
-    /* Animation fade-in pour le paragraphe */
+    /* Animation fade-in */
     .fade-in {
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
@@ -104,14 +104,15 @@
     <li>🔍 recherche intelligente,</li>
     <li>🚘 intégration avec les applications de navigation,</li>
     <li>📌 informations utiles,</li>
-    <li>📝 formulaire de contribution...</li>
+    <li>📝 formulaire de contribution,</li>
+    <li>… et bien d’autres à venir.</li>
   </ul>
 
   <div class="divider"></div>
 
   <h2>Mais pourquoi ?</h2>
 
-  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil 🙃</p>
+  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil dans l’urgence.</p>
 
   <p id="stats" class="fade-in">Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
 
@@ -147,7 +148,11 @@
         const stats = document.getElementById('stats');
         stats.textContent =
           `À ce jour, ${nbLieux} points d’accès routier et ${nbAppareils} appareils sont référencés.`;
-        stats.classList.add('visible');
+
+        // Animation fade-in déclenchée après un petit délai
+        setTimeout(() => {
+          stats.classList.add('visible');
+        }, 50);
 
       } catch (error) {
         console.error("Erreur chargement JSON :", error);
