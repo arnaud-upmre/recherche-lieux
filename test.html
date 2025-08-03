@@ -183,10 +183,12 @@
   <div id="counter">📍 Postes consultés : chargement…</div>
   <ul id="suggestions"></ul>
   <div id="result"></div>
+
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     const appareilsUrl = "appareils_test.json";
     const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+
     let lieux = [], appareils = [], fuse;
 
     function normalize(str) {
@@ -194,28 +196,22 @@
     }
 
     function loadData() {
-      fetch(jsonUrl)
-        .then(res => res.json())
-        .then(data => {
-          lieux = data;
-          fuse = new Fuse(lieux, {
-            keys: ['nom'],
-            includeScore: true,
-            threshold: 0.4,
-            ignoreLocation: true
-          });
+      fetch(jsonUrl).then(res => res.json()).then(data => {
+        lieux = data;
+        fuse = new Fuse(lieux, {
+          keys: ['nom'],
+          includeScore: true,
+          threshold: 0.4,
+          ignoreLocation: true
         });
-      fetch(appareilsUrl)
-        .then(res => res.json())
-        .then(data => { appareils = data; });
+      });
+      fetch(appareilsUrl).then(res => res.json()).then(data => { appareils = data; });
     }
 
     function updateCounter() {
-      fetch(compteurURL)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
-        });
+      fetch(compteurURL).then(res => res.json()).then(data => {
+        document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
+      });
     }
 
     function incrementCounter() {
@@ -223,7 +219,8 @@
     }
 
     document.getElementById("search").addEventListener("input", e => {
-      const query = normalize(e.target.value.trim());
+      const queryRaw = e.target.value.trim();
+      const query = normalize(queryRaw);
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
       suggestionsEl.innerHTML = "";
@@ -231,9 +228,11 @@
       resultEl.style.display = "none";
       if (!query || !fuse) return;
 
-      const estNumero = /^\d+$/.test(query);
-      if (estNumero) {
-        const matches = appareils.filter(app => app.nom.includes(query));
+      // Recherche d'appareils
+      const appareilRegex = /^([a-zA-Z]{1,2})?\\s?\\d{1,5}$/;
+      if (appareilRegex.test(queryRaw)) {
+        const qCompact = normalize(queryRaw).replace(/\s+/g, '');
+        const matches = appareils.filter(app => normalize(app.nom).replace(/\s+/g, '').includes(qCompact));
         matches.forEach(app => {
           const li = document.createElement("li");
           li.textContent = `🔌 ${app.nom} (${app.poste})`;
@@ -246,6 +245,7 @@
         return;
       }
 
+      // Recherche classique (lieux)
       let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
       if (results.length === 0 || query.length <= 3) {
         const fallback = lieux.filter(lieu => normalize(lieu.nom).includes(query));
@@ -283,7 +283,16 @@
         blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
       }
 
-      const appareilsAssocies = appareils.filter(app => app.poste === lieu.nom);
+      const appareilsAssocies = appareils.filter(app => {
+        const lieuNorm = normalize(lieu.nom);
+        const appPoste = normalize(app.poste);
+        if (lieuNorm.endsWith('sat1') || lieuNorm.endsWith('sat2') || lieuNorm.endsWith('sat3')) {
+          return appPoste === lieuNorm;
+        } else {
+          return appPoste.startsWith(lieuNorm);
+        }
+      });
+
       if (appareilsAssocies.length) {
         blocs.push(`<p><strong>🔌 Appareils liés :</strong></p><ul>`);
         appareilsAssocies.forEach(app => {
