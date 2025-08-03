@@ -180,9 +180,13 @@
     let lieux = [], fuse;
     let appareils = [], fuseAppareils;
 
-    function normalize(str) {
-      return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-    }
+   function normalize(str) {
+  return str
+    .normalize("NFD")                // enlève les accents
+    .replace(/[̀-ͯ]/g, "")           // encore accents
+    .replace(/[^a-z0-9]/gi, "")     // enlève tout sauf lettres/chiffres
+    .toLowerCase();                 // met en minuscules
+}
 
     function loadData() {
       fetch(jsonUrl)
