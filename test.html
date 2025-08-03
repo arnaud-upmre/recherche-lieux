@@ -257,12 +257,14 @@ function showLieu(lieu) {
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
     blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-  if (lieu.rss === "A") {
-  blocs.push(`<p><strong>📞 RSS Table 1 :</strong></p>
-    <div style="border:1px solid #ccc; padding:10px; border-radius:10px; background:#f9f9f9;">
-      <a href="tel:0328558256">03 28 55 82 56</a><br>
+if (lieu.rss === "A") {
+  blocs.push(`
+    <p><strong>📞 RSS Table 1 :</strong></p>
+    <div class="inline-links">
+      <a href="tel:0328558256">03 28 55 82 56</a>
       <a href="tel:0328558257">03 28 55 82 57</a>
-    </div>`);
+    </div>
+  `);
 } else if (lieu.rss) {
     blocs.push(`<p><strong>📞 RSS :</strong> ${lieu.rss}</p>`);
   }
@@ -321,6 +323,6 @@ setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
 </script>
 
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V01b</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Version : V01c</p>
 </body>
 </html>
