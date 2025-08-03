@@ -89,7 +89,7 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
-      fetch("TON_URL_SCRIPT_APPS_SCRIPT", {
+      fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
         method: "POST",
         body: data
       })
