@@ -1,57 +1,67 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Carte interactive</title>
+  <meta charset="UTF-8">
+  <title>Carte des appareils</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-    }
-    #map {
-      height: 100vh;
-      width: 100vw;
-    }
-    .leaflet-popup-content {
-      font-size: 15px;
-      line-height: 1.4;
-    }
+    html, body { margin: 0; height: 100%; }
+    #map { height: 100vh; width: 100vw; }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  const carte = L.map('map').setView([50.5, 2.5], 8);
+  // Récupère le paramètre ?poste= depuis l’URL
+  const params = new URLSearchParams(window.location.search);
+  const posteCible = params.get("poste");
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
-    maxZoom: 19,
-  }).addTo(carte);
+  if (!posteCible) {
+    alert("Aucun poste précisé dans l’URL.");
+    throw new Error("Paramètre ?poste= manquant.");
+  }
 
-  fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json') // Ton fichier JSON actuel
+  // Initialisation carte
+  const map = L.map('map').setView([50.9, 1.8], 15); // position temporaire
+
+  L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    maxZoom: 20,
+    attribution: 'Google Satellite'
+  }).addTo(map);
+
+  // Charger les appareils
+  fetch('appareils_test.json')
     .then(response => response.json())
-    .then(donnees => {
-      donnees.forEach(poste => {
-        const lat = parseFloat(String(poste.latitude).replace(',', '.'));
-        const lon = parseFloat(String(poste.longitude).replace(',', '.'));
+    .then(data => {
+      // Filtrer tous les appareils liés au poste et ses satellites
+      const appareilsAssocies = data.filter(appareil =>
+        appareil.poste === posteCible
+      );
 
-        if (!isNaN(lat) && !isNaN(lon)) {
-          const marker = L.marker([lat, lon]).addTo(carte);
-          marker.bindPopup(`
-            <strong>${poste.nom}</strong><br>
-            ${poste.description || ''}<br><br>
-            ${poste.pk ? `🚄 <b>PK ${poste.pk}</b> sur la ligne n°${poste.numero_ligne} - ${poste.lignes}` : ''}
-          `);
-        }
+      if (appareilsAssocies.length === 0) {
+        alert("Aucun appareil trouvé pour ce poste.");
+        return;
+      }
+
+      // Centrer sur le premier appareil trouvé
+      const first = appareilsAssocies[0];
+      map.setView([first.latitude, first.longitude], 17);
+
+      // Ajouter les marqueurs
+      appareilsAssocies.forEach(appareil => {
+        const popup = `<strong>${appareil.nom}</strong><br>${appareil.type}${appareil.satellite ? " – " + appareil.satellite : ""}`;
+        L.marker([appareil.latitude, appareil.longitude]).addTo(map)
+          .bindPopup(popup);
       });
     })
-    .catch(error => {
-      console.error('Erreur de chargement du JSON :', error);
+    .catch(err => {
+      console.error("Erreur JSON :", err);
     });
 </script>
 
