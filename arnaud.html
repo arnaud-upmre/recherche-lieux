@@ -68,7 +68,6 @@
       background-color: #0040a8;
     }
 
-    /* Animation fade-in */
     .fade-in {
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
@@ -82,7 +81,10 @@
 <body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
   <h1>🔧 À propos</h1>
 
-  <p>Tout a commencé par une carte sur Google MyMaps, créée pour référencer les accès routiers aux postes. Chaque agent disposait plus ou moins de points GPS, mais sans précision, sans suivi clair…</p>
+  <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
+  <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
+  <p>Rien de centralisé, rien de structuré.</p>
+  <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
 
   <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
   <ul>
@@ -92,10 +94,10 @@
   </ul>
 
   <blockquote>
-    “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>– John C. Maxwell
+    “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
   </blockquote>
 
-  <p>C’est dans cet esprit qu’est née cette carte interactive : pour unifier les points existants et les partager à l’ensemble des collègues. Une première tentative de collaboration ouverte.</p>
+  <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
 
   <p>Petit à petit, le projet a évolué jusqu’à devenir une véritable application web, pensée pour une utilisation directe sur le terrain, depuis un smartphone.</p>
 
@@ -104,21 +106,32 @@
     <li>🔍 recherche intelligente,</li>
     <li>🚘 intégration avec les applications de navigation,</li>
     <li>📌 informations utiles,</li>
-    <li>📝 formulaire de contribution,</li>
-    <li>… et bien d’autres à venir.</li>
+    <li>📝 formulaire de contribution...</li>
   </ul>
 
   <div class="divider"></div>
 
-  <h2>Mais pourquoi ?</h2>
+  <h2>🧐 Mais pourquoi ?</h2>
 
-  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil dans l’urgence.</p>
+  <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
+
+  <p>Une nuit d’astreinte — l’une de mes toutes premières sorties 😁 — j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
+  Je ne m’étais encore jamais rendu à ce poste.<br>
+  Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
+  Alors j’ai sorti mon téléphone, activé la vue satellite, et tenté de repérer le PRCI.<br>
+  Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, dans le ballast — avec une ancienne lampe frontale 😅 — pour rejoindre l’appareil…<br>
+  Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté. 😅</p>
+
+  <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
+  C’est sans doute à ce moment-là que l’idée de ce projet a vraiment pris racine.</p>
 
   <p id="stats" class="fade-in">Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
 
   <p>🕒 👉 <strong>Plus de 60 heures de recherche et développement</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
 
-  <h2>Et la suite ?</h2>
+  <div class="divider"></div>
+
+  <h2>🚀 Et la suite ?</h2>
 
   <p>Le projet ne s’arrête pas là.</p>
   <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
@@ -130,8 +143,8 @@
   <p>Ferroviairement,<br><strong>Arnaud</strong></p>
 
   <div style="text-align: center;">
-  <a href="index.html" class="btn">🔍 Faire une recherche</a>
-</div>
+    <a href="index.html" class="btn">🔍 Faire une recherche</a>
+  </div>
 
   <script>
     async function fetchCounts() {
@@ -151,7 +164,6 @@
         stats.textContent =
           `À ce jour, ${nbLieux} points d’accès routier et ${nbAppareils} appareils sont référencés.`;
 
-        // Animation fade-in déclenchée après un petit délai
         setTimeout(() => {
           stats.classList.add('visible');
         }, 50);
