@@ -176,7 +176,7 @@ function normalize(str) {
 }
 
 function formatNomCompletLieu(obj) {
-  const base = `${obj.nom || ''} ${obj.type || ''}`.trim();
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
   return obj.accès ? `${base} – accès ${obj.accès}` : base;
 }
 
@@ -185,7 +185,9 @@ function formatNomCompletAppareil(obj) {
   const sat = obj.SAT ? ` ${obj.SAT}` : '';
   return `${base}${sat}`.trim();
 }
-
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
 function formatRSS(table) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -463,6 +465,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.14</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.15</p>
 </body>
 </html>
