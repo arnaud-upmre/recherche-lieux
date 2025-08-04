@@ -190,7 +190,35 @@ function formatRSS(table) {
   const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
   return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
+function generateAppareilListHTML(currentLieu) {
+  const posteNomComplet = formatNomComplet(currentLieu);
+  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
+  if (matchingApps.length === 0) {
+    return `<p><strong>🧩 Aucun appareil référencé pour ce lieu.</strong> <a href="formulaire.html">🔧 Ajoutez-en ici</a>.</p>`;
+  }
+
+  let grouped = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!grouped[sat]) grouped[sat] = [];
+    grouped[sat].push(app);
+  });
+
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+
+  for (const [sat, list] of Object.entries(grouped)) {
+    if (isSAT && sat !== currentLieu.SAT) continue;
+    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
+    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
+    else html += `<p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
+  }
+
+  html += `<p><a href="formulaire.html">🔧 Appareil manquant ? Cliquez ici.</a></p>`;
+  return html;
+}
 fetch(jsonUrl).then(res => res.json()).then(data => {
   lieux = data;
   fuse = new Fuse(lieux, {
@@ -269,6 +297,7 @@ function showLieu(lieu) {
   if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
   if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
   html += blocs.join('<hr class="separator" />');
+  html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
   result.innerHTML = html;
 }
 
@@ -323,7 +352,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : Vb</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.01</p>
 </body>
 </html>
 </html>
