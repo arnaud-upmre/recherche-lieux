@@ -365,6 +365,22 @@ document.getElementById("searchAppareil").addEventListener("input", e => {
   resultEl.style.display = "none";
   if (!query || !fuseAppareils) return;
   let results = fuseAppareils.search(query).map(r => r.item);
+
+// 🔍 Priorise les appareils dont le nom commence par le préfixe saisi (tt, tc, i, etc.)
+const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
+const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]*/i);
+if (matchPrefix) {
+  const prefix = matchPrefix[1].toLowerCase();
+  if (prefixes.includes(prefix)) {
+    results.sort((a, b) => {
+      const aStart = a.appareil.toLowerCase().startsWith(prefix);
+      const bStart = b.appareil.toLowerCase().startsWith(prefix);
+      if (aStart && !bStart) return -1;
+      if (!aStart && bStart) return 1;
+      return 0;
+    });
+  }
+}
   results.reverse().forEach((app, index, array) => {
     const li = document.createElement("li");
     li.textContent = `${app.appareil} (${formatNomComplet(app)})`;
@@ -407,7 +423,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.02</p>
 </body>
 </html>
 </html>
