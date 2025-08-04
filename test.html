@@ -378,7 +378,7 @@ if (matchPrefix) {
     // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
     const complet = appareils.filter(app =>
       app.appareil.toLowerCase().startsWith(prefix) &&
-      app.nom.toLowerCase().includes(lieu)
+      (`${app.nom} ${app.SAT || ''}`.toLowerCase().includes(lieu))
     );
 
     // Fusionne sans doublons
@@ -387,8 +387,8 @@ if (matchPrefix) {
 
     // Tri : ceux qui matchent mieux d’abord
     results.sort((a, b) => {
-      const aMatch = a.appareil.toLowerCase().startsWith(prefix) && a.nom.toLowerCase().includes(lieu);
-      const bMatch = b.appareil.toLowerCase().startsWith(prefix) && b.nom.toLowerCase().includes(lieu);
+    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
+const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
       if (aMatch && !bMatch) return -1;
       if (!aMatch && bMatch) return 1;
       return 0;
@@ -439,7 +439,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.05</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.06</p>
 </body>
 </html>
 </html>
