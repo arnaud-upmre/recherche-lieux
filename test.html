@@ -364,9 +364,9 @@ document.getElementById("searchAppareil").addEventListener("input", e => {
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
   if (!query || !fuseAppareils) return;
-let results = fuseAppareils.search(query).map(r => r.item);
+let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
 
-// 🔍 Tri intelligent basé sur le préfixe + nom du lieu
+// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
 const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
 const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
 
@@ -375,18 +375,22 @@ if (matchPrefix) {
   const lieu = matchPrefix[2].toLowerCase();
 
   if (prefixes.includes(prefix)) {
+    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
+    const complet = appareils.filter(app =>
+      app.appareil.toLowerCase().startsWith(prefix) &&
+      app.nom.toLowerCase().includes(lieu)
+    );
+
+    // Fusionne sans doublons
+    const ids = new Set(results.map(a => a.appareil));
+    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
+
+    // Tri : ceux qui matchent mieux d’abord
     results.sort((a, b) => {
       const aMatch = a.appareil.toLowerCase().startsWith(prefix) && a.nom.toLowerCase().includes(lieu);
       const bMatch = b.appareil.toLowerCase().startsWith(prefix) && b.nom.toLowerCase().includes(lieu);
       if (aMatch && !bMatch) return -1;
       if (!aMatch && bMatch) return 1;
-
-      // 🔁 2e niveau : correspond au lieu uniquement
-      const aLieu = a.nom.toLowerCase().includes(lieu);
-      const bLieu = b.nom.toLowerCase().includes(lieu);
-      if (aLieu && !bLieu) return -1;
-      if (!aLieu && bLieu) return 1;
-
       return 0;
     });
   }
@@ -435,7 +439,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.04</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.05</p>
 </body>
 </html>
 </html>
