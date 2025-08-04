@@ -1619,21 +1619,21 @@
         "numero_ligne":"",
         "pk":""
     },
-    {
-        "nom":"Hondeghem",
-        "type":"PRCI",
-        "SAT":"",
-        "accès":I604,
-        "latitude":50.76564,
-        "longitude":2.51397,
-        "description":"",
-        "rss":"",
-        "contact":"",
-        "portail":"",
-        "lignes":"",
-        "numero_ligne":"",
-        "pk":""
-    },
+  {
+    "nom": "Hondeghem",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "I604",
+    "latitude": 50.76564,
+    "longitude": 2.51397,
+    "description": "",
+    "rss": "",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": ""
+  },
     {
         "nom":"Hondeghem",
         "type":"PRCI",
