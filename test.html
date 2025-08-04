@@ -175,38 +175,39 @@ function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
 
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}${obj.SAT ? ' ' + obj.SAT : ''}`.trim();
+}
+
 function formatRSS(table) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
     "B": ["03 28 55 82 58", "03 28 55 82 59"],
     "C": ["03 28 55 82 53", "03 28 55 82 54"]
   };
-
   const tableNum = { "A": "1", "B": "2", "C": "3" };
-
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
-
-  const nums = tables[table].map(num =>
-    `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`
-  ).join("");
-
-  return `
-    <p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p>
-    <div class="inline-links">${nums}</div>
-  `;
+  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
+  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
 
 fetch(jsonUrl).then(res => res.json()).then(data => {
   lieux = data;
   fuse = new Fuse(lieux, {
-    keys: ['nom'], includeScore: true, threshold: 0.4, ignoreLocation: true
+    keys: ['nom', 'type', 'SAT'],
+    includeScore: true,
+    threshold: 0.4,
+    ignoreLocation: true
   });
 });
 
 fetch(appareilsUrl).then(res => res.json()).then(data => {
   appareils = data;
   fuseAppareils = new Fuse(appareils, {
-    keys: ['appareil', 'poste'], includeScore: true, threshold: 0.5, ignoreLocation: true
+    keys: ['appareil', 'nom', 'type', 'SAT'],
+    includeScore: true,
+    threshold: 0.3,
+    ignoreLocation: true
   });
 });
 
@@ -215,17 +216,14 @@ function updateCounter() {
     document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
   });
 }
-
 function incrementCounter() {
   fetch(compteurURL + "?increment=true").then(updateCounter);
 }
-
 function updateCounterAppareil() {
   fetch(compteurAppareilURL).then(res => res.json()).then(data => {
     document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
   });
 }
-
 function incrementCounterAppareil() {
   fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
 }
@@ -240,13 +238,13 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || !fuse) return;
   let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
   if (results.length === 0 || query.length <= 3) {
-    const fallback = lieux.filter(l => normalize(l.nom).includes(query));
-    const ids = new Set(results.map(l => l.nom));
-    fallback.forEach(l => { if (!ids.has(l.nom)) results.push(l); });
+    const fallback = lieux.filter(l => normalize(l.nom).includes(query) || normalize(l.type).includes(query) || normalize(l.SAT || '').includes(query));
+    const ids = new Set(results.map(l => formatNomComplet(l)));
+    fallback.forEach(l => { if (!ids.has(formatNomComplet(l))) results.push(l); });
   }
   results.forEach(lieu => {
     const li = document.createElement("li");
-    li.textContent = lieu.nom;
+    li.textContent = formatNomComplet(lieu);
     li.onclick = () => showLieu(lieu);
     suggestionsEl.appendChild(li);
   });
@@ -257,13 +255,12 @@ function showLieu(lieu) {
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
-  let html = `<h2>📌 ${lieu.nom}</h2>
+  let html = `<h2>📌 ${formatNomComplet(lieu)}</h2>
   <div class="inline-links">
     <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
     <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
     <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
   </div><hr class="separator" />`;
-
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
@@ -271,49 +268,29 @@ function showLieu(lieu) {
   if (lieu.rss) blocs.push(formatRSS(lieu.rss));
   if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
   if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
-
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
 }
 
 document.getElementById("searchAppareil").addEventListener("input", e => {
-const query = normalize(e.target.value.trim());
+  const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestionsAppareils");
   const resultEl = document.getElementById("result");
   suggestionsEl.innerHTML = "";
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
   if (!query || !fuseAppareils) return;
-let results = [];
-const match = e.target.value.trim().toLowerCase().match(/^(\S+)(?:\s+de)?\s+(.+)$/i);
-if (match) {
-  const type = match[1].toLowerCase();
-  const lieu = match[2].toLowerCase();
-
-  const résultats_ciblés = appareils.filter(app =>
-    normalize(app.appareil).startsWith(type) &&
-    normalize(app.poste).includes(lieu)
-  );
-
-  results = résultats_ciblés.length > 0
-    ? résultats_ciblés
-    : fuseAppareils.search(query).map(r => r.item);
-} else {
-  results = fuseAppareils.search(query).map(r => r.item);
-}
-results.reverse().forEach((app, index, array) => {
-  const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.poste})`;
-
-  // Surligner le plus pertinent (dernier de la liste après reverse)
-  if (index === array.length - 1) {
-    li.style.backgroundColor = "#e6f0ff"; // fond bleu clair
-    li.style.fontWeight = "600";          // texte un peu plus gras
-  }
-
-  li.onclick = () => showAppareil(app);
-  suggestionsEl.appendChild(li);
-});
+  let results = fuseAppareils.search(query).map(r => r.item);
+  results.reverse().forEach((app, index, array) => {
+    const li = document.createElement("li");
+    li.textContent = `${app.appareil} (${formatNomComplet(app)})`;
+    if (index === array.length - 1) {
+      li.style.backgroundColor = "#e6f0ff";
+      li.style.fontWeight = "600";
+    }
+    li.onclick = () => showAppareil(app);
+    suggestionsEl.appendChild(li);
+  });
 });
 
 function showAppareil(app) {
@@ -321,17 +298,14 @@ function showAppareil(app) {
   const result = document.getElementById("result");
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
-
-  let html = `<h2>🔌 ${app.appareil} (${app.poste})</h2>`;
+  let html = `<h2>🔌 ${app.appareil} (${formatNomComplet(app)})</h2>`;
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-
-  const posteTrouvé = lieux.find(l => l.nom === app.poste);
+  const posteTrouvé = lieux.find(l => formatNomComplet(l) === formatNomComplet(app));
   if (posteTrouvé) {
-    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => l.nom === '${app.poste}'))">ICI</a></p>`);
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => formatNomComplet(l) === '${formatNomComplet(app)}'))">ICI</a></p>`);
   }
-
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
 }
@@ -349,7 +323,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.10a</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : Vb</p>
 </body>
 </html>
 </html>
