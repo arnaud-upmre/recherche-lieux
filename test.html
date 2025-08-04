@@ -444,9 +444,12 @@ function showAppareil(app) {
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-  const posteTrouvé = lieux.find(l => formatNomCompletLieu(l) === formatNomCompletAppareil(app));
+  const posteTrouvé = lieux.find(l => 
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type)
+);
   if (posteTrouvé) {
-    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => formatNomComplet(l) === '${formatNomComplet(app)}'))">ICI</a></p>`);
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(posteTrouvé)})'>ICI</a></p>`);
   }
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
@@ -465,6 +468,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.15</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.16</p>
 </body>
 </html>
