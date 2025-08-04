@@ -376,10 +376,13 @@ if (matchPrefix) {
 
   if (prefixes.includes(prefix)) {
     // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
-    const complet = appareils.filter(app =>
-      app.appareil.toLowerCase().startsWith(prefix) &&
-      (`${app.nom} ${app.SAT || ''}`.toLowerCase().includes(lieu))
-    );
+    const complet = appareils.filter(app => {
+      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
+      return (
+        app.appareil.toLowerCase().startsWith(prefix) &&
+        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
+      );
+    });
 
     // Fusionne sans doublons
     const ids = new Set(results.map(a => a.appareil));
@@ -439,7 +442,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.06</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.07</p>
 </body>
 </html>
 </html>
