@@ -294,12 +294,12 @@ fetch(appareilsUrl).then(res => res.json()).then(data => {
   fetch(jsonUrl).then(res => res.json()).then(data => {
   lieux = data;
 
-  fuse = new Fuse(lieux, {
-    keys: ["nom", "type", "SAT"],
-    includeScore: true,
-    threshold: 0.3,
-    ignoreLocation: true
-  });
+fuse = new Fuse(lieux, {
+  keys: ["nom", "type", "SAT", "accès"],
+  includeScore: true,
+  threshold: 0.3,
+  ignoreLocation: true
+});
 });
 function updateCounter() {
   fetch(compteurURL).then(res => res.json()).then(data => {
@@ -328,7 +328,12 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || !fuse) return;
   let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
   if (results.length === 0 || query.length <= 3) {
-    const fallback = lieux.filter(l => normalize(l.nom).includes(query) || normalize(l.type).includes(query) || normalize(l.SAT || '').includes(query));
+   const fallback = lieux.filter(l =>
+  normalize(l.nom).includes(query) ||
+  normalize(l.type).includes(query) ||
+  normalize(l.SAT || '').includes(query) ||
+  normalize(String(l.accès || '')).includes(query)
+);
     const ids = new Set(results.map(l => formatNomComplet(l)));
     fallback.forEach(l => { if (!ids.has(formatNomComplet(l))) results.push(l); });
   }
@@ -449,6 +454,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.12</p>
 </body>
 </html>
