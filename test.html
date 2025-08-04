@@ -175,8 +175,15 @@ function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
 
-function formatNomComplet(obj) {
-  return `${obj.nom || ''} ${obj.type || ''}${obj.SAT ? ' ' + obj.SAT : ''}`.trim();
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''}`.trim();
+  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+}
+
+function formatNomCompletAppareil(obj) {
+  const base = `${obj.nom || ''}`;
+  const sat = obj.SAT ? ` ${obj.SAT}` : '';
+  return `${base}${sat}`.trim();
 }
 
 function formatRSS(table) {
@@ -338,7 +345,7 @@ function showLieu(lieu) {
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
-  let html = `<h2>📌 ${formatNomComplet(lieu)}</h2>
+  let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>`;
   <div class="inline-links">
     <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
     <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
@@ -402,7 +409,7 @@ const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT
 // 🔄 Affichage des résultats
 results.forEach((app, index) => {
   const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${formatNomComplet(app)})`;
+  li.textContent = `${app.appareil} (${formatNomCompletAppareil(app)})`;
   if (index === 0) {
     li.style.backgroundColor = "#e6f0ff";
     li.style.fontWeight = "600";
@@ -417,11 +424,11 @@ function showAppareil(app) {
   const result = document.getElementById("result");
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
-  let html = `<h2>🔌 ${app.appareil} (${formatNomComplet(app)})</h2>`;
+  let html = `<h2>🔌 ${app.appareil} (${formatNomCompletAppareil(app)})</h2>`;
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-  const posteTrouvé = lieux.find(l => formatNomComplet(l) === formatNomComplet(app));
+  const posteTrouvé = lieux.find(l => formatNomCompletLieu(l) === formatNomCompletAppareil(app));
   if (posteTrouvé) {
     blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => formatNomComplet(l) === '${formatNomComplet(app)}'))">ICI</a></p>`);
   }
@@ -442,7 +449,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.07a</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.10</p>
 </body>
 </html>
 </html>
