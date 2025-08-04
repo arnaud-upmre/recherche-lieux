@@ -247,18 +247,18 @@ fetch(jsonUrl).then(res => res.json()).then(data => {
 });
 
 fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data;
+  appareils = enrichirAliasAutomatique(data);
 fuseAppareils = new Fuse(appareils, {
   keys: [
     { name: 'appareil', weight: 0.5 },
-    { name: 'type', weight: 0.3 },
+    { name: 'type', weight: 0.2 },
     { name: 'nom', weight: 0.1 },
-    { name: 'SAT', weight: 0.1 }
+    { name: 'SAT', weight: 0.1 },
+    { name: 'alias', weight: 0.3 }
   ],
   includeScore: true,
   threshold: 0.3,
   ignoreLocation: true
-});
 });
 
 function updateCounter() {
@@ -365,6 +365,41 @@ updateCounter();
 updateCounterAppareil();
 setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
+  function enrichirAliasAutomatique(appareils) {
+  return appareils.map(app => {
+    const nom = (app.nom || "").trim();
+    const type = (app.type || "").trim();
+    const sat = (app.SAT || "").trim();
+    const appareil = (app.appareil || "").replace(/\s+/g, "");
+    const nomLieu = nom;
+
+    const alias = new Set();
+
+    // Type + nom lieu
+    if (type && nom) alias.add(`${type} ${nomLieu}`);
+
+    // Type court + nom lieu (ex: TT Etaples)
+    const typeCourt = (appareil.split(/\s+/)[0] || "").toUpperCase();
+    if (typeCourt && nom) alias.add(`${typeCourt} ${nomLieu}`);
+
+    // Appareil concaténé + nom
+    if (appareil && nom) alias.add(`${appareil} ${nomLieu}`);
+
+    // Nom lieu + mots de l’appareil
+    const motsAppareil = appareil.replace(/[^a-z0-9]/gi, ' ').split(/\s+/);
+    motsAppareil.forEach(m => {
+      if (m.length > 1) alias.add(`${nomLieu} ${m}`);
+    });
+
+    // Ajout du SAT si présent
+    if (sat) {
+      alias.add(`${typeCourt} ${nomLieu} ${sat}`);
+      alias.add(`${nomLieu} ${sat}`);
+    }
+
+    return { ...app, alias: Array.from(alias) };
+  });
+}
 </script>
   <div style="text-align:center; margin-top: 30px;">
   <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
@@ -374,7 +409,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.05a</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.05b</p>
 </body>
 </html>
 </html>
