@@ -195,6 +195,7 @@ function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
   if (matchingApps.length === 0) {
+    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
     return `
       <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
         🤝 Appareil manquant ? 
@@ -205,6 +206,7 @@ function generateAppareilListHTML(currentLieu) {
     `;
   }
 
+  // S’il y a des appareils, on affiche le titre + la liste
   let grouped = {};
   matchingApps.forEach(app => {
     const sat = app.SAT || 'Poste';
@@ -367,7 +369,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.04</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.05</p>
 </body>
 </html>
 </html>
