@@ -343,8 +343,8 @@ document.getElementById("search").addEventListener("input", e => {
   normalize(l.SAT || '').includes(query) ||
   normalize(String(l.accès || '')).includes(query)
 );
-   const ids = new Set(results.map(l => formatNomCompletLieu(l)));
-    fallback.forEach(l => { if (!ids.has(formatNomComplet(l))) results.push(l); });
+const ids = new Set(results.map(l => formatNomCompletLieu(l)));
+fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
   }
   results.forEach(lieu => {
     const li = document.createElement("li");
@@ -463,6 +463,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.13</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.14</p>
 </body>
 </html>
