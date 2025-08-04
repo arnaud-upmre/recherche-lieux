@@ -213,7 +213,7 @@ function generateAppareilListHTML(currentLieu) {
   });
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-  let html = `<p><strong>🤩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
 
   for (const [sat, list] of Object.entries(grouped)) {
     if (isSAT && sat !== currentLieu.SAT) continue;
