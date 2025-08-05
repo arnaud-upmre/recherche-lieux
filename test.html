@@ -426,7 +426,7 @@ const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT
 // 🔄 Affichage des résultats
 results.forEach((app, index) => {
   const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.nom}${app.SAT ? ' / ' + app.SAT : ''})`;
+  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
   if (index === 0) {
     li.style.backgroundColor = "#e6f0ff";
     li.style.fontWeight = "600";
@@ -470,6 +470,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.04</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.05</p>
 </body>
 </html>
