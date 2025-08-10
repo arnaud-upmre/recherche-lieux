@@ -441,6 +441,7 @@ results.reverse().forEach((app, index, array) => {
 
 function showAppareil(app) {
   incrementCounterAppareil();
+
   const result = document.getElementById("result");
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
@@ -450,52 +451,80 @@ function showAppareil(app) {
 
   if (app.description) blocs.push(`<p>${app.description}</p>`);
 
-  blocs.push(`<p>📍 Localiser cet appareil sur la carte : 
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" 
-    target="_blank">ICI</a></p>`);
-
-  // Candidats : mêmes nom/type/SAT
-  const candidats = lieux.filter(l => 
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type) === normalize(app.type) &&
-    normalize(l.SAT || "") === normalize(app.SAT || "")
+  blocs.push(
+    `<p>📍 Localiser cet appareil sur la carte : 
+      <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a>
+    </p>`
   );
 
-  // Fonction pour normaliser l'accès
-  function normAcces(str) {
-    return normalize(str || "").replace(/[\s\-]/g, "");
+  // --- Helpers de normalisation ---
+  function normalizeBase(str) {
+    return (str || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // accents
+      .replace(/’/g, "'")              // apostrophes typographiques
+      .trim()
+      .toLowerCase();
+  }
+  function normalizeIdem(str) {
+    return normalizeBase(str).replace(/[\s\-]/g, ""); // supprime espaces et tirets
   }
 
-  // Score de pertinence
+  // --- On récupère les postes candidats (même nom/type/SAT) ---
+  const candidats = (window.lieux || []).filter(l =>
+    normalizeBase(l.nom)  === normalizeBase(app.nom)  &&
+    normalizeBase(l.type) === normalizeBase(app.type) &&
+    normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
+  );
+
+  // --- Score de pertinence du poste ---
   function scorePoste(l) {
     let s = 0;
-    if (app.accès && normAcces(l.accès) === normAcces(app.accès)) {
-      s += 100; // accès exact
-    } else if (!app.accès && l.accès === "" && (l.SAT || "") === "") {
-      s += 80; // poste de base
-    } else if (l.SAT && l.SAT !== "") {
-      s -= 10; // éviter SAT par défaut
+
+    // 1) Correspondance d'accès :
+    // - si app.accès est renseigné -> match direct
+    // - sinon on tente avec app.appareil comme "accès" de secours (ex: F IL3)
+    const matchAccesDirect   = app.accès && normalizeIdem(l.accès) === normalizeIdem(app.accès);
+    const matchAccesFallback = !app.accès && normalizeIdem(l.accès) === normalizeIdem(app.appareil);
+
+    if (matchAccesDirect || matchAccesFallback) s += 100;
+
+    // 2) Poste "de base" (accès vide & SAT vide) quand l'appareil n'a pas d'accès spécifique
+    if (!app.accès && normalizeBase(l.accès) === "" && normalizeBase(l.SAT || "") === "") {
+      s += 80;
     }
-    // Bonus de proximité
+
+    // 3) Éviter de privilégier les SAT* par défaut
+    if (l.SAT && l.SAT !== "") s -= 10;
+
+    // 4) Bonus de proximité géographique (petit bonus)
     const dLat = (app.latitude - l.latitude) * Math.PI / 180;
     const dLon = (app.longitude - l.longitude) * Math.PI / 180;
-    const a = Math.sin(dLat/2)**2 + Math.cos(app.latitude * Math.PI / 180) * Math.cos(l.latitude * Math.PI / 180) * Math.sin(dLon/2)**2;
-    const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); // km
+    const a = Math.sin(dLat/2)**2 +
+              Math.cos(app.latitude * Math.PI / 180) *
+              Math.cos(l.latitude * Math.PI / 180) *
+              Math.sin(dLon/2)**2;
+    const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); // km
     s += Math.max(0, 10 - dist);
+
     return s;
   }
 
-  // Meilleur lieu
+  // --- Choix du meilleur poste ---
   let lieuCible = null;
   if (candidats.length > 0) {
-    lieuCible = candidats.reduce((best, current) => {
-      return scorePoste(current) > scorePoste(best) ? current : best;
-    });
+    lieuCible = candidats.reduce((best, cur) => (scorePoste(cur) > scorePoste(best) ? cur : best));
   }
 
   if (lieuCible) {
-    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : 
-      <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
+    blocs.push(
+      `<p>🚗 Créer l'itinéraire en voiture : 
+        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a>
+      </p>`
+    );
+  } else {
+    blocs.push(`<p>⚠️ Aucun poste correspondant trouvé pour cet appareil.</p>`);
   }
 
   html += blocs.join('<hr class="separator" />');
@@ -515,6 +544,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.02</p>
 </body>
 </html>
