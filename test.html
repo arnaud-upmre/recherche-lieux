@@ -291,9 +291,6 @@ const matchingApps = appareils.filter(a =>
   return Array.from(alias);
 }
 
-fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data;
-
   // Génère dynamiquement les alias
   appareils.forEach(app => {
    app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
@@ -309,6 +306,28 @@ fetch(appareilsUrl).then(res => res.json()).then(data => {
     ],
     includeScore: true,
     threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
+    ignoreLocation: true
+  });
+});
+  fetch(jsonUrl).then(res => res.json()).then(data => {
+  lieux = data.map(l => ({
+    ...l,
+    _nom: normNom(l.nom),
+    _type: normNom(l.type),
+    _sat: normNom(l.SAT),
+    _acces: normNom(l.accès),
+    _code: normNom(l.appareil || "")
+  }));
+
+  fuse = new Fuse(lieux, {
+    keys: [
+      { name: "nom", weight: 0.5 },
+      { name: "type", weight: 0.3 },
+      { name: "SAT", weight: 0.2 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.3,
     ignoreLocation: true
   });
 });
@@ -475,16 +494,16 @@ let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
 // 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
 const posteTrouvé = lieux.find(l => 
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "")
+  l._nom  === app._nom &&
+  l._type === app._type &&
+  l._sat  === app._sat
 );
 
 const accesTrouvé = lieux.find(l =>
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "") &&
-  normalize(String(l.accès || "")) === normalize(app.appareil)
+  l._nom  === app._nom &&
+  l._type === app._type &&
+  l._sat  === app._sat &&
+  l._acces === app._code
 );
 
 // 2) Priorité à l'accès spécifique, sinon fallback poste
@@ -510,6 +529,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.19</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01ab</p>
 </body>
 </html>
