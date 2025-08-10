@@ -172,7 +172,12 @@ let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
 function normalize(str) {
-  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return str
+    .normalize("NFD")                  // enlève les accents
+    .replace(/[\u0300-\u036f]/g, "")   // enlève les marques diacritiques
+    .replace(/[^a-z0-9]/gi, "")        // garde uniquement lettres/chiffres
+    .toLowerCase()                     // tout en minuscule
+    .trim();                           // supprime espaces début/fin
 }
 
 function formatNomCompletLieu(obj) {
@@ -229,7 +234,7 @@ function generateAppareilListHTML(currentLieu) {
     if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
     else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
     else html += `<p>`;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)}); return false;'>${app.appareil}</a>`).join(", ") + `</p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
   }
 
   html += `
@@ -438,95 +443,36 @@ results.reverse().forEach((app, index, array) => {
   suggestionsEl.appendChild(li);
 });
 });
+
 function showAppareil(app) {
   incrementCounterAppareil();
-
   const result = document.getElementById("result");
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
-
-  let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
+let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
   const blocs = [];
-
   if (app.description) blocs.push(`<p>${app.description}</p>`);
+  blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
+// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
+const posteTrouvé = lieux.find(l => 
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "")
+);
 
-  blocs.push(
-    `<p>📍 Localiser cet appareil sur la carte : 
-      <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a>
-    </p>`
-  );
+const accesTrouvé = lieux.find(l =>
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "") &&
+  normalize(String(l.accès || "")) === normalize(app.appareil)
+);
 
-  // --- Helpers ---
-  function normalizeBase(str) {
-    return (str || "")
-      .toString()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/’/g, "'")
-      .trim()
-      .toLowerCase();
-  }
-  function normalizeIdem(str) {
-    return normalizeBase(str).replace(/[\s\-]/g, "");
-  }
+// 2) Priorité à l'accès spécifique, sinon fallback poste
+const lieuCible = accesTrouvé || posteTrouvé;
 
-  // --- Recherche du poste correspondant ---
-  let candidats = (window.lieux || []).filter(l =>
-    normalizeBase(l.nom) === normalizeBase(app.nom) &&
-    normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
-  );
-
-  // Fallback si rien trouvé : match uniquement sur le nom
-  if (candidats.length === 0) {
-    candidats = (window.lieux || []).filter(l =>
-      normalizeBase(l.nom) === normalizeBase(app.nom)
-    );
-  }
-
-  // --- Score de pertinence ---
-  function scorePoste(l) {
-    let s = 0;
-
-    const matchAccesDirect   = app.accès && normalizeIdem(l.accès) === normalizeIdem(app.accès);
-    const matchAccesFallback = !app.accès && normalizeIdem(l.accès) === normalizeIdem(app.appareil);
-    if (matchAccesDirect || matchAccesFallback) s += 100;
-
-    if (!app.accès && normalizeBase(l.accès) === "" && normalizeBase(l.SAT || "") === "") {
-      s += 80;
-    }
-
-    if (l.SAT && l.SAT !== "") s -= 10;
-
-    // Bonus distance
-    const dLat = (app.latitude - l.latitude) * Math.PI / 180;
-    const dLon = (app.longitude - l.longitude) * Math.PI / 180;
-    const a = Math.sin(dLat/2)**2 +
-              Math.cos(app.latitude * Math.PI / 180) *
-              Math.cos(l.latitude * Math.PI / 180) *
-              Math.sin(dLon/2)**2;
-    const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    s += Math.max(0, 10 - dist);
-
-    return s;
-  }
-
-  // --- Choix du meilleur poste ---
-  let lieuCible = null;
-  if (candidats.length > 0) {
-    lieuCible = candidats.reduce((best, cur) =>
-      scorePoste(cur) > scorePoste(best) ? cur : best
-    );
-  }
-
-  if (lieuCible) {
-    blocs.push(
-      `<p>🚗 Créer l'itinéraire en voiture : 
-        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a>
-      </p>`
-    );
-  } else {
-    blocs.push(`<p>⚠️ Aucun poste correspondant trouvé pour cet appareil.</p>`);
-  }
+if (lieuCible) {
+  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
+}
 
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
@@ -545,6 +491,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.04</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V2</p>
 </body>
 </html>
