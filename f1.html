@@ -24,9 +24,10 @@ body{
   color:var(--text);
   padding:20px;
 }
-.wrap{
-  max-width:640px;
-  margin:auto;
+.wrap {
+  max-width: 640px;
+  margin: auto;
+  padding: 0 8px; /* évite que les champs collent aux bords */
 }
 h1{
   font-size:22px;
@@ -151,6 +152,10 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   .segment label{ color:var(--text); }
   form{ background:#2c2c2e; border-color:var(--border); }
   input[type="text"], textarea{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
     background:#1c1c1e;
     color:var(--text);
     border-color:var(--border);
@@ -219,7 +224,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 02.00 — iOS Lisible + Dark Mode</div>
+  <div class="version">Version 02.10</div>
 </div>
 
 <script>
