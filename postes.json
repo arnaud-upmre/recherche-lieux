@@ -598,6 +598,21 @@
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
     "numero_ligne": 216000.0,
     "pk": "59,146"
+  },  
+  {
+    "nom": "Cassel",
+    "type": "S",
+    "SAT": "SAT1",
+    "accès": "",
+    "latitude": 50.78073,
+    "longitude": 2.47334,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": ""
   },
   {
     "nom": "Cassel",
