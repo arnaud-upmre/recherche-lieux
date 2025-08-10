@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>🗺️ Formulaire de contribution à la carte GPS</title>
+  <style>
+    /* =========
+       Design iOS-like : flat + arrondi + ombres douces
+       ========= */
+    :root{
+      --bg: #f2f3f7;
+      --card: #ffffff;
+      --text: #1c1c1e;
+      --subtle:#6b7280;
+      --border:#e5e7eb;
+      --primary:#007aff;     /* iOS blue */
+      --primary-press:#0a64c5;
+      --success:#34c759;     /* iOS green */
+      --danger:#ff3b30;      /* iOS red */
+      --focus:#c7e2ff;
+      --muted:#f5f6f8;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --inset: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(0,0,0,.04);
+      --radius-xl: 18px;
+      --radius-2xl: 24px;
+      --radius-3xl: 28px;
+      --radius-full: 9999px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text","Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, #f6f7fb 0%, #eef1f6 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:24px 16px 40px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:640px;
+    }
+
+    header{
+      text-align:center;
+      margin: 6px 0 16px;
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:var(--radius-full);
+      background: var(--muted);
+      color:#111827;
+      font-size:12px;
+      letter-spacing:.2px;
+    }
+    h1{
+      margin:14px 0 6px;
+      font-size:22px;
+      font-weight:700;
+    }
+    .subtitle{
+      color:var(--subtle);
+      font-size:14px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius-3xl);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    /* Segmented control iOS-like */
+    .segment{
+      background:var(--muted);
+      border-radius:var(--radius-full);
+      padding:6px;
+      display:flex;
+      gap:6px;
+      box-shadow: var(--inset);
+    }
+    .segment input{ display:none; }
+    .seg-option{
+      flex:1;
+      position:relative;
+    }
+    .seg-label{
+      display:block;
+      text-align:center;
+      padding:10px 12px;
+      border-radius:var(--radius-full);
+      font-weight:600;
+      font-size:14px;
+      color:#111827;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .02s ease-in-out;
+    }
+    .seg-label:active{ transform:scale(.98); }
+    .seg-label .icon{ margin-right:8px; opacity:.9 }
+
+    .seg-option input:checked + .seg-label{
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      color:#0b1220;
+    }
+
+    /* Form styles */
+    form{
+      margin-top:16px;
+    }
+    .group{
+      margin-top:14px;
+    }
+    label.field{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      color:#111827;
+      margin:6px 2px 8px;
+    }
+    .control{
+      position:relative;
+    }
+    input[type="text"],
+    textarea,
+    select{
+      width:100%;
+      border:1px solid var(--border);
+      background:#fbfbfd;
+      border-radius:20px;
+      padding:14px 14px;
+      font-size:16px;
+      outline:none;
+      transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      min-height:48px;
+    }
+    textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color:#b6d7ff;
+      box-shadow: 0 0 0 4px var(--focus);
+      background:#fff;
+    }
+
+    /* Helper / hint text */
+    .hint{
+      font-size:12px;
+      color:var(--subtle);
+      margin-top:6px;
+    }
+
+    /* Submit button */
+    .actions{
+      margin-top:18px;
+    }
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:var(--radius-full);
+      padding:14px 18px;
+      font-size:16px;
+      font-weight:700;
+      color:#fff;
+      background: linear-gradient(180deg, var(--primary) 0%, #0b78ff 100%);
+      box-shadow: 0 8px 20px rgba(16, 112, 255, .25);
+      cursor:pointer;
+      transition: transform .05s ease, filter .2s ease, opacity .2s ease;
+    }
+    .btn:active{ transform: translateY(1px) scale(.995); }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:grayscale(.1);
+    }
+
+    /* Toast / message */
+    .toast{
+      margin-top:14px;
+      border-radius:20px;
+      padding:12px 14px;
+      font-weight:600;
+      display:none;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow: var(--shadow);
+    }
+    .toast.show{ display:flex; }
+    .toast.success{ border-color:#daf4df; }
+    .toast.success .dot{ background:var(--success); }
+    .toast.error{ border-color:#ffd6d3; }
+    .toast.error .dot{ background:var(--danger); }
+    .dot{
+      width:12px; height:12px; border-radius:50%;
+      flex:none;
+    }
+
+    /* Subtle separator */
+    .sep{ height:1px; background:var(--border); margin:18px 0; opacity:.6 }
+
+    /* Hidden sections & honeypot */
+    .hidden{ display:none !important; }
+    .hp{ display:none !important; }
+
+    /* Footer */
+    .version{
+      text-align:center;
+      color:#9ca3af;
+      font-size:12px;
+      margin-top:16px;
+    }
+
+    /* Better tap targets on iOS */
+    @media (hover:none){
+      .seg-label, .btn { -webkit-tap-highlight-color: transparent; }
+    }
+
+    /* Dark mode auto */
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0f1115;
+        --card:#151821;
+        --text:#e5e7eb;
+        --subtle:#9aa3b2;
+        --border:#242a36;
+        --muted:#1b1f2a;
+        --focus: rgba(59,130,246,.25);
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+      .segment{ box-shadow:none; }
+      input, textarea, select{ background:#141924; color:var(--text); }
+      .seg-label{ color:#e5e7eb; }
+      .seg-option input:checked + .seg-label{ color:#fff; }
+      .btn{ box-shadow: 0 8px 24px rgba(23, 118, 255, .28); }
+      .toast{ background:#121621; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">Formulaire</span>
+      <h1>🗺️ Contribution à la carte GPS</h1>
+      <div class="subtitle">Ajoutez un poste ou proposez une modification</div>
+    </header>
+
+    <div class="card">
+      <!-- Segmented control -->
+      <div class="segment" role="tablist" aria-label="Type de demande">
+        <div class="seg-option">
+          <input type="radio" name="type" id="opt-ajout" value="Ajout" checked />
+          <label class="seg-label" for="opt-ajout" role="tab" aria-controls="tab-ajout">
+            <span class="icon">➕</span> Ajout
+          </label>
+        </div>
+        <div class="seg-option">
+          <input type="radio" name="type" id="opt-modif" value="Modification" />
+          <label class="seg-label" for="opt-modif" role="tab" aria-controls="tab-modif">
+            <span class="icon">✏️</span> Modification
+          </label>
+        </div>
+      </div>
+
+      <form id="formulaire" novalidate>
+        <!-- Honeypot anti-spam -->
+        <input class="hp" type="text" name="website" autocomplete="off" tabindex="-1" />
+
+        <!-- Demandeur -->
+        <div class="group">
+          <label class="field" for="demandeur">Demandeur</label>
+          <div class="control">
+            <input type="text" name="demandeur" id="demandeur"
+                   autocomplete="name" inputmode="text" placeholder="Votre nom ou pseudo" required />
+          </div>
+          <div class="hint">Nous ne partageons pas votre nom publiquement.</div>
+        </div>
+
+        <!-- Bloc AJOUT -->
+        <div id="tab-ajout" class="tab">
+          <div class="group">
+            <label class="field" for="nom_poste">Nom du poste</label>
+            <div class="control">
+              <input type="text" name="nom_poste" id="nom_poste" placeholder="Ex. Alleux SP / SAT1" />
+            </div>
+          </div>
+
+          <div class="group">
+            <label class="field" for="coordonnees">Coordonnées ou lien GPS</label>
+            <div class="control">
+              <input type="text" name="coordonnees" id="coordonnees"
+                     inputmode="text" placeholder="50.1234, 3.5678 • ou lien Google/Apple/Waze/OSM" />
+            </div>
+          </div>
+
+          <div class="group">
+            <label class="field" for="autre">Autre remarque</label>
+            <div class="control">
+              <textarea name="autre" id="autre" placeholder="Détail d’accès, précision, etc. (facultatif)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloc MODIF -->
+        <div id="tab-modif" class="tab hidden">
+          <div class="group">
+            <label class="field" for="nom_modif">Nom du poste à modifier</label>
+            <div class="control">
+              <input type="text" name="nom_modif" id="nom_modif" placeholder="Ex. Alleux SP / SAT1" />
+            </div>
+          </div>
+
+          <div class="group">
+            <label class="field" for="raison">Raison de la modification</label>
+            <div class="control">
+              <textarea name="raison" id="raison" placeholder="Ce qui doit être corrigé ou mis à jour"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="sep" role="presentation"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn" id="submitBtn">✅ Envoyer</button>
+        </div>
+
+        <div id="toast" class="toast" aria-live="polite" aria-atomic="true">
+          <span class="dot"></span>
+          <span id="toastText"></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="version">Version 01.04 · style iOS</div>
+  </div>
+
+  <script>
+    // ===== UI logic : segmented toggle + conditional required =====
+    const rAjout = document.getElementById('opt-ajout');
+    const rModif = document.getElementById('opt-modif');
+    const tabAjout = document.getElementById('tab-ajout');
+    const tabModif = document.getElementById('tab-modif');
+
+    const form = document.getElementById('formulaire');
+    const submitBtn = document.getElementById('submitBtn');
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+
+    const demandeur = document.getElementById('demandeur');
+    const nom_poste = document.getElementById('nom_poste');
+    const coordonnees = document.getElementById('coordonnees');
+    const autre = document.getElementById('autre');
+
+    const nom_modif = document.getElementById('nom_modif');
+    const raison = document.getElementById('raison');
+
+    function setMode(mode){
+      if(mode === 'Ajout'){
+        tabAjout.classList.remove('hidden');
+        tabModif.classList.add('hidden');
+
+        // Required dynamiques
+        nom_poste.required = false; // facultatif côté UX
+        coordonnees.required = false;
+        nom_modif.required = false;
+        raison.required = false;
+      }else{
+        tabModif.classList.remove('hidden');
+        tabAjout.classList.add('hidden');
+
+        nom_modif.required = true;
+        raison.required = true;
+
+        nom_poste.required = false;
+        coordonnees.required = false;
+      }
+    }
+
+    rAjout.addEventListener('change', () => setMode('Ajout'));
+    rModif.addEventListener('change', () => setMode('Modification'));
+
+    // init
+    setMode('Ajout');
+
+    // Focus UX
+    window.requestAnimationFrame(()=> demandeur.focus());
+
+    // ===== Toast helper =====
+    function showToast(message, type='success'){
+      toastText.textContent = message;
+      toast.classList.remove('success','error','show');
+      toast.classList.add(type, 'show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=> toast.classList.remove('show'), 5500);
+    }
+
+    // Minimal validation "beau jeu" : juste s'assurer que demandeur est rempli,
+    // et que pour "Modification", les champs requis le sont.
+    function isValid(){
+      if(!demandeur.value.trim()){ demandeur.focus(); return false; }
+      if(rModif.checked){
+        if(!nom_modif.value.trim()){ nom_modif.focus(); return false; }
+        if(!raison.value.trim()){ raison.focus(); return false; }
+      }
+      return true;
+    }
+
+    // ===== Submit =====
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      // Honeypot
+      if(form.website && form.website.value){ return; }
+
+      if(!isValid()){
+        showToast('Veuillez compléter les champs requis.', 'error');
+        return;
+      }
+
+      const fd = new FormData(form);
+
+      // Ajouter explicitement "type" selon le segment
+      fd.set('type', rAjout.checked ? 'Ajout' : 'Modification');
+
+      // Bouton loading
+      const original = submitBtn.textContent;
+      submitBtn.textContent = '⏳ Envoi en cours…';
+      submitBtn.disabled = true;
+
+      try{
+        const ctrl = new AbortController();
+        const t = setTimeout(()=> ctrl.abort(), 12000); // 12s timeout
+
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
+          method:'POST',
+          body: fd,
+          signal: ctrl.signal
+        }).catch(err=>{
+          if(err.name === 'AbortError') throw new Error('TIMEOUT');
+          throw err;
+        });
+        clearTimeout(t);
+
+        const text = await res.text();
+        const ok = text && text.trim().toUpperCase() === 'OK';
+
+        if(ok){
+          showToast('✅ Votre demande a bien été envoyée. Merci !', 'success');
+          form.reset();
+          // Rester sur le même segment (ne pas forcer Ajout)
+          setMode(rAjout.checked ? 'Ajout' : 'Modification');
+        }else{
+          showToast('❌ Une erreur inattendue s’est produite. Réessayez.', 'error');
+        }
+      }catch(err){
+        showToast('❌ Impossible d’envoyer pour le moment. Vérifiez la connexion et réessayez.', 'error');
+      }finally{
+        submitBtn.textContent = original;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
