@@ -229,7 +229,7 @@ function generateAppareilListHTML(currentLieu) {
     if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
     else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
     else html += `<p>`;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)}); return false;'>${app.appareil}</a>`).join(", ") + `</p>`;
   }
 
   html += `
@@ -472,11 +472,18 @@ function showAppareil(app) {
   }
 
   // --- On récupère les postes candidats (même nom/type/SAT) ---
-  const candidats = (window.lieux || []).filter(l =>
-    normalizeBase(l.nom)  === normalizeBase(app.nom)  &&
-    normalizeBase(l.type) === normalizeBase(app.type) &&
-    normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
+ // --- On récupère les postes candidats (même nom + même SAT) ---
+let candidats = (window.lieux || []).filter(l =>
+  normalizeBase(l.nom) === normalizeBase(app.nom) &&
+  normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
+);
+
+// 🔁 Fallback : si rien avec SAT, on tente nom seul
+if (candidats.length === 0) {
+  candidats = (window.lieux || []).filter(l =>
+    normalizeBase(l.nom) === normalizeBase(app.nom)
   );
+}
 
   // --- Score de pertinence du poste ---
   function scorePoste(l) {
@@ -544,6 +551,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.02</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.03</p>
 </body>
 </html>
