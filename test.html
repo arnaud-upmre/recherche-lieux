@@ -171,19 +171,6 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
-  // Helper pour uniformiser les apostrophes et espaces dans les noms de postes
-const ODD_QUOTES = /[\u2018\u2019\u02BC\u2032\u00B4`]/g; // ’ ʹ ´ ` etc.
-function normNom(s = "") {
-  return String(s)
-    .normalize("NFKC")
-    .replace(ODD_QUOTES, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-// (optionnel, juste pour test dans la console)
-window.normNom = normNom;
-
 function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
@@ -212,12 +199,7 @@ function formatRSS(table) {
 }
 function generateAppareilListHTML(currentLieu) {
   const posteNomComplet = formatNomComplet(currentLieu);
-const matchingApps = appareils.filter(a =>
-  a._nom  === currentLieu._nom &&
-  a._type === currentLieu._type &&
-  (!a._sat || !currentLieu._sat || a._sat === currentLieu._sat) &&
-  (!a._acces || !currentLieu._acces || a._acces === currentLieu._acces)
-);
+  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
   if (matchingApps.length === 0) {
     // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
@@ -291,6 +273,9 @@ const matchingApps = appareils.filter(a =>
   return Array.from(alias);
 }
 
+fetch(appareilsUrl).then(res => res.json()).then(data => {
+  appareils = data;
+
   // Génère dynamiquement les alias
   appareils.forEach(app => {
    app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
@@ -310,36 +295,7 @@ const matchingApps = appareils.filter(a =>
   });
 });
   fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data.map(l => ({
-    ...l,
-    _nom: normNom(l.nom),
-    _type: normNom(l.type),
-    _sat: normNom(l.SAT),
-    _acces: normNom(l.accès),
-    _code: normNom(l.appareil || "")
-  }));
-
-  fuse = new Fuse(lieux, {
-    keys: [
-      { name: "nom", weight: 0.5 },
-      { name: "type", weight: 0.3 },
-      { name: "SAT", weight: 0.2 },
-      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.3,
-    ignoreLocation: true
-  });
-});
-fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data.map(a => ({
-    ...a,
-    _nom: normNom(a.nom),
-    _type: normNom(a.type),
-    _sat: normNom(a.SAT),
-    _acces: normNom(a.accès),
-    _code: normNom(a.appareil || "")
-  }));
+  lieux = data;
 
 fuse = new Fuse(lieux, {
   keys: [
@@ -492,26 +448,14 @@ let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
 const posteTrouvé = lieux.find(l => 
-  l._nom  === app._nom &&
-  l._type === app._type &&
-  l._sat  === app._sat
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "")
 );
-
-const accesTrouvé = lieux.find(l =>
-  l._nom  === app._nom &&
-  l._type === app._type &&
-  l._sat  === app._sat &&
-  l._acces === app._code
-);
-
-// 2) Priorité à l'accès spécifique, sinon fallback poste
-const lieuCible = accesTrouvé || posteTrouvé;
-
-if (lieuCible) {
-  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
-}
+  if (posteTrouvé) {
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(posteTrouvé)})'>ICI</a></p>`);
+  }
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
 }
@@ -529,6 +473,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01ab</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01a</p>
 </body>
 </html>
