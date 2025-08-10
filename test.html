@@ -438,7 +438,6 @@ results.reverse().forEach((app, index, array) => {
   suggestionsEl.appendChild(li);
 });
 });
-
 function showAppareil(app) {
   incrementCounterAppareil();
 
@@ -457,62 +456,55 @@ function showAppareil(app) {
     </p>`
   );
 
-  // --- Helpers de normalisation ---
+  // --- Helpers ---
   function normalizeBase(str) {
     return (str || "")
       .toString()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // accents
-      .replace(/’/g, "'")              // apostrophes typographiques
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/’/g, "'")
       .trim()
       .toLowerCase();
   }
   function normalizeIdem(str) {
-    return normalizeBase(str).replace(/[\s\-]/g, ""); // supprime espaces et tirets
+    return normalizeBase(str).replace(/[\s\-]/g, "");
   }
 
-  // --- On récupère les postes candidats (même nom/type/SAT) ---
- // --- On récupère les postes candidats (même nom + même SAT) ---
-let candidats = (window.lieux || []).filter(l =>
-  normalizeBase(l.nom) === normalizeBase(app.nom) &&
-  normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
-);
-
-// 🔁 Fallback : si rien avec SAT, on tente nom seul
-if (candidats.length === 0) {
-  candidats = (window.lieux || []).filter(l =>
-    normalizeBase(l.nom) === normalizeBase(app.nom)
+  // --- Recherche du poste correspondant ---
+  let candidats = (window.lieux || []).filter(l =>
+    normalizeBase(l.nom) === normalizeBase(app.nom) &&
+    normalizeBase(l.SAT || "") === normalizeBase(app.SAT || "")
   );
-}
 
-  // --- Score de pertinence du poste ---
+  // Fallback si rien trouvé : match uniquement sur le nom
+  if (candidats.length === 0) {
+    candidats = (window.lieux || []).filter(l =>
+      normalizeBase(l.nom) === normalizeBase(app.nom)
+    );
+  }
+
+  // --- Score de pertinence ---
   function scorePoste(l) {
     let s = 0;
 
-    // 1) Correspondance d'accès :
-    // - si app.accès est renseigné -> match direct
-    // - sinon on tente avec app.appareil comme "accès" de secours (ex: F IL3)
     const matchAccesDirect   = app.accès && normalizeIdem(l.accès) === normalizeIdem(app.accès);
     const matchAccesFallback = !app.accès && normalizeIdem(l.accès) === normalizeIdem(app.appareil);
-
     if (matchAccesDirect || matchAccesFallback) s += 100;
 
-    // 2) Poste "de base" (accès vide & SAT vide) quand l'appareil n'a pas d'accès spécifique
     if (!app.accès && normalizeBase(l.accès) === "" && normalizeBase(l.SAT || "") === "") {
       s += 80;
     }
 
-    // 3) Éviter de privilégier les SAT* par défaut
     if (l.SAT && l.SAT !== "") s -= 10;
 
-    // 4) Bonus de proximité géographique (petit bonus)
+    // Bonus distance
     const dLat = (app.latitude - l.latitude) * Math.PI / 180;
     const dLon = (app.longitude - l.longitude) * Math.PI / 180;
     const a = Math.sin(dLat/2)**2 +
               Math.cos(app.latitude * Math.PI / 180) *
               Math.cos(l.latitude * Math.PI / 180) *
               Math.sin(dLon/2)**2;
-    const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); // km
+    const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     s += Math.max(0, 10 - dist);
 
     return s;
@@ -521,7 +513,9 @@ if (candidats.length === 0) {
   // --- Choix du meilleur poste ---
   let lieuCible = null;
   if (candidats.length > 0) {
-    lieuCible = candidats.reduce((best, cur) => (scorePoste(cur) > scorePoste(best) ? cur : best));
+    lieuCible = candidats.reduce((best, cur) =>
+      scorePoste(cur) > scorePoste(best) ? cur : best
+    );
   }
 
   if (lieuCible) {
@@ -551,6 +545,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.03</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.04</p>
 </body>
 </html>
