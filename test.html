@@ -448,11 +448,26 @@ let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
+// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
 const posteTrouvé = lieux.find(l => 
   normalize(l.nom) === normalize(app.nom) &&
   normalize(l.type) === normalize(app.type) &&
   normalize(l.SAT || "") === normalize(app.SAT || "")
 );
+
+const accesTrouvé = lieux.find(l =>
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "") &&
+  normalize(String(l.accès || "")) === normalize(app.appareil)
+);
+
+// 2) Priorité à l'accès spécifique, sinon fallback poste
+const lieuCible = accesTrouvé || posteTrouvé;
+
+if (lieuCible) {
+  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
+}
   if (posteTrouvé) {
     blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(posteTrouvé)})'>ICI</a></p>`);
   }
