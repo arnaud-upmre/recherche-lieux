@@ -171,6 +171,19 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
+  // Helper pour uniformiser les apostrophes et espaces dans les noms de postes
+const ODD_QUOTES = /[\u2018\u2019\u02BC\u2032\u00B4`]/g; // ’ ʹ ´ ` etc.
+function normNom(s = "") {
+  return String(s)
+    .normalize("NFKC")
+    .replace(ODD_QUOTES, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// (optionnel, juste pour test dans la console)
+window.normNom = normNom;
+
 function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
@@ -199,8 +212,12 @@ function formatRSS(table) {
 }
 function generateAppareilListHTML(currentLieu) {
   const posteNomComplet = formatNomComplet(currentLieu);
-  console.log("🔍 currentLieu :", currentLieu);
-  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
+const matchingApps = appareils.filter(a =>
+  a._nom  === currentLieu._nom &&
+  a._type === currentLieu._type &&
+  (!a._sat || !currentLieu._sat || a._sat === currentLieu._sat) &&
+  (!a._acces || !currentLieu._acces || a._acces === currentLieu._acces)
+);
 
   if (matchingApps.length === 0) {
     // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
@@ -295,8 +312,15 @@ fetch(appareilsUrl).then(res => res.json()).then(data => {
     ignoreLocation: true
   });
 });
-  fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data;
+fetch(appareilsUrl).then(res => res.json()).then(data => {
+  appareils = data.map(a => ({
+    ...a,
+    _nom: normNom(a.nom),
+    _type: normNom(a.type),
+    _sat: normNom(a.SAT),
+    _acces: normNom(a.accès),
+    _code: normNom(a.appareil || "")
+  }));
 
 fuse = new Fuse(lieux, {
   keys: [
@@ -486,6 +510,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.18</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.19</p>
 </body>
 </html>
