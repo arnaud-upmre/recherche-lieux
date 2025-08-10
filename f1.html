@@ -24,10 +24,10 @@ body{
   color:var(--text);
   padding:20px;
 }
-.wrap {
-  max-width: 640px;
-  margin: auto;
-  padding: 0 8px; /* évite que les champs collent aux bords */
+.wrap{
+  max-width:640px;
+  margin:auto;
+  padding:0 8px; /* Ajout pour éviter le débordement visuel */
 }
 h1{
   font-size:22px;
@@ -81,11 +81,13 @@ label.field{
 }
 input[type="text"], textarea{
   width:100%;
+  max-width:100%; /* Empêche le dépassement */
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:12px;
   font-size:16px;
   outline:none;
+  box-sizing:border-box; /* Inclut les bordures dans la largeur */
 }
 textarea{min-height:100px;resize:vertical;}
 input:focus, textarea:focus{
@@ -102,6 +104,7 @@ input:focus, textarea:focus{
 .actions{margin-top:18px;}
 button{
   width:100%;
+  max-width:100%; /* Empêche le dépassement */
   padding:14px;
   font-size:16px;
   font-weight:700;
@@ -110,6 +113,7 @@ button{
   border:none;
   border-radius:var(--radius);
   cursor:pointer;
+  box-sizing:border-box;
 }
 button:hover{background:var(--primary-hover);}
 button:disabled{opacity:.6;cursor:not-allowed;}
@@ -152,10 +156,6 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   .segment label{ color:var(--text); }
   form{ background:#2c2c2e; border-color:var(--border); }
   input[type="text"], textarea{
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
     background:#1c1c1e;
     color:var(--text);
     border-color:var(--border);
@@ -224,7 +224,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 02.10</div>
+  <div class="version">Version 02.01 — iOS Lisible + Dark Mode + Fix largeur</div>
 </div>
 
 <script>
