@@ -19,7 +19,7 @@
 }
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   padding:20px;
@@ -83,6 +83,7 @@ label.field{
 }
 input[type="text"], textarea{
   width:100%;
+  max-width:100%;
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:12px;
@@ -95,11 +96,17 @@ input:focus, textarea:focus{
   border-color:var(--primary);
   box-shadow:0 0 0 3px rgba(0,122,255,.2);
 }
+.hint{
+  font-size:12px;
+  color:var(--subtle);
+  margin-top:4px;
+}
 
 /* Submit button */
 .actions{margin-top:18px;}
 button{
   width:100%;
+  max-width:100%;
   padding:14px;
   font-size:16px;
   font-weight:700;
@@ -108,11 +115,24 @@ button{
   border:none;
   border-radius:var(--radius);
   cursor:pointer;
+  box-sizing:border-box;
 }
 button:hover{background:var(--primary-hover);}
 button:disabled{opacity:.6;cursor:not-allowed;}
 
-/* Overlay avec effet fondu + montée */
+/* Toast message */
+.toast{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:var(--radius);
+  font-weight:600;
+  text-align:center;
+}
+.toast.show{display:block;}
+.toast.error{background:rgba(255,59,48,.15);color:var(--danger);}
+
+/* Overlay */
 .overlay{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
@@ -181,9 +201,17 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     --success:#30d158;
     --danger:#ff453a;
   }
-  body{background:var(--bg);color:var(--text);}
-  form, .overlay-content{background:#2c2c2e;border-color:var(--border);}
-  input, textarea{background:#1c1c1e;color:var(--text);border-color:var(--border);}
+  body{ background:var(--bg); color:var(--text); }
+  .segment{ background:#2c2c2e; border-color:var(--border); }
+  .segment label{ color:var(--text); }
+  form{ background:#2c2c2e; border-color:var(--border); }
+  input[type="text"], textarea{
+    background:#1c1c1e;
+    color:var(--text);
+    border-color:var(--border);
+  }
+  .hint{ color:var(--subtle); }
+  .toast.error{ background:rgba(255,69,58,.15); }
   .btn-secondary{background:#3a3a3c;color:#fff;}
 }
 </style>
@@ -193,6 +221,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   <h1>🛤️ Ajouter ou mettre à jour un poste</h1>
   <div class="subtitle">Indiquez un nouveau poste ou mettez à jour un existant</div>
 
+  <!-- Segmented control -->
   <div class="segment">
     <input type="radio" name="type" id="opt-ajout" value="Ajout" checked>
     <label for="opt-ajout">Ajout</label>
@@ -201,13 +230,16 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   </div>
 
   <form id="formulaire">
+    <!-- Honeypot -->
     <input type="text" name="website" class="hidden" autocomplete="off" tabindex="-1">
 
+    <!-- Demandeur -->
     <div class="group">
       <label class="field" for="demandeur">👤 Votre nom</label>
       <input type="text" name="demandeur" id="demandeur" placeholder="Nom, prénom">
     </div>
 
+    <!-- Bloc Ajout -->
     <div id="tab-ajout">
       <div class="group">
         <label class="field" for="nom_poste">📍 Nom du poste</label>
@@ -223,6 +255,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
       </div>
     </div>
 
+    <!-- Bloc Modification -->
     <div id="tab-modif" class="hidden">
       <div class="group">
         <label class="field" for="nom_modif">✏️ Poste à modifier</label>
@@ -237,9 +270,10 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div class="actions">
       <button type="submit" id="submitBtn">✅ Envoyer</button>
     </div>
+    <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.04_11</div>
+  <div class="version">Version 01.03_11</div>
 </div>
 
 <!-- Overlay -->
@@ -260,6 +294,7 @@ const rModif = document.getElementById('opt-modif');
 const tabAjout = document.getElementById('tab-ajout');
 const tabModif = document.getElementById('tab-modif');
 const form = document.getElementById('formulaire');
+const toast = document.getElementById('toast');
 const submitBtn = document.getElementById('submitBtn');
 const overlay = document.getElementById('successOverlay');
 const newContributionBtn = document.getElementById('newContribution');
@@ -280,9 +315,15 @@ function setMode(mode){
     form.raison.required = true;
   }
 }
+
 rAjout.addEventListener('change', ()=>setMode('Ajout'));
 rModif.addEventListener('change', ()=>setMode('Modification'));
 setMode('Ajout');
+
+function showToast(msg, type){
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+}
 
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -299,12 +340,12 @@ form.addEventListener('submit', async (e)=>{
     });
     const text = await res.text();
     if(text.trim().toUpperCase() === 'OK'){
-      overlay.classList.add('show');
+      overlay.classList.add('show'); // On affiche l'overlay au lieu du toast
     }else{
-      alert('❌ Erreur lors de l’envoi');
+      showToast('❌ Erreur lors de l’envoi', 'error');
     }
   }catch{
-    alert('❌ Problème de connexion');
+    showToast('❌ Problème de connexion', 'error');
   }
   submitBtn.disabled = false;
 });
