@@ -27,19 +27,21 @@ body{
 .wrap{
   max-width:640px;
   margin:auto;
-  padding:0 8px; /* Ajout pour éviter le débordement visuel */
+  padding:0 8px;
 }
 h1{
-  font-size:22px;
+  font-size:18px; /* réduit de 22px à 18px */
   font-weight:700;
   margin-bottom:6px;
   text-align:center;
+  line-height:1.2; /* réduit l’espacement vertical */
 }
 .subtitle{
   text-align:center;
-  font-size:14px;
+  font-size:13px; /* réduit de 14px à 13px */
   color:var(--subtle);
   margin-bottom:20px;
+  line-height:1.2;
 }
 
 /* Segment control */
@@ -81,13 +83,13 @@ label.field{
 }
 input[type="text"], textarea{
   width:100%;
-  max-width:100%; /* Empêche le dépassement */
+  max-width:100%;
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:12px;
   font-size:16px;
   outline:none;
-  box-sizing:border-box; /* Inclut les bordures dans la largeur */
+  box-sizing:border-box;
 }
 textarea{min-height:100px;resize:vertical;}
 input:focus, textarea:focus{
@@ -104,7 +106,7 @@ input:focus, textarea:focus{
 .actions{margin-top:18px;}
 button{
   width:100%;
-  max-width:100%; /* Empêche le dépassement */
+  max-width:100%;
   padding:14px;
   font-size:16px;
   font-weight:700;
@@ -224,7 +226,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.01_11</div>
+  <div class="version">Version 01.01_12</div>
 </div>
 
 <script>
@@ -256,7 +258,7 @@ function showToast(msg, type){
 
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  if(form.website.value) return; // anti-spam
+  if(form.website.value) return;
 
   submitBtn.disabled = true;
   showToast('⏳ Envoi en cours…', 'info');
