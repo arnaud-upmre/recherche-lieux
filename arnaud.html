@@ -12,7 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
-      padding-bottom: 6rem; /* espace pour la barre fixe */
+      padding-bottom: 7rem; /* espace pour la barre fixe */
       line-height: 1.6;
       user-select: none;
     }
@@ -62,13 +62,6 @@
       border-radius: 0.6rem;
       padding: 0.8rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      opacity: 0;
-      transform: scale(0.9);
-      transition: all 0.6s ease;
-    }
-    .stats-box.visible {
-      opacity: 1;
-      transform: scale(1);
     }
     .stats-content {
       display: flex;
@@ -83,21 +76,11 @@
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    .stat-pill.visible {
-      animation: popFadeIn 0.5s forwards;
-    }
-    @keyframes popFadeIn {
-      0% { opacity: 0; transform: scale(0.9); }
-      60% { opacity: 1; transform: scale(1.1); }
-      100% { opacity: 1; transform: scale(1); }
     }
     .btn-box {
       background: #fff;
-      border-radius: 0.6rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 0.6rem 0.6rem 0 0;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
       position: fixed;
       bottom: 0;
@@ -133,6 +116,27 @@
       .btn {
         flex: 1 1 100%;
         max-width: none;
+      }
+    }
+    /* Mode sombre automatique */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1e1e1e;
+        color: #ddd;
+      }
+      .card, .stats-box, .btn-box {
+        background: #2a2a2a;
+        border-color: #444;
+      }
+      blockquote {
+        background: #333;
+        border-left-color: #666;
+      }
+      .btn {
+        background-color: #3366ff;
+      }
+      .btn:hover {
+        background-color: #264fcc;
       }
     }
   </style>
@@ -185,7 +189,7 @@
   </div>
 
   <!-- Encadré dynamique -->
-  <div class="stats-box" id="statsBox" style="max-width:1000px; margin:1.5rem auto;">
+  <div class="stats-box" style="max-width:1000px; margin:1.5rem auto;">
     <h2>🚀 Notre avancement</h2>
     <div class="stats-content" id="stats"></div>
   </div>
@@ -217,27 +221,6 @@
         console.error("Erreur chargement JSON :", error);
       }
     }
-
-    function animateStats() {
-      const statPills = document.querySelectorAll('.stat-pill');
-      statPills.forEach((pill, index) => {
-        pill.style.animationDelay = `${index * 0.2}s`;
-        pill.classList.add('visible');
-      });
-    }
-
-    const statsBox = document.getElementById('statsBox');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          statsBox.classList.add('visible');
-          animateStats();
-          observer.disconnect();
-        }
-      });
-    }, { threshold: 0.3 });
-    observer.observe(statsBox);
-
     fetchCounts();
   </script>
 </body>
