@@ -12,6 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
+      padding-bottom: 6rem; /* espace pour bloc boutons fixe */
       line-height: 1.6;
       user-select: none;
     }
@@ -52,20 +53,20 @@
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
-      flex: 1 1 300px;
+      flex: 1 1 100%;
     }
-    .stats-box, .btn-box {
-      margin-top: 1rem;
+    .stats-card, .btn-card {
       background: #fff;
-      border: 1px solid #ddd;
       border-radius: 0.6rem;
-      padding: 0.8rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 1rem;
+      margin-top: 1rem;
     }
     .stats-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      justify-content: center;
     }
     .stat-pill {
       background: #0055cc;
@@ -103,70 +104,78 @@
         flex: 1 1 100%;
       }
     }
+    /* Bloc boutons fixe */
+    .btn-card.fixed {
+      position: fixed;
+      bottom: 0.8rem;
+      left: 0.8rem;
+      right: 0.8rem;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
   
   <h1>🔧 À propos</h1>
   
-  <div class="container">
-    <!-- Colonne gauche -->
-    <div class="card">
-      <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
-      <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
-      <p>Rien de centralisé, rien de structuré.</p>
-      <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
-  
-      <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
-      <ul>
-        <li>➡️ pas de recherche intelligente,</li>
-        <li>➡️ peu de possibilités collaboratives pour ajouter des points,</li>
-        <li>➡️ pas de gestion avancée des données terrain.</li>
-      </ul>
-  
-      <blockquote>
-        “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
-      </blockquote>
-  
-      <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
-      <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
+  <!-- Encadré 1 : Présentation -->
+  <div class="card">
+    <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
+    <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
+    <p>Rien de centralisé, rien de structuré.</p>
+    <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
 
-      <div class="stats-box">
-        <div class="stats-content" id="stats"></div>
-      </div>
-    </div>
-    
-    <!-- Colonne droite -->
-    <div class="card">
-      <h2>🧐 Le déclic</h2>
-      <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
-      <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
-      Je découvrais ce poste pour la toute première fois.<br>
-      Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
-      Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
-      Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅, pour rejoindre l’appareil…<br>
-      Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté 😅</p>
-  
-      <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
-      C’est sans doute à ce moment que l’idée de ce projet a pris racine.</p>
-  
-      <p>🕒 👉 <strong>Plus de 60 heures de R&D</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
-  
-      <h2>🚀 Et la suite ?</h2>
-      <p>Le projet ne s’arrête pas là.</p>
-      <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
-      <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
-  
-      <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
-  
-      <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+    <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
+    <ul>
+      <li>➡️ pas de recherche intelligente,</li>
+      <li>➡️ peu de possibilités collaboratives pour ajouter des points,</li>
+      <li>➡️ pas de gestion avancée des données terrain.</li>
+    </ul>
 
-      <div class="btn-box">
-        <div class="btn-container">
-          <a href="index.html" class="btn">🔍 Recherche</a>
-          <a href="formulaire.html" class="btn">📌 Contribuer</a>
-        </div>
-      </div>
+    <blockquote>
+      “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
+    </blockquote>
+
+    <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
+    <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
+  </div>
+
+  <!-- Encadré 2 : Le déclic -->
+  <div class="card">
+    <h2>🧐 Le déclic</h2>
+    <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
+    <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
+    Je découvrais ce poste pour la toute première fois.<br>
+    Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
+    Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
+    Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅, pour rejoindre l’appareil…<br>
+    Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté 😅</p>
+
+    <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
+    C’est sans doute à ce moment que l’idée de ce projet a pris racine.</p>
+
+    <p>🕒 👉 <strong>Plus de 60 heures de R&D</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
+
+    <h2>🚀 Et la suite ?</h2>
+    <p>Le projet ne s’arrête pas là.</p>
+    <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
+    <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
+
+    <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
+
+    <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+  </div>
+
+  <!-- Encadré 3 : Bloc dynamique -->
+  <div class="stats-card">
+    <div class="stats-content" id="stats"></div>
+  </div>
+
+  <!-- Encadré 4 : Bloc boutons -->
+  <div class="btn-card fixed">
+    <div class="btn-container">
+      <a href="index.html" class="btn">🔍 Recherche</a>
+      <a href="formulaire.html" class="btn">📌 Contribuer</a>
     </div>
   </div>
   
