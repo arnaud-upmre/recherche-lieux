@@ -8,33 +8,37 @@
   <style>
     body {
       font-family: 'Segoe UI', 'Inter', sans-serif;
-      background-color: #fdfdfd;
+      background-color: #fafafa;
       color: #333;
       margin: 0;
-      padding: 1.5rem;
+      padding: 1.2rem;
       line-height: 1.6;
       user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
     }
 
-    h1, h2, h3 {
-      margin-top: 1.5rem;
+    h1, h2 {
       font-weight: 600;
+      margin-top: 1.2rem;
+      margin-bottom: 0.6rem;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
+      text-align: center;
     }
 
     h2 {
-      font-size: 1.4rem;
-      margin-top: 2rem;
+      font-size: 1.3rem;
+      margin-top: 1.8rem;
     }
 
     p, li {
       font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    ul {
+      padding-left: 1.2rem;
     }
 
     blockquote {
@@ -43,24 +47,33 @@
       background: #f0f0f0;
       border-left: 4px solid #ccc;
       font-style: italic;
+      border-radius: 4px;
     }
 
     .divider {
       border-top: 1px solid #ddd;
-      margin: 2rem 0;
+      margin: 1.5rem 0;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
 
     .btn {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 0.75rem 1.5rem;
+      flex: 1 1 auto;
+      min-width: 140px;
+      text-align: center;
+      padding: 0.8rem 1.2rem;
       background-color: #0055cc;
       color: white;
-      border: none;
       border-radius: 0.5rem;
       font-size: 1rem;
       text-decoration: none;
-      cursor: pointer;
+      font-weight: 500;
       transition: background-color 0.3s ease;
     }
 
@@ -76,9 +89,17 @@
     .fade-in.visible {
       opacity: 1;
     }
+
+    @media (max-width: 600px) {
+      .btn {
+        font-size: 0.95rem;
+        padding: 0.7rem 1rem;
+      }
+    }
   </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
+
   <h1>🔧 À propos</h1>
 
   <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
@@ -98,8 +119,9 @@
   </blockquote>
 
   <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
-<p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé d’un seul coup en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
-  <ul>
+
+  <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
+
   <div class="divider"></div>
 
   <h2>🧐 Mais pourquoi ?</h2>
@@ -109,11 +131,12 @@
   <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
   Je découvrais ce poste pour la toute première fois.<br>
   Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
-  Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone. Un peu comme quand on organisait un départ en vacances, sauf que cette fois, c’est pour dénicher un poste paumé en pleine nature.<br>
-  Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅,  pour rejoindre l’appareil…<br>
-  Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté de l'appareil 😅</p>
+  Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
+  Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅, pour rejoindre l’appareil…<br>
+  Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté 😅</p>
+
   <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
-  C’est sans doute à ce moment-là que l’idée de ce projet a vraiment pris racine.</p>
+  C’est sans doute à ce moment que l’idée de ce projet a pris racine.</p>
 
   <p id="stats" class="fade-in">Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
 
@@ -125,15 +148,15 @@
 
   <p>Le projet ne s’arrête pas là.</p>
   <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
-  <p>🔄 L’outil s’enrichit avec vos retours, vos ajouts, vos repérages terrain. Chaque contribution rend la carte plus utile, plus précise, plus efficace.</p>
+  <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
 
   <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
 
-  <br>
-  <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+  <p style="margin-top:1.5rem;">Ferroviairement,<br><strong>Arnaud</strong></p>
 
-  <div style="text-align: center;">
+  <div class="btn-container">
     <a href="index.html" class="btn">🔍 Faire une recherche</a>
+    <a href="formulaire.html" class="btn">📌 Contribuer</a>
   </div>
 
   <script>
@@ -143,26 +166,15 @@
           fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
           fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
         ]);
-
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-
-        const nbLieux = lieux.length;
-        const nbAppareils = appareils.length;
-
         const stats = document.getElementById('stats');
-        stats.textContent =
-          `À ce jour, ${nbLieux} points d’accès routier et ${nbAppareils} appareils sont référencés.`;
-
-        setTimeout(() => {
-          stats.classList.add('visible');
-        }, 50);
-
+        stats.textContent = `À ce jour, ${lieux.length} points d’accès routier et ${appareils.length} appareils sont référencés.`;
+        setTimeout(() => stats.classList.add('visible'), 50);
       } catch (error) {
         console.error("Erreur chargement JSON :", error);
       }
     }
-
     fetchCounts();
   </script>
 </body>
