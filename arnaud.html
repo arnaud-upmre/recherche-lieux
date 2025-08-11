@@ -12,7 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
-      padding-bottom: 7rem; /* espace pour la barre fixe */
+      padding-bottom: 7rem;
       line-height: 1.6;
       user-select: none;
     }
@@ -48,20 +48,15 @@
       max-width: 1000px;
       margin: auto;
     }
-    .card {
+    .card,
+    .stats-box {
       background: #fff;
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
       flex: 1 1 300px;
-    }
-    .stats-box {
-      margin-top: 1rem;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 0.6rem;
-      padding: 0.8rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      max-width: 1000px;
+      margin: 1.5rem auto;
     }
     .stats-content {
       display: flex;
@@ -117,26 +112,28 @@
         flex: 1 1 100%;
         max-width: none;
       }
+      body {
+        padding-bottom: 9rem;
+      }
     }
-    /* Mode sombre automatique */
     @media (prefers-color-scheme: dark) {
       body {
-        background-color: #1e1e1e;
-        color: #ddd;
+        background-color: #121212;
+        color: #e0e0e0;
       }
       .card, .stats-box, .btn-box {
-        background: #2a2a2a;
-        border-color: #444;
+        background: #1e1e1e;
+        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
       }
       blockquote {
-        background: #333;
-        border-left-color: #666;
+        background: #2a2a2a;
+        border-left: 4px solid #555;
       }
       .btn {
-        background-color: #3366ff;
+        background-color: #1976d2;
       }
       .btn:hover {
-        background-color: #264fcc;
+        background-color: #1565c0;
       }
     }
   </style>
@@ -146,7 +143,6 @@
   <h1>🔧 À propos</h1>
   
   <div class="container">
-    <!-- Colonne gauche -->
     <div class="card">
       <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
       <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
@@ -165,21 +161,19 @@
       <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
     </div>
     
-    <!-- Colonne droite -->
     <div class="card">
       <h2>🧐 Le déclic</h2>
       <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
       <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
       Je découvrais ce poste pour la toute première fois.<br>
       Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
-      Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
-      Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres… pour rejoindre l’appareil… et découvrir qu’il y avait un portail juste à côté 😅</p>
+      Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant… mais ma “carte” était mon téléphone.<br>
+      Une fois sur place, j’ai dû marcher plusieurs centaines de mètres… pour rejoindre l’appareil… et découvrir qu’il y avait un portail juste à côté 😅</p>
       <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong></p>
     </div>
   </div>
 
-  <!-- Encadré "Et la suite ?" -->
-  <div class="card" style="max-width:1000px; margin:1.5rem auto;">
+  <div class="card">
     <h2>🚀 Et la suite ?</h2>
     <p>Le projet ne s’arrête pas là.</p>
     <p>🎯 L’objectif : construire une base fiable et exhaustive, poste par poste, appareil par appareil.</p>
@@ -188,13 +182,11 @@
     <p>Ferroviairement,<br><strong>Arnaud</strong></p>
   </div>
 
-  <!-- Encadré dynamique -->
-  <div class="stats-box" style="max-width:1000px; margin:1.5rem auto;">
+  <div class="stats-box" id="statsBox">
     <h2>🚀 Notre avancement</h2>
     <div class="stats-content" id="stats"></div>
   </div>
 
-  <!-- Barre fixe boutons -->
   <div class="btn-box">
     <div class="btn-container">
       <a href="index.html" class="btn">🔍 Recherche</a>
@@ -211,8 +203,7 @@
         ]);
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-        const statsEl = document.getElementById('stats');
-        statsEl.innerHTML = `
+        document.getElementById('stats').innerHTML = `
           <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
           <span class="stat-pill">⚡ ${appareils.length} appareils</span>
           <span class="stat-pill">🕒 +60h R&D</span>
