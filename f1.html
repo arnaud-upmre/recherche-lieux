@@ -257,7 +257,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.05_11</div>
+  <div class="version">Version 01.06_11</div>
 </div>
 
 <!-- Overlay -->
@@ -278,6 +278,14 @@ const form = document.getElementById('formulaire');
 const toast = document.getElementById('toast');
 const submitBtn = document.getElementById('submitBtn');
 const overlay = document.getElementById('overlay');
+
+/* >>> AJOUT compteur contributions <<< */
+const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+function incrementContribution(){
+  // on n'attend pas la réponse, on déclenche juste l’incrément côté Apps Script
+  fetch(compteurContributionURL + "?increment=true").catch(()=>{});
+}
+/* >>> FIN AJOUT <<< */
 
 function setMode(mode){
   form.querySelectorAll('[name]').forEach(el => el.removeAttribute('required'));
@@ -328,6 +336,10 @@ form.addEventListener('submit', async (e)=>{
     });
     const text = await res.text();
     if(text.trim().toUpperCase() === 'OK'){
+      /* >>> AJOUT : incrément réel après succès <<< */
+      incrementContribution();
+      /* >>> FIN AJOUT <<< */
+
       form.reset();
       setMode('Ajout');
       toast.textContent = '';
