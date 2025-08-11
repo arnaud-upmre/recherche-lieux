@@ -12,7 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
-      padding-bottom: 6rem; /* espace pour bloc boutons fixe */
+      padding-bottom: 7rem; /* espace pour boutons fixes */
       line-height: 1.6;
       user-select: none;
     }
@@ -41,26 +41,13 @@
       font-style: italic;
       border-radius: 4px;
     }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .card {
+    .card,
+    .stats-card {
       background: #fff;
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
-      flex: 1 1 100%;
-    }
-    .stats-card, .btn-card {
-      background: #fff;
-      border-radius: 0.6rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 1rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem; /* plus d'espace entre encadrés */
     }
     .stats-content {
       display: flex;
@@ -76,6 +63,17 @@
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
+    }
+    .btn-card {
+      position: fixed;
+      bottom: 0.8rem;
+      left: 0.8rem;
+      right: 0.8rem;
+      background: #fff;
+      border-radius: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 0.8rem;
+      z-index: 1000;
     }
     .btn-container {
       display: flex;
@@ -103,14 +101,6 @@
       .btn {
         flex: 1 1 100%;
       }
-    }
-    /* Bloc boutons fixe */
-    .btn-card.fixed {
-      position: fixed;
-      bottom: 0.8rem;
-      left: 0.8rem;
-      right: 0.8rem;
-      z-index: 1000;
     }
   </style>
 </head>
@@ -140,7 +130,12 @@
     <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
   </div>
 
-  <!-- Encadré 2 : Le déclic -->
+  <!-- Encadré 2 : Bloc dynamique -->
+  <div class="stats-card">
+    <div class="stats-content" id="stats"></div>
+  </div>
+
+  <!-- Encadré 3 : Le déclic -->
   <div class="card">
     <h2>🧐 Le déclic</h2>
     <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
@@ -166,13 +161,8 @@
     <p>Ferroviairement,<br><strong>Arnaud</strong></p>
   </div>
 
-  <!-- Encadré 3 : Bloc dynamique -->
-  <div class="stats-card">
-    <div class="stats-content" id="stats"></div>
-  </div>
-
-  <!-- Encadré 4 : Bloc boutons -->
-  <div class="btn-card fixed">
+  <!-- Encadré 4 : Bloc boutons fixes -->
+  <div class="btn-card">
     <div class="btn-container">
       <a href="index.html" class="btn">🔍 Recherche</a>
       <a href="formulaire.html" class="btn">📌 Contribuer</a>
@@ -188,8 +178,7 @@
         ]);
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-        const stats = document.getElementById('stats');
-        stats.innerHTML = `
+        document.getElementById('stats').innerHTML = `
           <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
           <span class="stat-pill">⚡ ${appareils.length} appareils</span>
           <span class="stat-pill">🕒 +60h R&D</span>
