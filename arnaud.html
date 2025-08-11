@@ -12,6 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
+      padding-bottom: 5.5rem; /* espace pour la barre fixe */
       line-height: 1.6;
       user-select: none;
     }
@@ -54,29 +55,40 @@
       padding: 1rem;
       flex: 1 1 300px;
     }
-    .stats {
+    .stats-box {
+      margin-top: 1rem;
+      background: #e9f5ff;
+      border: 1px solid #bcdffb;
+      border-radius: 0.6rem;
+      padding: 0.8rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-top: 1rem;
     }
     .stat-pill {
-      background: #e9f5ff;
-      color: #0055cc;
+      background: #0055cc;
+      color: #fff;
       padding: 0.4rem 0.8rem;
       border-radius: 999px;
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
     }
-    .btn-container {
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+      padding: 0.6rem 1rem;
       display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1rem;
+      gap: 1rem;
+      z-index: 1000;
     }
     .btn {
-      display: block;
+      flex: 1 1 auto;
       text-align: center;
       padding: 0.8rem 1.2rem;
       background-color: #0055cc;
@@ -123,7 +135,7 @@
       <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
       <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
 
-      <div class="stats" id="stats"></div>
+      <div class="stats-box" id="stats"></div>
     </div>
     
     <!-- Colonne droite -->
@@ -150,12 +162,13 @@
       <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
   
       <p>Ferroviairement,<br><strong>Arnaud</strong></p>
-  
-      <div class="btn-container">
-        <a href="index.html" class="btn">🔍 Faire une recherche</a>
-        <a href="formulaire.html" class="btn">📌 Contribuer</a>
-      </div>
     </div>
+  </div>
+  
+  <!-- Barre fixe avec boutons -->
+  <div class="bottom-bar">
+    <a href="index.html" class="btn">🔍 Faire une recherche</a>
+    <a href="formulaire.html" class="btn">📌 Contribuer</a>
   </div>
   
   <script>
