@@ -14,7 +14,6 @@
       padding: 1rem;
       line-height: 1.6;
       user-select: none;
-      padding-bottom: 7rem; /* espace pour éviter que les boutons masquent le contenu */
     }
     h1 {
       font-size: 1.6rem;
@@ -54,18 +53,11 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
     }
-    .stats-box {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 0.6rem;
-      padding: 0.8rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      margin-top: 1rem;
-    }
     .stats-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      justify-content: center;
     }
     .stat-pill {
       background: #0055cc;
@@ -76,16 +68,13 @@
       font-size: 0.9rem;
       white-space: nowrap;
     }
-    .btn-box {
-      background: #fff;
-      border-radius: 0.6rem 0.6rem 0 0;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    /* Bloc boutons fixes */
+    .card.btn-card {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 0.8rem;
-      z-index: 100;
+      bottom: 0.8rem;
+      left: 1rem;
+      right: 1rem;
+      z-index: 1000;
     }
     .btn-container {
       display: flex;
@@ -157,9 +146,7 @@
     
     <!-- Encadré 3 (Dynamique) -->
     <div class="card">
-      <div class="stats-box">
-        <div class="stats-content" id="stats"></div>
-      </div>
+      <div class="stats-content" id="stats"></div>
     </div>
     
     <!-- Encadré 4 (Et la suite) -->
@@ -174,8 +161,8 @@
   
   </div>
 
-  <!-- Boutons fixes -->
-  <div class="btn-box">
+  <!-- Boutons fixes (même style que les autres encadrés) -->
+  <div class="card btn-card">
     <div class="btn-container">
       <a href="index.html" class="btn">🔍 Recherche</a>
       <a href="formulaire.html" class="btn">📌 Contribuer</a>
@@ -191,8 +178,7 @@
         ]);
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-        const stats = document.getElementById('stats');
-        stats.innerHTML = `
+        document.getElementById('stats').innerHTML = `
           <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
           <span class="stat-pill">⚡ ${appareils.length} appareils</span>
           <span class="stat-pill">🕒 +60h R&D</span>
@@ -202,6 +188,16 @@
       }
     }
     fetchCounts();
+
+    // Ajuster le padding en bas pour éviter que le contenu soit masqué
+    function adjustBottomPadding() {
+      const btnCard = document.querySelector('.btn-card');
+      if (btnCard) {
+        document.body.style.paddingBottom = (btnCard.offsetHeight + 20) + 'px';
+      }
+    }
+    window.addEventListener('load', adjustBottomPadding);
+    window.addEventListener('resize', adjustBottomPadding);
   </script>
 </body>
 </html>
