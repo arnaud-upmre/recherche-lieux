@@ -12,6 +12,7 @@
       color: #333;
       margin: 0;
       padding: 1rem;
+      padding-bottom: 6rem; /* espace pour la barre fixe */
       line-height: 1.6;
       user-select: none;
     }
@@ -22,7 +23,7 @@
     }
     h2 {
       font-size: 1.3rem;
-      margin-top: 0;
+      margin-top: 1rem;
       margin-bottom: 0.6rem;
     }
     p, li {
@@ -42,7 +43,7 @@
     }
     .container {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 1.5rem;
       max-width: 1000px;
       margin: auto;
@@ -52,12 +53,27 @@
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
+      flex: 1 1 300px;
+    }
+    .stats-box {
+      margin-top: 1rem;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0.6rem;
+      padding: 0.8rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.6s ease;
+    }
+    .stats-box.visible {
+      opacity: 1;
+      transform: scale(1);
     }
     .stats-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      justify-content: center;
     }
     .stat-pill {
       background: #0055cc;
@@ -67,14 +83,28 @@
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
+      opacity: 0;
+      transform: scale(0.9);
     }
-    /* Bloc boutons fixes */
-    .card.btn-card {
+    .stat-pill.visible {
+      animation: popFadeIn 0.5s forwards;
+    }
+    @keyframes popFadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      60% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .btn-box {
+      background: #fff;
+      border-radius: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 1rem;
       position: fixed;
-      bottom: 0.8rem;
-      left: 1rem;
-      right: 1rem;
-      z-index: 1000;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 1000px;
+      margin: auto;
     }
     .btn-container {
       display: flex;
@@ -94,6 +124,7 @@
       font-weight: 500;
       transition: background-color 0.3s ease;
       white-space: nowrap;
+      max-width: 200px;
     }
     .btn:hover {
       background-color: #0040a8;
@@ -101,6 +132,7 @@
     @media (max-width: 480px) {
       .btn {
         flex: 1 1 100%;
+        max-width: none;
       }
     }
   </style>
@@ -110,8 +142,7 @@
   <h1>🔧 À propos</h1>
   
   <div class="container">
-    
-    <!-- Encadré 1 -->
+    <!-- Colonne gauche -->
     <div class="card">
       <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
       <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
@@ -130,7 +161,7 @@
       <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
     </div>
     
-    <!-- Encadré 2 -->
+    <!-- Colonne droite -->
     <div class="card">
       <h2>🧐 Le déclic</h2>
       <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
@@ -138,31 +169,29 @@
       Je découvrais ce poste pour la toute première fois.<br>
       Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
       Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
-      Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅, pour rejoindre l’appareil…<br>
-      Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté 😅</p>
-      <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
-      C’est sans doute à ce moment que l’idée de ce projet a pris racine.</p>
+      Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres… pour rejoindre l’appareil… et découvrir qu’il y avait un portail juste à côté 😅</p>
+      <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong></p>
     </div>
-    
-    <!-- Encadré 3 (Dynamique) -->
-    <div class="card">
-      <div class="stats-content" id="stats"></div>
-    </div>
-    
-    <!-- Encadré 4 (Et la suite) -->
-    <div class="card">
-      <h2>🚀 Et la suite ?</h2>
-      <p>Le projet ne s’arrête pas là.</p>
-      <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
-      <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
-      <p>📩 Vous souhaitez contribuer ? Le formulaire est là pour ça.</p>
-      <p>Ferroviairement,<br><strong>Arnaud</strong></p>
-    </div>
-  
   </div>
 
-  <!-- Boutons fixes (même style que les autres encadrés) -->
-  <div class="card btn-card">
+  <!-- Encadré "Et la suite ?" -->
+  <div class="card" style="max-width:1000px; margin:1.5rem auto;">
+    <h2>🚀 Et la suite ?</h2>
+    <p>Le projet ne s’arrête pas là.</p>
+    <p>🎯 L’objectif : construire une base fiable et exhaustive, poste par poste, appareil par appareil.</p>
+    <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
+    <p>📩 Vous souhaitez contribuer ? Le formulaire est là pour ça.</p>
+    <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+  </div>
+
+  <!-- Encadré dynamique -->
+  <div class="stats-box" id="statsBox" style="max-width:1000px; margin:1.5rem auto;">
+    <h2>🚀 Notre avancement</h2>
+    <div class="stats-content" id="stats"></div>
+  </div>
+
+  <!-- Barre fixe boutons -->
+  <div class="btn-box">
     <div class="btn-container">
       <a href="index.html" class="btn">🔍 Recherche</a>
       <a href="formulaire.html" class="btn">📌 Contribuer</a>
@@ -178,7 +207,8 @@
         ]);
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-        document.getElementById('stats').innerHTML = `
+        const statsEl = document.getElementById('stats');
+        statsEl.innerHTML = `
           <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
           <span class="stat-pill">⚡ ${appareils.length} appareils</span>
           <span class="stat-pill">🕒 +60h R&D</span>
@@ -187,17 +217,28 @@
         console.error("Erreur chargement JSON :", error);
       }
     }
-    fetchCounts();
 
-    // Ajuster le padding en bas pour éviter que le contenu soit masqué
-    function adjustBottomPadding() {
-      const btnCard = document.querySelector('.btn-card');
-      if (btnCard) {
-        document.body.style.paddingBottom = (btnCard.offsetHeight + 20) + 'px';
-      }
+    function animateStats() {
+      const statPills = document.querySelectorAll('.stat-pill');
+      statPills.forEach((pill, index) => {
+        pill.style.animationDelay = `${index * 0.2}s`;
+        pill.classList.add('visible');
+      });
     }
-    window.addEventListener('load', adjustBottomPadding);
-    window.addEventListener('resize', adjustBottomPadding);
+
+    const statsBox = document.getElementById('statsBox');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          statsBox.classList.add('visible');
+          animateStats();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    observer.observe(statsBox);
+
+    fetchCounts();
   </script>
 </body>
 </html>
