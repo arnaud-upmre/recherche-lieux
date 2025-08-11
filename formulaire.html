@@ -141,6 +141,37 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   margin-top:16px;
 }
 
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.overlay-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: var(--radius);
+  max-width: 300px;
+  text-align: center;
+}
+.overlay-content button {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.overlay-content button:hover {
+  background: var(--primary-hover);
+}
+
 /* ===== Dark Mode ===== */
 @media (prefers-color-scheme: dark){
   :root{
@@ -165,6 +196,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   .hint{ color:var(--subtle); }
   .toast.success{ background:rgba(48,209,88,.15); }
   .toast.error{ background:rgba(255,69,58,.15); }
+  .overlay-content { background: #2c2c2e; color: var(--text); }
 }
 </style>
 </head>
@@ -225,7 +257,16 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.02_11</div>
+  <div class="version">Version 01.05_11</div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <div class="overlay-content">
+    <p>✅ Votre contribution a bien été enregistrée</p>
+    <button onclick="window.location.href='index.html'">🏠 Retour à l'accueil</button>
+    <button onclick="fermerOverlay()">➕ Nouvelle contribution</button>
+  </div>
 </div>
 
 <script>
@@ -236,11 +277,10 @@ const tabModif = document.getElementById('tab-modif');
 const form = document.getElementById('formulaire');
 const toast = document.getElementById('toast');
 const submitBtn = document.getElementById('submitBtn');
+const overlay = document.getElementById('overlay');
 
 function setMode(mode){
-  // Réinitialise tous les "required"
   form.querySelectorAll('[name]').forEach(el => el.removeAttribute('required'));
-
   if(mode === 'Ajout'){
     tabAjout.classList.remove('hidden');
     tabModif.classList.add('hidden');
@@ -265,6 +305,13 @@ function showToast(msg, type){
   toast.className = 'toast show ' + type;
 }
 
+function ouvrirOverlay(){
+  overlay.style.display = 'flex';
+}
+function fermerOverlay(){
+  overlay.style.display = 'none';
+}
+
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   if(form.website.value) return;
@@ -281,9 +328,11 @@ form.addEventListener('submit', async (e)=>{
     });
     const text = await res.text();
     if(text.trim().toUpperCase() === 'OK'){
-      showToast('✅ Votre demande a bien été envoyée', 'success');
       form.reset();
       setMode('Ajout');
+      toast.textContent = '';
+      toast.className = 'toast';
+      ouvrirOverlay();
     }else{
       showToast('❌ Erreur lors de l’envoi', 'error');
     }
