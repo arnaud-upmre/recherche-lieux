@@ -19,7 +19,7 @@
 }
 body{
   margin:0;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   padding:20px;
@@ -83,7 +83,6 @@ label.field{
 }
 input[type="text"], textarea{
   width:100%;
-  max-width:100%;
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:12px;
@@ -96,17 +95,11 @@ input:focus, textarea:focus{
   border-color:var(--primary);
   box-shadow:0 0 0 3px rgba(0,122,255,.2);
 }
-.hint{
-  font-size:12px;
-  color:var(--subtle);
-  margin-top:4px;
-}
 
 /* Submit button */
 .actions{margin-top:18px;}
 button{
   width:100%;
-  max-width:100%;
   padding:14px;
   font-size:16px;
   font-weight:700;
@@ -115,33 +108,68 @@ button{
   border:none;
   border-radius:var(--radius);
   cursor:pointer;
-  box-sizing:border-box;
 }
 button:hover{background:var(--primary-hover);}
 button:disabled{opacity:.6;cursor:not-allowed;}
 
-/* Toast message */
-.toast{
-  display:none;
-  margin-top:12px;
-  padding:12px;
+/* Overlay avec effet fondu + montée */
+.overlay{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.3s ease, visibility 0.3s ease;
+}
+.overlay.show{
+  opacity:1;
+  visibility:visible;
+}
+.overlay-content{
+  background:#fff;
   border-radius:var(--radius);
-  font-weight:600;
+  padding:20px;
+  max-width:320px;
   text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+  transform:translateY(20px);
+  transition:transform 0.3s ease;
 }
-.toast.show{display:block;}
-.toast.success{background:rgba(52,199,89,.15);color:var(--success);}
-.toast.error{background:rgba(255,59,48,.15);color:var(--danger);}
-
-.hidden{display:none;}
-.version{
-  text-align:center;
-  color:var(--subtle);
-  font-size:12px;
-  margin-top:16px;
+.overlay.show .overlay-content{
+  transform:translateY(0);
+}
+.overlay-content h2{
+  font-size:18px;
+  margin-bottom:10px;
+  color:var(--success);
+}
+.overlay-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
+}
+.overlay-buttons button{
+  padding:12px;
+  border:none;
+  border-radius:var(--radius);
+  font-size:15px;
+  cursor:pointer;
+}
+.btn-primary{
+  background:var(--primary);
+  color:#fff;
+}
+.btn-secondary{
+  background:#e5e5ea;
+  color:#000;
 }
 
-/* ===== Dark Mode ===== */
+/* Dark mode */
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#1c1c1e;
@@ -153,18 +181,10 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     --success:#30d158;
     --danger:#ff453a;
   }
-  body{ background:var(--bg); color:var(--text); }
-  .segment{ background:#2c2c2e; border-color:var(--border); }
-  .segment label{ color:var(--text); }
-  form{ background:#2c2c2e; border-color:var(--border); }
-  input[type="text"], textarea{
-    background:#1c1c1e;
-    color:var(--text);
-    border-color:var(--border);
-  }
-  .hint{ color:var(--subtle); }
-  .toast.success{ background:rgba(48,209,88,.15); }
-  .toast.error{ background:rgba(255,69,58,.15); }
+  body{background:var(--bg);color:var(--text);}
+  form, .overlay-content{background:#2c2c2e;border-color:var(--border);}
+  input, textarea{background:#1c1c1e;color:var(--text);border-color:var(--border);}
+  .btn-secondary{background:#3a3a3c;color:#fff;}
 }
 </style>
 </head>
@@ -173,7 +193,6 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   <h1>🛤️ Ajouter ou mettre à jour un poste</h1>
   <div class="subtitle">Indiquez un nouveau poste ou mettez à jour un existant</div>
 
-  <!-- Segmented control -->
   <div class="segment">
     <input type="radio" name="type" id="opt-ajout" value="Ajout" checked>
     <label for="opt-ajout">Ajout</label>
@@ -182,16 +201,13 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   </div>
 
   <form id="formulaire">
-    <!-- Honeypot -->
     <input type="text" name="website" class="hidden" autocomplete="off" tabindex="-1">
 
-    <!-- Demandeur -->
     <div class="group">
       <label class="field" for="demandeur">👤 Votre nom</label>
       <input type="text" name="demandeur" id="demandeur" placeholder="Nom, prénom">
     </div>
 
-    <!-- Bloc Ajout -->
     <div id="tab-ajout">
       <div class="group">
         <label class="field" for="nom_poste">📍 Nom du poste</label>
@@ -207,7 +223,6 @@ button:disabled{opacity:.6;cursor:not-allowed;}
       </div>
     </div>
 
-    <!-- Bloc Modification -->
     <div id="tab-modif" class="hidden">
       <div class="group">
         <label class="field" for="nom_modif">✏️ Poste à modifier</label>
@@ -222,10 +237,21 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div class="actions">
       <button type="submit" id="submitBtn">✅ Envoyer</button>
     </div>
-    <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.02_11</div>
+  <div class="version">Version 01.04_11</div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="successOverlay">
+  <div class="overlay-content">
+    <h2>✅ Contribution enregistrée</h2>
+    <p>Votre contribution a bien été prise en compte.</p>
+    <div class="overlay-buttons">
+      <button class="btn-primary" onclick="window.location.href='index.html'">⬅️ Retour à l'accueil</button>
+      <button class="btn-secondary" id="newContribution">➕ Nouvelle contribution</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -234,13 +260,12 @@ const rModif = document.getElementById('opt-modif');
 const tabAjout = document.getElementById('tab-ajout');
 const tabModif = document.getElementById('tab-modif');
 const form = document.getElementById('formulaire');
-const toast = document.getElementById('toast');
 const submitBtn = document.getElementById('submitBtn');
+const overlay = document.getElementById('successOverlay');
+const newContributionBtn = document.getElementById('newContribution');
 
 function setMode(mode){
-  // Réinitialise tous les "required"
   form.querySelectorAll('[name]').forEach(el => el.removeAttribute('required'));
-
   if(mode === 'Ajout'){
     tabAjout.classList.remove('hidden');
     tabModif.classList.add('hidden');
@@ -255,22 +280,15 @@ function setMode(mode){
     form.raison.required = true;
   }
 }
-
 rAjout.addEventListener('change', ()=>setMode('Ajout'));
 rModif.addEventListener('change', ()=>setMode('Modification'));
 setMode('Ajout');
-
-function showToast(msg, type){
-  toast.textContent = msg;
-  toast.className = 'toast show ' + type;
-}
 
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   if(form.website.value) return;
 
   submitBtn.disabled = true;
-  showToast('⏳ Envoi en cours…', 'info');
 
   const fd = new FormData(form);
   fd.set('type', rAjout.checked ? 'Ajout' : 'Modification');
@@ -281,16 +299,20 @@ form.addEventListener('submit', async (e)=>{
     });
     const text = await res.text();
     if(text.trim().toUpperCase() === 'OK'){
-      showToast('✅ Votre demande a bien été envoyée', 'success');
-      form.reset();
-      setMode('Ajout');
+      overlay.classList.add('show');
     }else{
-      showToast('❌ Erreur lors de l’envoi', 'error');
+      alert('❌ Erreur lors de l’envoi');
     }
   }catch{
-    showToast('❌ Problème de connexion', 'error');
+    alert('❌ Problème de connexion');
   }
   submitBtn.disabled = false;
+});
+
+newContributionBtn.addEventListener('click', ()=>{
+  overlay.classList.remove('show');
+  form.reset();
+  setMode('Ajout');
 });
 </script>
 </body>
