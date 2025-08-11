@@ -1,161 +1,286 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width">
-  <meta name="robots" content="noindex, nofollow" />
-  <title>🗺️ Formulaire de contribution à la carte GPS</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 1rem;
-      background: #f8f8f8;
-      color: #333;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 1rem;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="robots" content="noindex, nofollow" />
+<title>🛤️ Ajouter ou mettre à jour un poste</title>
+<style>
+:root{
+  --bg:#f2f2f7;
+  --text:#1c1c1e;
+  --subtle:#6b7280;
+  --border:#d1d1d6;
+  --primary:#007aff;
+  --primary-hover:#0066d6;
+  --success:#34c759;
+  --danger:#ff3b30;
+  --radius:14px;
+}
+body{
+  margin:0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding:20px;
+}
+.wrap{
+  max-width:640px;
+  margin:auto;
+  padding:0 8px; /* Ajout pour éviter le débordement visuel */
+}
+h1{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:6px;
+  text-align:center;
+}
+.subtitle{
+  text-align:center;
+  font-size:14px;
+  color:var(--subtle);
+  margin-bottom:20px;
+}
 
-    input, select, textarea, button {
-     font-size: 16px;
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-    .hidden {
-      display: none;
-    }
-    .message {
-      margin-top: 1rem;
-      color: green;
-      font-weight: bold;
-      text-align: center;
-      transition: opacity 0.4s;
-    }
-    button {
-      margin-top: 1.5rem;
-      background-color: #1a73e8;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #155ab6;
-    }
-    .version {
-      margin-top: 3rem;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.9rem;
-    }
-  </style>
+/* Segment control */
+.segment{
+  display:flex;
+  background:#fff;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.segment input{display:none;}
+.segment label{
+  flex:1;
+  padding:12px 0;
+  text-align:center;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  transition:background .2s,color .2s;
+}
+.segment input:checked + label{
+  background:var(--primary);
+  color:#fff;
+}
+
+/* Form fields */
+form{
+  background:#fff;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  padding:16px;
+  margin-top:16px;
+}
+.group{margin-top:14px;}
+label.field{
+  display:block;
+  font-weight:600;
+  margin-bottom:6px;
+}
+input[type="text"], textarea{
+  width:100%;
+  max-width:100%; /* Empêche le dépassement */
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px;
+  font-size:16px;
+  outline:none;
+  box-sizing:border-box; /* Inclut les bordures dans la largeur */
+}
+textarea{min-height:100px;resize:vertical;}
+input:focus, textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(0,122,255,.2);
+}
+.hint{
+  font-size:12px;
+  color:var(--subtle);
+  margin-top:4px;
+}
+
+/* Submit button */
+.actions{margin-top:18px;}
+button{
+  width:100%;
+  max-width:100%; /* Empêche le dépassement */
+  padding:14px;
+  font-size:16px;
+  font-weight:700;
+  color:#fff;
+  background:var(--primary);
+  border:none;
+  border-radius:var(--radius);
+  cursor:pointer;
+  box-sizing:border-box;
+}
+button:hover{background:var(--primary-hover);}
+button:disabled{opacity:.6;cursor:not-allowed;}
+
+/* Toast message */
+.toast{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:var(--radius);
+  font-weight:600;
+  text-align:center;
+}
+.toast.show{display:block;}
+.toast.success{background:rgba(52,199,89,.15);color:var(--success);}
+.toast.error{background:rgba(255,59,48,.15);color:var(--danger);}
+
+.hidden{display:none;}
+.version{
+  text-align:center;
+  color:var(--subtle);
+  font-size:12px;
+  margin-top:16px;
+}
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1c1c1e;
+    --text:#f5f5f7;
+    --subtle:#a1a1aa;
+    --border:#2c2c2e;
+    --primary:#0a84ff;
+    --primary-hover:#0060df;
+    --success:#30d158;
+    --danger:#ff453a;
+  }
+  body{ background:var(--bg); color:var(--text); }
+  .segment{ background:#2c2c2e; border-color:var(--border); }
+  .segment label{ color:var(--text); }
+  form{ background:#2c2c2e; border-color:var(--border); }
+  input[type="text"], textarea{
+    background:#1c1c1e;
+    color:var(--text);
+    border-color:var(--border);
+  }
+  .hint{ color:var(--subtle); }
+  .toast.success{ background:rgba(48,209,88,.15); }
+  .toast.error{ background:rgba(255,69,58,.15); }
+}
+</style>
 </head>
 <body>
-  <h1>🗺️ Formulaire de contribution à la carte GPS</h1>
+<div class="wrap">
+  <h1>🛤️ Ajouter ou mettre à jour un poste</h1>
+  <div class="subtitle">Indiquez un nouveau poste ou mettez à jour un existant</div>
+
+  <!-- Segmented control -->
+  <div class="segment">
+    <input type="radio" name="type" id="opt-ajout" value="Ajout" checked>
+    <label for="opt-ajout">Ajout</label>
+    <input type="radio" name="type" id="opt-modif" value="Modification">
+    <label for="opt-modif">Modification</label>
+  </div>
 
   <form id="formulaire">
-    <label for="type">Type de demande :</label>
-    <select name="type" id="type" required>
-      <option value="">-- Sélectionner --</option>
-      <option value="Ajout">Ajout</option>
-      <option value="Modification">Modification</option>
-    </select>
+    <!-- Honeypot -->
+    <input type="text" name="website" class="hidden" autocomplete="off" tabindex="-1">
 
-    <label for="demandeur">Demandeur :</label>
-    <input type="text" name="demandeur" id="demandeur" required />
-
-    <div id="ajoutFields" class="hidden">
-      <label for="nom_poste">Nom du poste :</label>
-      <input type="text" name="nom_poste" id="nom_poste" />
-
-      <label for="coordonnees">Coordonnées ou lien GPS :</label>
-      <input type="text" name="coordonnees" id="coordonnees" />
-
-      <label for="autre">Autre remarque :</label>
-      <textarea name="autre" id="autre"></textarea>
+    <!-- Demandeur -->
+    <div class="group">
+      <label class="field" for="demandeur">Demandeur</label>
+      <input type="text" name="demandeur" id="demandeur" required>
     </div>
 
-    <div id="modifFields" class="hidden">
-      <label for="nom_modif">Nom du poste à modifier :</label>
-      <input type="text" name="nom_modif" id="nom_modif" />
-
-      <label for="raison">Raison de la modification :</label>
-      <textarea name="raison" id="raison"></textarea>
+    <!-- Bloc Ajout -->
+    <div id="tab-ajout">
+      <div class="group">
+        <label class="field" for="nom_poste">Nom du poste</label>
+        <input type="text" name="nom_poste" id="nom_poste">
+      </div>
+      <div class="group">
+        <label class="field" for="coordonnees">Coordonnées ou lien GPS</label>
+        <input type="text" name="coordonnees" id="coordonnees">
+        <div class="hint">Ex : 50.123, 3.456 ou lien Google Maps</div>
+      </div>
+      <div class="group">
+        <label class="field" for="autre">Autre remarque</label>
+        <textarea name="autre" id="autre"></textarea>
+      </div>
     </div>
 
-    <button type="submit">✅ Envoyer</button>
-    <div class="message" id="message"></div>
+    <!-- Bloc Modification -->
+    <div id="tab-modif" class="hidden">
+      <div class="group">
+        <label class="field" for="nom_modif">Nom du poste à modifier</label>
+        <input type="text" name="nom_modif" id="nom_modif">
+      </div>
+      <div class="group">
+        <label class="field" for="raison">Raison de la modification</label>
+        <textarea name="raison" id="raison"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" id="submitBtn">✅ Envoyer</button>
+    </div>
+    <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.02</div>
+  <div class="version">Version 01.01_11</div>
+</div>
 
-  <script>
-    const typeSelect = document.getElementById("type");
-    const ajoutFields = document.getElementById("ajoutFields");
-    const modifFields = document.getElementById("modifFields");
+<script>
+const rAjout = document.getElementById('opt-ajout');
+const rModif = document.getElementById('opt-modif');
+const tabAjout = document.getElementById('tab-ajout');
+const tabModif = document.getElementById('tab-modif');
+const form = document.getElementById('formulaire');
+const toast = document.getElementById('toast');
+const submitBtn = document.getElementById('submitBtn');
 
-    typeSelect.addEventListener("change", function () {
-      ajoutFields.classList.add("hidden");
-      modifFields.classList.add("hidden");
+function setMode(mode){
+  if(mode === 'Ajout'){
+    tabAjout.classList.remove('hidden');
+    tabModif.classList.add('hidden');
+  }else{
+    tabModif.classList.remove('hidden');
+    tabAjout.classList.add('hidden');
+  }
+}
+rAjout.addEventListener('change', ()=>setMode('Ajout'));
+rModif.addEventListener('change', ()=>setMode('Modification'));
+setMode('Ajout');
 
-      if (this.value === "Ajout") ajoutFields.classList.remove("hidden");
-      if (this.value === "Modification") modifFields.classList.remove("hidden");
+function showToast(msg, type){
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+}
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(form.website.value) return; // anti-spam
+
+  submitBtn.disabled = true;
+  showToast('⏳ Envoi en cours…', 'info');
+
+  const fd = new FormData(form);
+  fd.set('type', rAjout.checked ? 'Ajout' : 'Modification');
+
+  try{
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
+      method:'POST', body:fd
     });
-
-    document.getElementById("formulaire").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = new FormData(form);
-      const button = form.querySelector("button[type='submit']");
-      const message = document.getElementById("message");
-
-      // Affiche "envoi en cours…" et désactive le bouton
-      message.textContent = "⏳ Envoi en cours…";
-      button.disabled = true;
-      button.style.transition = "opacity 0.6s";
-      button.style.opacity = "0.4";
-
-      fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
-        method: "POST",
-        body: data
-      })
-      .then(res => res.text())
-      .then(text => {
-        if (text.trim().toUpperCase() === "OK") {
-          message.textContent = "✅ Votre demande a bien été envoyée. Elle sera traitée sous 48h maximum (jours ouvrés).";
-          form.reset();
-          ajoutFields.classList.add("hidden");
-          modifFields.classList.add("hidden");
-        } else {
-          message.textContent = "❌ Une erreur inattendue s’est produite. Veuillez réessayer.";
-        }
-        setTimeout(() => {
-          message.textContent = "";
-          button.disabled = false;
-          button.style.opacity = "1";
-        }, 5000);
-      })
-      .catch(() => {
-        message.textContent = "❌ Une erreur s’est produite. Vérifiez votre connexion ou réessayez plus tard.";
-        setTimeout(() => {
-          message.textContent = "";
-          button.disabled = false;
-          button.style.opacity = "1";
-        }, 5000);
-      });
-    });
-  </script>
+    const text = await res.text();
+    if(text.trim().toUpperCase() === 'OK'){
+      showToast('✅ Votre demande a bien été envoyée', 'success');
+      form.reset();
+      setMode('Ajout');
+    }else{
+      showToast('❌ Erreur lors de l’envoi', 'error');
+    }
+  }catch{
+    showToast('❌ Problème de connexion', 'error');
+  }
+  submitBtn.disabled = false;
+});
+</script>
 </body>
 </html>
