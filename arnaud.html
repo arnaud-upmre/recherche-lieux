@@ -3,282 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <title>🔧 À propos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="color-scheme" content="light dark" />
-
   <style>
-    /* ====== Design tokens ====== */
-    :root{
-      --bg: #0b0c10;
-      --panel: #12131a;
-      --panel-2:#161824;
-      --text: #e8eaed;
-      --muted:#a9b0bb;
-      --brand:#4c8dff;
-      --brand-2:#7db0ff;
-      --accent:#19c37d;
-
-      --radius: 14px;
-      --shadow: 0 10px 30px rgba(0,0,0,.25);
-      --maxw: 880px;
+    body {
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      background-color: #fafafa;
+      color: #333;
+      margin: 0;
+      padding: 1.2rem;
+      padding-bottom: 6rem; /* espace pour le bloc fixe */
+      line-height: 1.6;
+      user-select: none;
     }
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg: #f7f8fb;
-        --panel:#ffffff;
-        --panel-2:#f3f5f9;
-        --text:#1a1f2b;
-        --muted:#556070;
-        --brand:#2b6fff;
-        --brand-2:#6ea1ff;
-        --accent:#17aE6b;
-        --shadow: 0 8px 24px rgba(24,39,75,.06);
-      }
+    h1, h2 {
+      font-weight: 600;
+      margin-top: 1.2rem;
+      margin-bottom: 0.6rem;
     }
-
-    /* ====== Base ====== */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:
-        radial-gradient(80rem 40rem at 10% -20%, rgba(76,141,255,.18), transparent 60%),
-        radial-gradient(80rem 40rem at 90% -10%, rgba(25,195,125,.12), transparent 60%),
-        var(--bg);
-      line-height:1.6;
+    h1 {
+      font-size: 1.6rem;
+      text-align: center;
     }
-    a{color:inherit}
-
-    /* ====== Layout ====== */
-    .shell{
-      max-width: var(--maxw);
-      margin: clamp(16px, 4vw, 48px) auto;
-      padding: 0 16px 48px;
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 1.8rem;
     }
-
-    header.hero{
-      position: relative;
-      border-radius: calc(var(--radius) + 6px);
-      padding: clamp(20px,4vw,28px);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), transparent),
-        linear-gradient(135deg, var(--panel), var(--panel-2));
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
+    p, li {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
     }
-    .hero .emoji{
-      font-size:clamp(28px,5vw,36px);
-      line-height:1;
-      filter: drop-shadow(0 6px 18px rgba(25,195,125,.25));
+    ul {
+      padding-left: 1.2rem;
     }
-    .hero h1{
-      font-size:clamp(22px,4vw,28px);
-      margin:0 0 6px 0;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .hero p{
-      margin:0;
-      color:var(--muted);
-    }
-
-    /* ====== Cards ====== */
-    .grid{
-      margin-top: 26px;
-      display: grid;
-      gap: 16px;
-    }
-    @media (min-width: 820px){
-      .grid{
-        grid-template-columns: 1.1fr .9fr;
-      }
-    }
-
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.03), transparent),
-                  var(--panel);
-      border:1px solid rgba(136,153,168,.15);
-      border-radius: var(--radius);
-      padding: clamp(16px,2.4vw,22px);
-      box-shadow: var(--shadow);
-    }
-    .card h2{
-      margin:0 0 10px;
-      font-size: clamp(18px,3.4vw,22px);
-      letter-spacing:.2px;
-    }
-    .card p, .card li{
-      color: var(--muted);
-      margin: 8px 0;
-    }
-    .card ul{margin:8px 0 0 0; padding-left: 1.1rem}
-
-    blockquote{
-      margin: 14px 0 0;
-      padding: 14px 16px;
-      border-radius: calc(var(--radius) - 4px);
-      border:1px dashed rgba(136,153,168,.35);
-      background: linear-gradient(180deg, rgba(76,141,255,.07), transparent);
+    blockquote {
+      margin: 1rem 0;
+      padding: 0.8rem 1rem;
+      background: #f0f0f0;
+      border-left: 4px solid #ccc;
       font-style: italic;
+      border-radius: 4px;
     }
-
-    /* ====== Stats ====== */
-    .stats{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:12px;
+    .divider {
+      border-top: 1px solid #ddd;
+      margin: 1.5rem 0;
     }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(25,195,125,.12), rgba(25,195,125,.06));
-      border:1px solid rgba(25,195,125,.25);
-      color: var(--text);
-      font-weight:600;
-      font-size:.98rem;
-      opacity:.0; transform: translateY(6px);
-      transition: opacity .5s ease, transform .5s ease;
+    .btn-box-fixed {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+      padding: 0.8rem 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 1000;
     }
-    .pill.show{opacity:1; transform:none}
-    .pill .dot{
-      width:8px; height:8px; border-radius:50%; background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(25,195,125,.18);
-    }
-
-    /* ====== CTA ====== */
-    .cta{
-      display:flex; gap:12px; flex-wrap:wrap;
-      margin-top: 18px;
-    }
-    .btn{
-      appearance:none; border:0; cursor:pointer;
-      padding: 12px 16px;
-      min-width: 180px;
-      border-radius: 12px;
-      font-weight:600;
-      text-decoration:none; text-align:center;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
-      will-change: transform;
-    }
-    .btn-primary{
-      background: linear-gradient(180deg, var(--brand), var(--brand-2));
+    .btn {
+      flex: 1 1 auto;
+      max-width: 200px;
+      text-align: center;
+      padding: 0.8rem 1.2rem;
+      background-color: #0055cc;
       color: white;
-      box-shadow: 0 10px 20px rgba(76,141,255,.25);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
     }
-    .btn-secondary{
-      background: linear-gradient(180deg, rgba(136,153,168,.18), rgba(136,153,168,.08));
-      color: var(--text);
-      border:1px solid rgba(136,153,168,.25);
+    .btn:hover {
+      background-color: #0040a8;
     }
-    .btn:hover{transform: translateY(-1px)}
-    .btn:active{transform: translateY(0)}
-
-    /* ====== Footer sig ====== */
-    .sig{
-      margin-top: 8px;
-      color: var(--muted);
-      font-size:.95rem;
+    .fade-in {
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
     }
-
-    /* ====== Motion preferences ====== */
-    @media (prefers-reduced-motion: reduce){
-      .pill{transition:none}
-      .btn{transition:none}
+    .fade-in.visible {
+      opacity: 1;
     }
   </style>
 </head>
-<body>
-  <div class="shell">
-    <header class="hero">
-      <div class="emoji">🔧</div>
-      <div>
-        <h1>À propos</h1>
-        <p>De quelques points Google partagés… à une application web pensée pour le terrain.</p>
-      </div>
-    </header>
+<body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
+  <h1>🔧 À propos</h1>
 
-    <main class="grid">
-      <!-- Colonne 1 -->
-      <section class="card">
-        <h2>Pourquoi ce projet ?</h2>
-        <p>Au début, on s’échangeait des points GPS “comme on pouvait”… sans structure ni recherche. J’ai créé une carte MyMaps pour référencer les accès routiers aux postes — utile, mais limité&nbsp;:</p>
-        <ul>
-          <li>pas de recherche intelligente,</li>
-          <li>peu de collaboration,</li>
-          <li>pas de gestion avancée des données terrain.</li>
-        </ul>
+  <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
+  <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
+  <p>Rien de centralisé, rien de structuré.</p>
+  <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
 
-        <blockquote>
-          « Le partage de connaissances… est le fondement d’une collaboration fructueuse. » — John C. Maxwell
-        </blockquote>
+  <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
+  <ul>
+    <li>➡️ pas de recherche intelligente,</li>
+    <li>➡️ peu de possibilités collaboratives pour ajouter des points,</li>
+    <li>➡️ pas de gestion avancée des données terrain.</li>
+  </ul>
 
-        <p style="margin-top:10px">L’idée s’est imposée&nbsp;: <strong>centraliser et partager</strong> les infos de tous dans une base claire, fiable et utile.</p>
+  <blockquote>
+    “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
+  </blockquote>
 
-        <div class="stats" id="stats">
-          <!-- pills remplies en JS -->
-        </div>
-      </section>
+  <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
 
-      <!-- Colonne 2 -->
-      <section class="card">
-        <h2>Le déclic</h2>
-        <p>Lors d’une astreinte à Rodelinghem, sans consigne ni plan, j’ai marché des centaines de mètres de nuit… avant de découvrir qu’un portail d’accès était juste à côté.</p>
-        <p><strong>Ce soir‑là : « Plus jamais ça. »</strong></p>
-        <p class="sig">Aujourd’hui&nbsp;: l’outil évolue en continu avec vos retours et le terrain.</p>
+  <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
 
-        <div class="cta">
-          <a class="btn btn-primary" href="index.html">🔍 Faire une recherche</a>
-          <a class="btn btn-secondary" href="formulaire.html">📌 Contribuer</a>
-        </div>
-      </section>
-    </main>
+  <div class="divider"></div>
+
+  <h2>🧐 Mais pourquoi ?</h2>
+
+  <p>Parce qu’on en avait besoin, tout simplement 🙃</p>
+
+  <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
+  Je découvrais ce poste pour la toute première fois.<br>
+  Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
+  Encore à l’équipe, je prépare mon itinéraire comme on le faisait avant : anticiper, visualiser le trajet, repérer les accès possibles… sauf qu’ici, ma “carte”, c’est mon téléphone.<br>
+  Mais une fois sur place, il m’a fallu marcher plusieurs centaines de mètres, seul, sur la piste "végétalisée", avec une ancienne lampe frontale 😅, pour rejoindre l’appareil…<br>
+  Et là, je me suis rendu compte qu’il y avait un portail d’accès… juste à côté 😅</p>
+
+  <p><strong>Ce soir-là, je me suis dit : « Plus jamais ça. »</strong><br>
+  C’est sans doute à ce moment que l’idée de ce projet a pris racine.</p>
+
+  <p id="stats" class="fade-in">Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
+
+  <p>🕒 👉 <strong>Plus de 60 heures de R&D</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
+
+  <div class="divider"></div>
+
+  <h2>🚀 Et la suite ?</h2>
+
+  <p>Le projet ne s’arrête pas là.</p>
+  <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
+  <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
+  <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
+
+  <p style="margin-top:1.5rem;">Ferroviairement,<br><strong>Arnaud</strong></p>
+
+  <div class="btn-box-fixed">
+    <a href="index.html" class="btn">🔍 Faire une recherche</a>
+    <a href="formulaire.html" class="btn">📌 Contribuer</a>
   </div>
 
   <script>
-    // Récupère et affiche les stats sous forme de "pills" élégantes
-    async function loadStats(){
-      const wrap = document.getElementById('stats');
-      const makePill = (text) => {
-        const span = document.createElement('span');
-        span.className = 'pill';
-        span.innerHTML = '<span class="dot" aria-hidden="true"></span>' + text;
-        return span;
-      };
-
-      try{
+    async function fetchCounts() {
+      try {
         const [lieuxRes, appareilsRes] = await Promise.all([
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json', {cache:'no-store'}),
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json', {cache:'no-store'})
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
         ]);
         const lieux = await lieuxRes.json();
         const appareils = await appareilsRes.json();
-
-        const pills = [
-          makePill(`${lieux.length} accès routiers référencés`),
-          makePill(`${appareils.length} appareils cartographiés`),
-          makePill(`+60 h de R&D`)
-        ];
-        pills.forEach((p,i)=>{
-          wrap.appendChild(p);
-          // petit décalage pour l’animation
-          setTimeout(()=>p.classList.add('show'), 90*(i+1));
-        });
-      }catch(e){
-        const fallback = makePill('Statistiques indisponibles pour le moment');
-        wrap.appendChild(fallback);
-        setTimeout(()=>fallback.classList.add('show'), 120);
-        console.error('Erreur de chargement des stats :', e);
+        const stats = document.getElementById('stats');
+        stats.textContent = `À ce jour, ${lieux.length} points d’accès routier et ${appareils.length} appareils sont référencés.`;
+        setTimeout(() => stats.classList.add('visible'), 50);
+      } catch (error) {
+        console.error("Erreur chargement JSON :", error);
       }
     }
-    loadStats();
+    fetchCounts();
   </script>
 </body>
 </html>
