@@ -30,15 +30,15 @@ body{
   padding:0 8px;
 }
 h1{
-  font-size:18px; /* réduit de 22px à 18px */
+  font-size:18px;
   font-weight:700;
   margin-bottom:6px;
   text-align:center;
-  line-height:1.2; /* réduit l’espacement vertical */
+  line-height:1.2;
 }
 .subtitle{
   text-align:center;
-  font-size:13px; /* réduit de 14px à 13px */
+  font-size:13px;
   color:var(--subtle);
   margin-bottom:20px;
   line-height:1.2;
@@ -187,36 +187,35 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 
     <!-- Demandeur -->
     <div class="group">
-      <label class="field" for="demandeur">Demandeur</label>
-      <input type="text" name="demandeur" id="demandeur" required>
+      <label class="field" for="demandeur">👤 Votre nom</label>
+      <input type="text" name="demandeur" id="demandeur" placeholder="Nom, prénom">
     </div>
 
     <!-- Bloc Ajout -->
     <div id="tab-ajout">
       <div class="group">
-        <label class="field" for="nom_poste">Nom du poste</label>
-        <input type="text" name="nom_poste" id="nom_poste">
+        <label class="field" for="nom_poste">📍 Nom du poste</label>
+        <input type="text" name="nom_poste" id="nom_poste" placeholder="Alleux SP">
       </div>
       <div class="group">
-        <label class="field" for="coordonnees">Coordonnées ou lien GPS</label>
-        <input type="text" name="coordonnees" id="coordonnees">
-        <div class="hint">Ex : 50.123, 3.456 ou lien Google Maps</div>
+        <label class="field" for="coordonnees">🌍 Coordonnées / lien</label>
+        <input type="text" name="coordonnees" id="coordonnees" placeholder="50.123, 3.456 ou lien Google Maps">
       </div>
       <div class="group">
-        <label class="field" for="autre">Autre remarque</label>
-        <textarea name="autre" id="autre"></textarea>
+        <label class="field" for="autre">📝 Remarques</label>
+        <textarea name="autre" id="autre" placeholder="Toute information utile, code portail, etc..."></textarea>
       </div>
     </div>
 
     <!-- Bloc Modification -->
     <div id="tab-modif" class="hidden">
       <div class="group">
-        <label class="field" for="nom_modif">Nom du poste à modifier</label>
-        <input type="text" name="nom_modif" id="nom_modif">
+        <label class="field" for="nom_modif">✏️ Poste à modifier</label>
+        <input type="text" name="nom_modif" id="nom_modif" placeholder="Hazebrouck SSPA">
       </div>
       <div class="group">
-        <label class="field" for="raison">Raison de la modification</label>
-        <textarea name="raison" id="raison"></textarea>
+        <label class="field" for="raison">❓ Raison</label>
+        <textarea name="raison" id="raison" placeholder="Erreur coordonnées, changement d'accès..."></textarea>
       </div>
     </div>
 
@@ -226,7 +225,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.01_12</div>
+  <div class="version">Version 01.02_11</div>
 </div>
 
 <script>
@@ -239,14 +238,24 @@ const toast = document.getElementById('toast');
 const submitBtn = document.getElementById('submitBtn');
 
 function setMode(mode){
+  // Réinitialise tous les "required"
+  form.querySelectorAll('[name]').forEach(el => el.removeAttribute('required'));
+
   if(mode === 'Ajout'){
     tabAjout.classList.remove('hidden');
     tabModif.classList.add('hidden');
+    form.demandeur.required = true;
+    form.nom_poste.required = true;
+    form.coordonnees.required = true;
   }else{
     tabModif.classList.remove('hidden');
     tabAjout.classList.add('hidden');
+    form.demandeur.required = true;
+    form.nom_modif.required = true;
+    form.raison.required = true;
   }
 }
+
 rAjout.addEventListener('change', ()=>setMode('Ajout'));
 rModif.addEventListener('change', ()=>setMode('Modification'));
 setMode('Ajout');
