@@ -486,7 +486,7 @@ setInterval(updateCounterAppareil, 3000);
 
 <!-- Compteur contributions -->
 <div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
-  🧮 Contributions enregistrées : <span id="compteur-valeur">—</span>
+  🧮 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
 </div>
 <script>
   const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
@@ -494,18 +494,18 @@ setInterval(updateCounterAppareil, 3000);
     try{
       const r = await fetch(compteurContributionURL);
       const data = await r.json();
-      document.getElementById("compteur-valeur").textContent = (data && typeof data.count !== "undefined") ? data.count : "0";
+      document.getElementById("compteur-valeur").textContent =
+        (data && typeof data.count !== "undefined") ? data.count : "chargement…";
     }catch(e){
-      // en cas d’erreur réseau, on laisse le tiret
+      document.getElementById("compteur-valeur").textContent = "chargement…";
     }
   }
   refreshContrib();
   setInterval(refreshContrib, 3000);
 </script>
-
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01.10</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.02.11</p>
 </body>
 </html>
