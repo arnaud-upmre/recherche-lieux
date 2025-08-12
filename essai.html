@@ -2,40 +2,223 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Test Bouton Démarrer</title>
+  <title>⚡ Sous-station — Version D1/D2/IA1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: sans-serif;
       background: #0b1020;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
     .cta {
-      padding: 14px 22px;
-      font-size: 1.2rem;
+      padding: 10px 18px;
+      font-size: 1rem;
       font-weight: bold;
       border: none;
       border-radius: 10px;
       background: linear-gradient(180deg,#60a5fa,#3b82f6);
       color: #041019;
       cursor: pointer;
+      margin: 0.3rem;
+    }
+    .tracks {
+      position: relative;
+      height: 360px;
+      background: #111a36;
+      margin: 1rem auto;
+      width: 95%;
+      max-width: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 16.66%;
+      border-bottom: 1px solid #2c3e50;
+    }
+    .train {
+      position: absolute;
+      font-size: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .train.fault {
+      animation: blink 0.5s infinite;
+    }
+    @keyframes blink {
+      50% { transform: translateY(-50%) scale(1.1); }
+    }
+    footer {
+      margin: 1rem;
+      font-size: 0.85rem;
+      color: #9fb3d9;
     }
   </style>
 </head>
 <body>
 
-  <button id="startBtn" class="cta">Démarrer</button>
+  <header>⚡ Sous-station — Localiser la panne & réenclencher</header>
+
+  <div>
+    <button id="startBtn" class="cta">Démarrer</button>
+    <button id="resetBtn" class="cta">Réinitialiser</button>
+  </div>
+
+  <div>⏱️ Temps : <span id="time">30.0</span> — 🏆 Score : <span id="score">0</span></div>
+
+  <div class="tracks" id="tracks">
+    <div class="track" style="top:0%" data-lane="1"></div>
+    <div class="track" style="top:16.66%" data-lane="2"></div>
+    <div class="track" style="top:33.33%" data-lane="3"></div>
+    <div class="track" style="top:50%" data-lane="4"></div>
+    <div class="track" style="top:66.66%" data-lane="5"></div>
+    <div class="track" style="top:83.33%" data-lane="6"></div>
+  </div>
+
+  <div>
+    <button class="cta" id="d1">Départ D1</button>
+    <button class="cta" id="d2">Départ D2</button>
+    <button class="cta" id="ia1">IA1 (Voies 3 à 6)</button>
+  </div>
+
+  <footer>Version : v1.0.0 — 12/08/2025</footer>
 
   <script>
-    const startBtn = document.getElementById('startBtn');
-    startBtn.addEventListener('click', () => {
-      alert("✅ Bouton Démarrer cliqué !");
+    const laneToDepart = {
+      1: "D1",
+      2: "D2",
+      3: "IA1",
+      4: "IA1",
+      5: "IA1",
+      6: "IA1"
+    };
+
+    const departState = { D1: true, D2: true, IA1: true }; // true = alimenté
+    const tracksEl = document.getElementById("tracks");
+    const trains = [];
+
+    let running = false;
+    let score = 0;
+    let timeLeft = 30;
+    let faultTrain = null;
+    let faultDepart = null;
+
+    function spawnTrain() {
+      const lane = Math.ceil(Math.random() * 6);
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      const el = document.createElement("div");
+      el.className = "train";
+      el.textContent = "🚆";
+      el.style.top = `${(lane - 1) * 16.66 + 8}%`;
+      let x = dir === 1 ? -40 : tracksEl.clientWidth + 40;
+      const speed = 80 + Math.random() * 50;
+
+      const trainObj = { el, lane, x, dir, speed, stopped: false };
+      el.addEventListener("click", () => {
+        if (trainObj === faultTrain) {
+          faultTrain.el.classList.remove("fault");
+          faultTrain.stopped = false;
+          departState[faultDepart] = true;
+          updateScore(5);
+          faultTrain = null;
+          faultDepart = null;
+        }
+      });
+
+      tracksEl.appendChild(el);
+      trains.push(trainObj);
+    }
+
+    function updateScore(points) {
+      score += points;
+      document.getElementById("score").textContent = score;
+    }
+
+    function triggerFault() {
+      const candidates = trains.filter(
+        t => departState[laneToDepart[t.lane]] && !t.stopped
+      );
+      if (candidates.length === 0) return;
+      const t = candidates[Math.floor(Math.random() * candidates.length)];
+      faultTrain = t;
+      faultDepart = laneToDepart[t.lane];
+      t.el.textContent = "⚡";
+      t.el.classList.add("fault");
+      t.stopped = true;
+      departState[faultDepart] = false;
+    }
+
+    function moveTrains(dt) {
+      const W = tracksEl.clientWidth;
+      trains.forEach(t => {
+        if (!departState[laneToDepart[t.lane]]) return;
+        if (t.stopped) return;
+        t.x += t.dir * t.speed * dt;
+        t.el.style.left = t.x + "px";
+        if (t.dir === 1 && t.x > W + 50) t.el.remove();
+        if (t.dir === -1 && t.x < -50) t.el.remove();
+      });
+    }
+
+    function gameLoop(timestamp) {
+      if (!running) return;
+      const dt = 0.016;
+      timeLeft -= dt;
+      document.getElementById("time").textContent = timeLeft.toFixed(1);
+      if (timeLeft <= 0) {
+        running = false;
+        alert("Fin de partie ! Score : " + score);
+        return;
+      }
+      if (Math.random() < 0.02) spawnTrain();
+      if (!faultTrain && Math.random() < 0.005) triggerFault();
+      moveTrains(dt);
+      requestAnimationFrame(gameLoop);
+    }
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      running = true;
+      score = 0;
+      timeLeft = 30;
+      trains.length = 0;
+      tracksEl.innerHTML = "";
+      requestAnimationFrame(gameLoop);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      running = false;
+      score = 0;
+      timeLeft = 30;
+      document.getElementById("score").textContent = score;
+      document.getElementById("time").textContent = timeLeft.toFixed(1);
+      tracksEl.innerHTML = "";
+      trains.length = 0;
+      faultTrain = null;
+      faultDepart = null;
+      departState.D1 = departState.D2 = departState.IA1 = true;
+    });
+
+    document.getElementById("d1").addEventListener("click", () => {
+      departState.D1 = !departState.D1;
+    });
+    document.getElementById("d2").addEventListener("click", () => {
+      departState.D2 = !departState.D2;
+    });
+    document.getElementById("ia1").addEventListener("click", () => {
+      departState.IA1 = !departState.IA1;
     });
   </script>
-
 </body>
 </html>
