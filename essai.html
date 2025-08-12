@@ -1,516 +1,683 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <title>Recherche de lieux</title>
+  <title>⚡ Sous-station Sprint — 30s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <meta name="theme-color" content="#0ea5e9" />
   <style>
-    ul#suggestions:empty,
-ul#suggestionsAppareils:empty {
-  margin-bottom: 0;
-}
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #fff;
-      padding: 1rem;
-      color: #333;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100vw;
-      box-sizing: border-box;
+    :root{
+      --bg:#0b1020;
+      --panel:#121a33;
+      --panel-2:#0f1730;
+      --text:#e6eefc;
+      --muted:#9fb3d9;
+      --accent:#38bdf8;
+      --good:#34d399;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow:0 6px 20px rgba(0,0,0,.35);
+      --radius:18px;
+      --green-top:42%;
+      --green-bottom:58%;
     }
-    #train-container {
-      width: 100%;
-      max-width: 600px;
-      height: 48px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      position: relative;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Noto Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 50% -10%, #0f1a37 0%, var(--bg) 55%);
+      color:var(--text);
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
     }
-    #train {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 42px;
-      animation: trainVaEtVient 28s ease-in-out infinite;
+    .wrap{
+      max-width:720px;
+      margin:0 auto;
+      padding:16px clamp(12px, 3vw, 24px) 28px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:100%;
     }
-    @keyframes trainVaEtVient {
-      0%, 100% { left: 0; }
-      45%, 50% { left: calc(100% - 95px); }
-      95% { left: 0; }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
-    h1 {
-      font-size: 20px;
-      margin: 0 0 0.8rem 0;
-      font-weight: 600;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 1rem;
-      text-align: left;
+    h1{
+      font-size:clamp(1.05rem, 3.4vw, 1.4rem);
+      font-weight:700;
+      margin:0;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:.55rem;
     }
-    input[type="text"] {
-      width: 100%;
-      max-width: 600px;
-      padding: 12px 16px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease;
+    .badge{
+      font-size:.78rem;
+      padding:.28rem .55rem;
+      border-radius:999px;
+      background:linear-gradient(180deg, #172347, #0d1530);
+      color:var(--muted);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
     }
-    input[type="text"]:focus {
-      border-color: #1a73e8;
-      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+
+    .panel{
+      background:linear-gradient(180deg, var(--panel), var(--panel-2));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
     }
-    #counter, #counterAppareil {
-      font-size: 13px;
-      color: #666;
-      margin-top: 6px;
-      margin-bottom: 1rem;
+
+    /* HUD */
+    .hud{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
     }
-    ul#suggestions, ul#suggestionsAppareils {
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
-      max-width: 600px;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      background-color: #fff;
-      font-size: 15px;
-      color: #333;
+    .hud .tile{
+      padding:10px 12px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:12px;
+      text-align:center;
+      min-width:110px;
     }
-    ul#suggestions li, ul#suggestionsAppareils li {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #eee;
+    .hud .center{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-width:140px;
+      gap:4px;
     }
-    ul#suggestions li:hover, ul#suggestionsAppareils li:hover {
-      background-color: #f0f8ff;
-      color: #1a73e8;
+    .time{
+      font-size:1.35rem;
+      font-weight:800;
+      letter-spacing:1px;
     }
-    #result {
-      display: none;
-      background: #ffffff;
-      padding: 1rem 1.5rem;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
-      color: #444;
-      font-size: 15px;
-      line-height: 1.5;
+    .score{
+      font-size:1.35rem;
+      font-weight:800;
     }
-    #result h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a73e8;
+    .combo{
+      font-size:.85rem;
+      color:var(--muted);
+      min-height:1.2em;
     }
-    .inline-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 14px;
-      padding: 0 1rem 0 0;
+    .combo.active{
+      color:var(--good);
+      font-weight:700;
+      text-shadow:0 0 12px rgba(52,211,153,.35);
     }
-    .inline-links a {
-      padding: 6px 10px;
-      font-size: 14px;
-      text-decoration: none;
-      color: #1a73e8;
-      border: 1px solid #1a73e8;
-      border-radius: 10px;
-      transition: 0.3s;
-      white-space: nowrap;
+
+    /* Jauge */
+    .gauge-wrap{
+      display:grid;
+      grid-template-columns:1fr 230px 1fr;
+      gap:16px;
+      padding:16px;
+      align-items:center;
     }
-    .inline-links a:hover {
-      background-color: #1a73e8;
-      color: white;
+    @media (max-width:700px){
+      .gauge-wrap{ grid-template-columns:1fr; }
     }
-    .separator {
-      border: none;
-      border-top: 1px solid #eee;
-      margin: 1rem 0;
+    .gauge{
+      position:relative;
+      width:230px;
+      height:420px;
+      margin:0 auto;
+      background:linear-gradient(180deg,#0b142d,#0c1733);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:inset 0 6px 30px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.25);
+      overflow:hidden;
     }
-    @media (max-width: 480px) {
-      body { padding: 0.8rem; }
-      h1 { font-size: 18px; padding: 0 0.5rem; }
-      input[type="text"] { font-size: 14px; padding: 10px 14px; }
-      ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
-      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
+    .gauge .tick{
+      position:absolute;
+      left:0; right:0;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      opacity:.6;
     }
+    .gauge .zone{
+      position:absolute; left:10px; right:10px;
+      top:var(--green-top); height:calc(var(--green-bottom) - var(--green-top));
+      background:linear-gradient(180deg, rgba(34,197,94,.15), rgba(34,197,94,.06));
+      border:1px dashed rgba(34,197,94,.5);
+      border-left:none; border-right:none;
+      pointer-events:none;
+    }
+    .gauge .cursor{
+      position:absolute; left:18px; right:18px;
+      height:10px; border-radius:10px;
+      background:linear-gradient(90deg, #60a5fa, #38bdf8, #22d3ee);
+      box-shadow:0 0 14px rgba(56,189,248,.5);
+      transform:translateY(-50%);
+      top:50%;
+    }
+    .gauge .value{
+      position:absolute; bottom:10px; left:0; right:0;
+      text-align:center; font-weight:700; color:var(--muted); font-size:.9rem;
+    }
+    .gauge .label{
+      position:absolute; top:10px; left:0; right:0;
+      text-align:center; font-weight:700; color:#9dd8ff; font-size:.9rem; letter-spacing:.3px;
+    }
+
+    /* Boutons départs */
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+      padding:16px;
+    }
+    @media (max-width:420px){
+      .controls{ grid-template-columns:1fr; }
+    }
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius:18px;
+      padding:16px 12px;
+      font-weight:800;
+      font-size:1.1rem;
+      letter-spacing:.4px;
+      color:#041019;
+      background:linear-gradient(180deg, #7dd3fc, #38bdf8);
+      box-shadow:0 10px 20px rgba(0,0,0,.25), inset 0 -3px 0 rgba(0,0,0,.12);
+      transform:translateY(0);
+      transition:transform .06s ease, filter .06s ease, box-shadow .06s ease;
+      outline:none;
+      touch-action:manipulation;
+    }
+    .btn:active{ transform:translateY(2px); filter:brightness(.98) }
+    .btn .sub{ display:block; font-size:.8rem; font-weight:700; opacity:.8 }
+
+    .btn.off{
+      background:linear-gradient(180deg, #cbd5e1, #94a3b8);
+      color:#0b1220;
+    }
+    .btn.on{
+      background:linear-gradient(180deg, #4ade80, #22c55e);
+      color:#062012;
+      box-shadow:0 10px 22px rgba(34,197,94,.25), inset 0 -3px 0 rgba(0,0,0,.12);
+    }
+
+    /* Barre d’état */
+    .status{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 14px;
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom-left-radius:var(--radius);
+      border-bottom-right-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.03));
+    }
+    .status .left{ display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.9rem; }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      box-shadow:0 0 10px currentColor;
+      background-color:var(--warn);
+    }
+    .dot.ok{ background-color:var(--good) }
+    .dot.bad{ background-color:var(--bad) }
+
+    /* Footer + actions */
+    .actions{
+      display:flex; gap:10px; justify-content:space-between; align-items:center;
+      padding:12px 14px;
+    }
+    .cta{
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, #172347, #0d1530);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:700;
+      font-size:1rem;
+      letter-spacing:.2px;
+      box-shadow:var(--shadow);
+    }
+    .cta.primary{
+      background:linear-gradient(180deg, #60a5fa, #3b82f6);
+      color:#041019;
+      border:none;
+    }
+    .hint{ color:var(--muted); font-size:.9rem }
+
+    /* Modal fin de partie */
+    .modal{
+      position:fixed; inset:0; display:none; place-items:center;
+      background:rgba(4,10,20,.66);
+      backdrop-filter:saturate(130%) blur(6px);
+      z-index:30;
+      padding:18px;
+    }
+    .modal.show{ display:grid }
+    .card{
+      width:min(620px, 100%);
+      background:linear-gradient(180deg, #111a36, #0b142a);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .card h2{ margin:6px 0 4px; font-size:1.35rem }
+    .card p{ margin:6px 0; color:var(--muted) }
+    .score-big{ font-size:2.4rem; font-weight:900; margin-top:4px; }
+    .train{
+      position:relative; height:44px; overflow:hidden; margin-top:6px;
+    }
+    .train .track{
+      position:absolute; left:0; right:0; bottom:0; height:6px;
+      background: repeating-linear-gradient(90deg, #334155 0 16px, #475569 16px 24px);
+      border-radius:6px;
+    }
+    .train .emoji{
+      position:absolute; bottom:8px; left:-120px; font-size:32px; filter:drop-shadow(0 6px 6px rgba(0,0,0,.4));
+      animation: none linear forwards;
+    }
+    @keyframes run {
+      from { transform: translateX(0) }
+      to   { transform: translateX(calc(100vw + 200px)) }
+    }
+
+    footer{
+      margin-top:auto;
+      opacity:.85;
+      text-align:center;
+      color:var(--muted);
+      font-size:.85rem;
+      padding-top:8px;
+    }
+    .version{ font-variant-numeric: tabular-nums; letter-spacing:.3px }
   </style>
 </head>
 <body>
-  <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  <div class="wrap">
+    <header>
+      <h1>⚡ Sous‑station Sprint <span class="badge">30 secondes</span></h1>
+      <div class="badge" id="tip">Maintiens la tension dans le vert</div>
+    </header>
+
+    <section class="panel">
+      <!-- HUD -->
+      <div class="hud">
+        <div class="tile">
+          <div style="font-size:.85rem;color:var(--muted)">⏱️ Temps</div>
+          <div class="time" id="time">30.0</div>
+        </div>
+        <div class="center">
+          <div id="combo" class="combo">—</div>
+          <button id="startBtn" class="cta primary">Démarrer</button>
+        </div>
+        <div class="tile">
+          <div style="font-size:.85rem;color:var(--muted)">🏆 Score</div>
+          <div class="score" id="score">0</div>
+        </div>
+      </div>
+
+      <!-- Jauge + Aides -->
+      <div class="gauge-wrap">
+        <div class="hint">
+          <strong>Règle :</strong> garde la jauge dans la zone verte.<br />
+          <span style="opacity:.85">Des « trains » créent des pics de charge. Active les départs pour répartir.</span>
+        </div>
+
+        <div class="gauge" aria-label="Jauge de tension">
+          <div class="label">Tension</div>
+          <!-- repères -->
+          <div class="tick" style="top:10%"></div>
+          <div class="tick" style="top:20%"></div>
+          <div class="tick" style="top:30%"></div>
+          <div class="tick" style="top:40%"></div>
+          <div class="tick" style="top:50%"></div>
+          <div class="tick" style="top:60%"></div>
+          <div class="tick" style="top:70%"></div>
+          <div class="tick" style="top:80%"></div>
+          <div class="tick" style="top:90%"></div>
+
+          <!-- zone verte -->
+          <div class="zone" aria-hidden="true"></div>
+          <!-- curseur -->
+          <div class="cursor" id="cursor" style="top:50%"></div>
+          <!-- valeur -->
+          <div class="value"><span id="value">50</span> %</div>
+        </div>
+
+        <div class="hint">
+          <div>🎯 Zone verte ≈ 45–55 %</div>
+          <div>✨ Combo après 3 s de stabilité</div>
+        </div>
+      </div>
+
+      <!-- Commandes -->
+      <div class="controls" id="controls">
+        <button class="btn off" data-line="0" id="b1">
+          Départ 1 <span class="sub">OFF</span>
+        </button>
+        <button class="btn off" data-line="1" id="b2">
+          Départ 2 <span class="sub">OFF</span>
+        </button>
+        <button class="btn off" data-line="2" id="b3">
+          Départ 3 <span class="sub">OFF</span>
+        </button>
+      </div>
+
+      <!-- Barre d’état -->
+      <div class="status">
+        <div class="left">
+          <span class="dot" id="stateDot"></span>
+          <span id="stateText">Instable</span>
+        </div>
+        <div class="right" id="eventText" style="color:var(--muted)">—</div>
+      </div>
+
+      <!-- Actions bas -->
+      <div class="actions">
+        <button id="resetBtn" class="cta">Réinitialiser</button>
+        <div class="hint">Astuce : tap rapide = correction fine, appui long = bascule sûre.</div>
+      </div>
+    </section>
+
+    <!-- Modal fin -->
+    <div class="modal" id="modal">
+      <div class="card">
+        <h2>Fin de manche</h2>
+        <div class="score-big" id="finalScore">0</div>
+        <p id="summary">Tu as maîtrisé la tension pendant X s. Bravo !</p>
+        <div class="train" id="trainBox" aria-hidden="true">
+          <div class="track"></div>
+          <div class="emoji" id="train">🚄</div>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px">
+          <button class="cta primary" id="playAgain">Rejouer</button>
+          <button class="cta" id="closeModal">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div>Jouable au doigt (mobile‑first). Retour haptique et audio subtils inclus.</div>
+      <div class="version">Version : <strong>v0.9.2</strong> — 12/08/2025</div>
+    </footer>
   </div>
 
-  <h1>🚘 Itinéraire et infos</h1>
-  <input type="text" id="search" placeholder="🔎 Entrer un poste pour trajet et détails" autocomplete="off" />
-  <div id="counter">📍 Postes consultés : chargement…</div>
-  <ul id="suggestions"></ul>
-  <div id="result"></div>
+  <script>
+    // =========================
+    //  LOGIQUE DU JEU
+    // =========================
+    (() => {
+      // Eléments UI
+      const cursor = document.getElementById('cursor');
+      const valEl  = document.getElementById('value');
+      const scoreEl= document.getElementById('score');
+      const timeEl = document.getElementById('time');
+      const dot    = document.getElementById('stateDot');
+      const stateT = document.getElementById('stateText');
+      const eventT = document.getElementById('eventText');
+      const startBtn = document.getElementById('startBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const modal    = document.getElementById('modal');
+      const finalScore = document.getElementById('finalScore');
+      const summary  = document.getElementById('summary');
+      const playAgain= document.getElementById('playAgain');
+      const closeModal= document.getElementById('closeModal');
+      const trainBox = document.getElementById('trainBox');
+      const trainEmoji = document.getElementById('train');
 
-  <h1 style="margin-top: 1.5rem;">⚡️ Rechercher un appareil</h1>
-  <ul id="suggestionsAppareils"></ul>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629, Guérite..." autocomplete="off" />
-  <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
-  
+      const buttons = [...document.querySelectorAll('.btn')];
 
-<script>
-const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
-const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
-const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
-const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+      // Audio (WebAudio, pas de fichier)
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      let audioCtx;
+      function beep(freq=720, dur=0.05, gain=0.03){
+        try{
+          audioCtx = audioCtx || new AudioCtx();
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type='square'; o.frequency.value=freq;
+          g.gain.value=gain;
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start();
+          setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, dur*1000);
+        }catch(e){/* silencieux sur iOS sans geste */ }
+      }
 
-let lieux = [], fuse;
-let appareils = [], fuseAppareils;
+      // Haptique
+      function buzz(ms=30){ if(navigator.vibrate) try{ navigator.vibrate(ms); }catch(e){} }
 
-function normalize(str) {
-  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
-}
+      // Paramètres physiques
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+      const map = (v, a1, a2, b1, b2) => b1 + (v-a1)*(b2-b1)/(a2-a1);
 
-function formatNomCompletLieu(obj) {
-  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-  return obj.accès ? `${base} – accès ${obj.accès}` : base;
-}
+      const GREEN_MIN = 45;    // %
+      const GREEN_MAX = 55;    // %
+      const START_VAL = 50;    // %
+      let tension = START_VAL;
 
-function formatNomCompletAppareil(obj) {
-  return formatNomCompletLieu(obj);
-}
-function formatNomComplet(obj) {
-  return `${obj.nom || ''} ${obj.type || ''}`.trim();
-}
-function formatRSS(table) {
-  const tables = {
-    "A": ["03 28 55 82 56", "03 28 55 82 57"],
-    "B": ["03 28 55 82 58", "03 28 55 82 59"],
-    "C": ["03 28 55 82 53", "03 28 55 82 54"]
-  };
-  const tableNum = { "A": "1", "B": "2", "C": "3" };
-  if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
-  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
-}
-function generateAppareilListHTML(currentLieu) {
-  const posteNomComplet = formatNomComplet(currentLieu);
-  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
+      let running = false;
+      let last = 0;
+      let remTime = 30.0;  // secondes
+      let score = 0;
+      let greenStreak = 0;     // secondes consécutives dans le vert
+      let comboActive = false;  // après 3s
+      let comboMult = 1.0;
 
-  if (matchingApps.length === 0) {
-    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
-    return `
-      <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
-        🤝 Appareil manquant ? 
-        <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-          Aidez-nous à l’ajouter.
-        </a>
-      </div>
-    `;
-  }
+      // Etat des départs (3 lignes)
+      const lines = [false,false,false]; // OFF par défaut
+      const lineEffect = 3.6; // effet par ligne ON (réduction de tension par seconde)
 
-  // S’il y a des appareils, on affiche le titre + la liste
-  let grouped = {};
-  matchingApps.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!grouped[sat]) grouped[sat] = [];
-    grouped[sat].push(app);
-  });
+      // Bruit de base + dérive
+      let drift = 0;
+      let noise = 0;
 
-  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+      // Pics "train"
+      let spike = 0;       // contribution instantanée
+      let spikeTimer = 0;  // temps restant d'un pic
+      function triggerSpike(){
+        // Pic positif (montée de tension) 0.9 à 1.5 s
+        spikeTimer = 0.9 + Math.random()*0.6;
+        spike = 24 + Math.random()*16; // amplitude
+        eventT.textContent = "🚆 Passage d’un train : pic de charge !";
+        eventT.style.color = "var(--warn)";
+        beep(560, 0.06, 0.04);
+        setTimeout(()=>{ eventT.textContent = "—"; eventT.style.color = "var(--muted)"; }, 900);
+      }
+      // Prochain pic aléatoire
+      let nextSpike = 0;
+      function scheduleNextSpike(){
+        // Entre 2 et 5 secondes
+        nextSpike = 2 + Math.random()*3;
+      }
 
-  for (const [sat, list] of Object.entries(grouped)) {
-    if (isSAT && sat !== currentLieu.SAT) continue;
-    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
-    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
-    else html += `<p>`;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
-  }
+      // UI helpers
+      const comboEl = document.getElementById('combo');
+      function updateComboUI(){
+        if(comboActive){
+          comboEl.textContent = "🔥 COMBO x" + comboMult.toFixed(2);
+          comboEl.classList.add('active');
+        }else{
+          comboEl.textContent = "—";
+          comboEl.classList.remove('active');
+        }
+      }
 
-  html += `
-    <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
-      🤝 Appareil manquant ? 
-      <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-        Aidez-nous à l’ajouter.
-      </a>
-    </div>
-  `;
+      function setButtonState(btn, on){
+        btn.classList.toggle('on', on);
+        btn.classList.toggle('off', !on);
+        btn.querySelector('.sub').textContent = on ? 'ON' : 'OFF';
+      }
 
-  return html;
-}function generateAlias(appareil, nom, sat, type) {
-  const alias = new Set();
-  const norm = str => str.toLowerCase().trim();
+      // Contrôles
+      buttons.forEach(btn=>{
+        const i = +btn.dataset.line;
+        const toggle = ()=>{
+          lines[i] = !lines[i];
+          setButtonState(btn, lines[i]);
+          buzz(25);
+          beep(lines[i] ? 820 : 380, 0.05, 0.035);
+        };
+        // Tap & click
+        btn.addEventListener('click', toggle);
+        btn.addEventListener('touchstart', (e)=>{ e.preventDefault(); toggle(); }, {passive:false});
+      });
 
-  const a = norm(appareil);
-  const n = norm(nom);
-  const s = norm(sat);
-  const t = norm(type);
-  const root = a.split(/[\s\-]/)[0];
+      function resetGame(){
+        running=false;
+        tension=START_VAL;
+        remTime=30.0;
+        score=0;
+        greenStreak=0;
+        comboActive=false;
+        comboMult=1.0;
+        updateComboUI();
+        drift=0; noise=0; spike=0; spikeTimer=0;
+        scheduleNextSpike();
+        buttons.forEach((b,i)=>{ lines[i]=false; setButtonState(b,false); });
+        render(0);
+        scoreEl.textContent = "0";
+        timeEl.textContent = remTime.toFixed(1);
+        stateT.textContent = "Instable";
+        dot.classList.remove('ok','bad'); dot.classList.remove('ok'); dot.classList.remove('bad');
+        dot.classList.remove('ok'); dot.classList.remove('bad');
+        dot.classList.remove('ok'); dot.classList.remove('bad');
+        dot.classList.remove('ok'); dot.classList.remove('bad');
+        dot.className='dot'; // reset classes properly
+        eventT.textContent="—"; eventT.style.color="var(--muted)";
+      }
 
-  alias.add(a);
-  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+      function startGame(){
+        if(running) return;
+        resetGame();
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(loop);
+      }
 
-  alias.add(`${a} ${n}`);
-  alias.add(`${n} ${a}`);
-  alias.add(`${root} ${n}`);
-  alias.add(`${root} de ${n}`);
+      function endGame(){
+        running=false;
+        finalScore.textContent = Math.round(score);
+        const secondsInGreen = (score / (comboActive ? comboMult : 1)) | 0; // approximation
+        summary.textContent = `Tu as maîtrisé la tension pendant ~${secondsInGreen}s.`;
+        // Train si score > 20
+        trainBox.style.display = (score > 20) ? 'block' : 'none';
+        if(score > 20){
+          trainEmoji.style.animation = 'none';
+          trainEmoji.style.left = '-120px';
+          // petite astuce pour relancer l'anim
+          void trainEmoji.offsetWidth;
+          trainEmoji.style.animation = 'run 2.6s linear forwards';
+        }
+        modal.classList.add('show');
+      }
 
-  if (s) {
-    alias.add(`${a} ${n} ${s}`);
-    alias.add(`${n} ${s} ${a}`);
-    alias.add(`${root} ${n} ${s}`);
-    alias.add(`${root} de ${n} ${s}`);
-  }
+      startBtn.addEventListener('click', startGame);
+      resetBtn.addEventListener('click', resetGame);
+      playAgain.addEventListener('click', ()=>{ modal.classList.remove('show'); startGame(); });
+      closeModal.addEventListener('click', ()=> modal.classList.remove('show'));
 
-  // ✅ Ajoute l'alias type complet : ex. "lambersart prci"
-  alias.add(`${n} ${t}`);
+      // Boucle
+      function loop(now){
+        if(!running) return;
+        const dt = Math.min(0.05, (now - last)/1000); // limite le pas (50 ms)
+        last = now;
 
-  return Array.from(alias);
-}
+        // Timer
+        remTime -= dt;
+        timeEl.textContent = Math.max(0, remTime).toFixed(1);
+        if(remTime <= 0){
+          endGame();
+          return;
+        }
 
-fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data;
+        // Planification pics
+        nextSpike -= dt;
+        if(nextSpike <= 0){
+          triggerSpike();
+          scheduleNextSpike();
+        }
 
-  // Génère dynamiquement les alias
-  appareils.forEach(app => {
-   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
-  });
+        // Déphasage/ dérive (lente)
+        drift += (Math.random()-0.5)*dt*2;        // drift varie lentement
+        drift = clamp(drift, -2.2, 2.2);
 
-  fuseAppareils = new Fuse(appareils, {
-    keys: [
-      { name: 'appareil', weight: 0.5 },
-      { name: 'alias', weight: 0.9 },
-      { name: 'type', weight: 0.3 },
-      { name: 'nom', weight: 0.1 },
-      { name: 'SAT', weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
-    ignoreLocation: true
-  });
-});
-  fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data;
+        // Bruit
+        noise = (Math.random()-0.5)*6;            // bruit instantané
 
-fuse = new Fuse(lieux, {
-  keys: [
-    { name: "nom", weight: 0.5 },
-    { name: "type", weight: 0.3 },
-    { name: "SAT", weight: 0.2 },
-    {
-      name: "accès",
-      getFn: o => o.accès?.toString?.() || "",
-      weight: 0.1
-    }
-  ],
-  includeScore: true,
-  threshold: 0.3,
-  ignoreLocation: true
-});
-});
-function updateCounter() {
-  fetch(compteurURL).then(res => res.json()).then(data => {
-    document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
-  });
-}
-function incrementCounter() {
-  fetch(compteurURL + "?increment=true").then(updateCounter);
-}
-function updateCounterAppareil() {
-  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
-    document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
-  });
-}
-function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
-}
+        // Pic en cours
+        if(spikeTimer > 0){
+          // contribution décroissante
+          const decay = map(spikeTimer, 0, 1.5, 0, 1);
+          spikeTimer -= dt;
+          if(spikeTimer <= 0) spike = 0;
+        }
 
-document.getElementById("search").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestions");
-  const resultEl = document.getElementById("result");
-  suggestionsEl.innerHTML = "";
-  resultEl.innerHTML = "";
-  resultEl.style.display = "none";
-  if (!query || !fuse) return;
-  let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
-  if (results.length === 0 || query.length <= 3) {
-   const fallback = lieux.filter(l =>
-  normalize(l.nom).includes(query) ||
-  normalize(l.type).includes(query) ||
-  normalize(l.SAT || '').includes(query) ||
-  normalize(String(l.accès || '')).includes(query)
-);
-const ids = new Set(results.map(l => formatNomCompletLieu(l)));
-fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
-  }
-  results.forEach(lieu => {
-    const li = document.createElement("li");
-    li.textContent = formatNomCompletLieu(lieu);
-    li.onclick = () => showLieu(lieu);
-    suggestionsEl.appendChild(li);
-  });
-});
+        // Effet des lignes ON
+        const onCount = lines.reduce((a,b)=>a+(b?1:0),0);
+        const mitigate = onCount * lineEffect;
 
-function showLieu(lieu) {
-  const result = document.getElementById("result");
-  document.getElementById("suggestions").innerHTML = "";
-  result.style.display = "block";
-  incrementCounter();
-let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
-<div class="inline-links">
-  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-</div><hr class="separator" />`;
-  const blocs = [];
-  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
-  if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-  if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
-  if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
-  html += blocs.join('<hr class="separator" />');
-  html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
-  result.innerHTML = html;
-}
+        // Mise à jour tension (pourcentage)
+        // Base vers 50%, ajout drift/noise/pics, retrait mitigation
+        const delta = drift + noise*dt + spike*dt - mitigate*dt;
+        tension = clamp(tension + delta, 0, 100);
 
-document.getElementById("searchAppareil").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestionsAppareils");
-  const resultEl = document.getElementById("result");
-  suggestionsEl.innerHTML = "";
-  resultEl.innerHTML = "";
-  resultEl.style.display = "none";
-  if (!query || !fuseAppareils) return;
-let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
+        // Score & état
+        const inGreen = (tension >= GREEN_MIN && tension <= GREEN_MAX);
+        if(inGreen){
+          greenStreak += dt;
+          if(!comboActive && greenStreak >= 3){
+            comboActive = true;
+            comboMult = 1.5; // petit bonus
+            updateComboUI();
+            beep(980, 0.08, 0.05);
+          }
+          score += dt * (1 * (comboActive ? comboMult : 1));
+        }else{
+          greenStreak = 0;
+          if(comboActive){
+            comboActive = false;
+            comboMult = 1.0;
+            updateComboUI();
+          }
+        }
 
-// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
-const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
-const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
+        // État visuel
+        stateT.textContent = inGreen ? "Stable" : (tension< GREEN_MIN ? "Sous-tension" : "Surtension");
+        dot.className = "dot " + (inGreen ? "ok" : (tension>GREEN_MAX ? "bad" : ""));
 
-if (matchPrefix) {
-  const prefix = matchPrefix[1].toLowerCase();
-  const lieu = matchPrefix[2].toLowerCase();
+        // Rendu
+        render(dt);
 
-  if (prefixes.includes(prefix)) {
-    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
-    const complet = appareils.filter(app => {
-      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
-      return (
-        app.appareil.toLowerCase().startsWith(prefix) &&
-        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
-      );
-    });
+        requestAnimationFrame(loop);
+      }
 
-    // Fusionne sans doublons
-    const ids = new Set(results.map(a => a.appareil));
-    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
+      function render(){
+        // Place le curseur : 0% en bas, 100% en haut → CSS : top en %
+        const top = 100 - tension;
+        cursor.style.top = top + "%";
+        valEl.textContent = Math.round(tension);
+        scoreEl.textContent = Math.round(score);
+      }
 
-    // Tri : ceux qui matchent mieux d’abord
-    results.sort((a, b) => {
-    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
-const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return 1;
-      return 0;
-    });
-  }
-}
+      // Démarrage « prêt à jouer »
+      resetGame();
 
-// 🔄 Affichage des résultats
-results.reverse().forEach((app, index, array) => {
-  const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
-
-  // Surligne le dernier (donc le plus pertinent après reverse)
-  if (index === array.length - 1) {
-    li.style.backgroundColor = "#e6f0ff";
-    li.style.fontWeight = "600";
-  }
-
-  li.onclick = () => showAppareil(app);
-  suggestionsEl.appendChild(li);
-});
-});
-
-function showAppareil(app) {
-  incrementCounterAppareil();
-  const result = document.getElementById("result");
-  result.style.display = "block";
-  document.getElementById("suggestionsAppareils").innerHTML = "";
-let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
-  const blocs = [];
-  if (app.description) blocs.push(`<p>${app.description}</p>`);
-  blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
-const posteTrouvé = lieux.find(l => 
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "")
-);
-
-const accesTrouvé = lieux.find(l =>
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "") &&
-  normalize(String(l.accès || "")) === normalize(app.appareil)
-);
-
-// 2) Priorité à l'accès spécifique, sinon fallback poste
-const lieuCible = accesTrouvé || posteTrouvé;
-
-if (lieuCible) {
-  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
-}
-
-  html += blocs.join('<hr class="separator" />');
-  result.innerHTML = html;
-}
-
-updateCounter();
-updateCounterAppareil();
-setInterval(updateCounter, 3000);
-setInterval(updateCounterAppareil, 3000);
-</script>
-  <div style="text-align:center; margin-top: 30px;">
-  <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
-    ✍️ CONTRIBUEZ
-  </a>
-</div>
-
-<!-- Compteur contributions -->
-<div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
-  🧮 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
-</div>
-<script>
-  const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-  async function refreshContrib(){
-    try{
-      const r = await fetch(compteurContributionURL);
-      const data = await r.json();
-      document.getElementById("compteur-valeur").textContent =
-        (data && typeof data.count !== "undefined") ? data.count : "chargement…";
-    }catch(e){
-      document.getElementById("compteur-valeur").textContent = "chargement…";
-    }
-  }
-  refreshContrib();
-  setInterval(refreshContrib, 3000);
-</script>
-
-<p style="font-size: 13px; margin-top: 2rem;">
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
-</p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.02.11</p>
+      // Accessibilité clavier (desktop)
+      window.addEventListener('keydown', (e)=>{
+        if(e.repeat) return;
+        if(e.key === ' ' || e.key === 'Enter'){ startGame(); }
+        if(e.key === '1'){ document.getElementById('b1').click(); }
+        if(e.key === '2'){ document.getElementById('b2').click(); }
+        if(e.key === '3'){ document.getElementById('b3').click(); }
+        if(e.key.toLowerCase() === 'r'){ resetGame(); }
+      });
+    })();
+  </script>
 </body>
 </html>
