@@ -26,7 +26,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BUSIGNY à SOMAIN",
-    "numero_ligne": 250000.0,
+    "numero_ligne": 250000,
     "pk": "230,460"
   },
   {
@@ -41,7 +41,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": "174,750"
   },
   {
@@ -56,7 +56,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
-    "numero_ligne": 216000.0,
+    "numero_ligne": 216000,
     "pk": "114,400"
   },
   {
@@ -131,7 +131,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": 295000.0,
+    "numero_ligne": 295000,
     "pk": "20,240"
   },
   {
@@ -146,7 +146,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "280,901"
   },
   {
@@ -161,7 +161,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": 295000.0,
+    "numero_ligne": 295000,
     "pk": "62,755"
   },
   {
@@ -176,7 +176,7 @@
     "contact": "Agent qui gère l'alimentation du PREC - 03 28 55 60 94",
     "portail": "0328557549,7623*",
     "lignes": "FIVES à ABBEVILLE",
-    "numero_ligne": 289000.0,
+    "numero_ligne": 289000,
     "pk": "2,150"
   },
   {
@@ -206,7 +206,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": 295000.0,
+    "numero_ligne": 295000,
     "pk": "85,166"
   },
   {
@@ -221,7 +221,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "200,290"
   },
   {
@@ -236,7 +236,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à BAISIEUX",
-    "numero_ligne": 269000.0,
+    "numero_ligne": 269000,
     "pk": "14,602"
   },
   {
@@ -251,7 +251,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à HIRSON ",
-    "numero_ligne": 267000.0,
+    "numero_ligne": 267000,
     "pk": "77,312"
   },
   {
@@ -266,7 +266,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "229,908"
   },
   {
@@ -281,7 +281,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "230,760"
   },
   {
@@ -296,7 +296,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à ABBEVILLE",
-    "numero_ligne": 289000.0,
+    "numero_ligne": 289000,
     "pk": "289000"
   },
   {
@@ -311,7 +311,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000.0,
+    "numero_ligne": 226000,
     "pk": "143,321"
   },
   {
@@ -326,7 +326,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à ABBEVILLE",
-    "numero_ligne": 289000.0,
+    "numero_ligne": 289000,
     "pk": "35,465"
   },
   {
@@ -356,7 +356,7 @@
     "contact": "",
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
-    "numero_ligne": 304000.0,
+    "numero_ligne": 304000,
     "pk": "14,900"
   },
   {
@@ -371,7 +371,7 @@
     "contact": "",
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
-    "numero_ligne": 304000.0,
+    "numero_ligne": 304000,
     "pk": "10,400"
   },
   {
@@ -386,7 +386,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LENS à OSTRICOURT",
-    "numero_ligne": 284000.0,
+    "numero_ligne": 284000,
     "pk": "215,547"
   },
   {
@@ -401,7 +401,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": "183,080"
   },
   {
@@ -416,7 +416,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": ""
   },
   {
@@ -431,7 +431,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": ""
   },
   {
@@ -446,7 +446,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": ""
   },
   {
@@ -461,7 +461,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "211,700"
   },
   {
@@ -476,7 +476,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000.0,
+    "numero_ligne": 226000,
     "pk": "183,687"
   },
   {
@@ -491,7 +491,7 @@
     "contact": "",
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
-    "numero_ligne": 304000.0,
+    "numero_ligne": 304000,
     "pk": "18,450"
   },
   {
@@ -506,7 +506,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": 216000.0,
+    "numero_ligne": 216000,
     "pk": "53,547"
   },
   {
@@ -521,7 +521,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": 216000.0,
+    "numero_ligne": 216000,
     "pk": "68,359"
   },
   {
@@ -536,7 +536,7 @@
     "contact": "",
     "portail": "",
     "lignes": "CREIL à JEUMONT",
-    "numero_ligne": 242000.0,
+    "numero_ligne": 242000,
     "pk": "182,251"
   },
   {
@@ -551,7 +551,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": 314000.0,
+    "numero_ligne": 314000,
     "pk": "277,710"
   },
   {
@@ -566,7 +566,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": 314000.0,
+    "numero_ligne": 314000,
     "pk": "277,710"
   },
   {
@@ -581,7 +581,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": 314000.0,
+    "numero_ligne": 314000,
     "pk": "277,710"
   },
   {
@@ -596,7 +596,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
-    "numero_ligne": 216000.0,
+    "numero_ligne": 216000,
     "pk": "59,146"
   },  
   {
@@ -610,8 +610,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "numero_ligne": 216000,
     "pk": ""
   },
   {
@@ -625,8 +625,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "numero_ligne": 216000,
     "pk": ""
   },
   {
@@ -640,9 +640,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": ""
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
+    "pk": "290,475"
   },
   {
     "nom": "Coquelles",
@@ -655,8 +655,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": ""
   },
   {
@@ -670,8 +670,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": ""
   },
   {
@@ -685,8 +685,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": ""
   },
   {
@@ -700,8 +700,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": ""
   },
   {
@@ -715,8 +715,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": ""
   },
   {
@@ -730,9 +730,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": "301000",
+    "pk": "300,521"
   },
   {
     "nom": "Coudekerque",
@@ -745,8 +745,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": "301000",
     "pk": ""
   },
   {
@@ -760,8 +760,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": "301000",
     "pk": ""
   },
   {
@@ -775,9 +775,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": ""
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "103,900"
   },
   {
     "nom": "Coulogne",
@@ -790,8 +790,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -805,8 +805,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -820,8 +820,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -835,8 +835,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -850,8 +850,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -865,8 +865,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -880,9 +880,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": ""
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "104,810 "
   },
   {
     "nom": "Curie",
@@ -895,8 +895,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -910,8 +910,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -925,8 +925,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
@@ -940,8 +940,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": ""
   },
   {
